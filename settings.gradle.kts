@@ -1,0 +1,12 @@
+rootProject.name = "INFO_v2_Backend"
+include ("common")
+include ("user")
+include ("board")
+include ("employment")
+include ("notice")
+include ("email")
+include ("comment")
+include ("noticeQuery")
+include ("company")
+include ("companyQuery")
+include ("applies")

@@ -146,3 +146,9 @@ project(":applies") {
     }
 }
 
+project(":aws") {
+    dependencies {
+        compileOnly(project(":common"))
+    }
+}
+

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title></title>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+<div style="
+ align-items: center;
+ width: 700px;
+font-family: 'Noto Sans KR', sans-serif;">
+    <div style="
+         background-color: #9684fc;
+         width: 1100px;
+         height: 60px;">
+    </div>
+    <div style="background-color: #c3beff;
+width: 1100px;
+height: 750px;
+padding: 0px 200px;
+box-sizing: border-box;
+padding-top: 80px;">
+        <div style="background-color: white;
+height: 400px;
+width: 700px;
+align-items: center;
+border-radius: 10px;
+position: relative;">
+            <img style="height: 60px; width: 60px; position: center; margin-left: 320px; margin-top: 20px;" src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/7a550490-9722-45e1-9f2d-091b8cd59864/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220914%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220914T232242Z&X-Amz-Expires=86400&X-Amz-Signature=5868b1530888359f2b954fe29a02dadc04fb254c75d503d9b9a997bb118b2b28&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject"></img>
+            <h1 style="margin: 0; position: relative; margin-top: 20px; margin-left: 290px; width: 150px;">인증번호</h1>
+            <p style="position: relative; margin-top: 20px; margin-left: 150px; width: 200px; text-align: center; position: relative; margin-left: 250px;">인증 번호는 다음과 같습니다.</p>
+            <div style="margin-top: 50px;">
+                <strong style="
+            background-color: rgb(249, 249, 249);
+            border: 1px solid rgb(235, 235, 235);
+            padding: 10px 30px;
+            letter-spacing: 5px;
+            color: dimgray;
+            font-size: 30px;
+            position: relative;
+            margin-left: 260px;
+            width: 150px;"><span th:text="${code}"/>
+                </strong>
+            </div>
+        </div>
+
+    </div>
+</div>
+</span>
+</body>
+</html>

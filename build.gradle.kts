@@ -43,6 +43,22 @@ subprojects {
     apply(plugin = "kotlin-spring")
     apply(plugin = "kotlin-jpa")
 
+    allOpen {
+        annotation("javax.persistence.Entity")
+        annotation("javax.persistence.MappedSuperclass")
+        annotation("org.springframework.data.redis.core.RedisHash")
+        annotation("org.springframework.data.mongodb.core.mapping.Document")
+        annotation("javax.persistence.Embeddable")
+    }
+
+    noArg {
+        annotation("javax.persistence.Entity")
+        annotation("javax.persistence.MappedSuperclass")
+        annotation("org.springframework.data.redis.core.RedisHash")
+        annotation("org.springframework.data.mongodb.core.mapping.Document")
+        annotation("javax.persistence.Embeddable")
+    }
+
 
     dependencies {
         compileOnly("org.springframework.boot:spring-boot-autoconfigure")
@@ -80,12 +96,23 @@ bootJar.enabled = false
 
 project(":common") {
     dependencies {
-        implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-
     }
 }
 
+project(":commonEntity") {
+    dependencies {
+        implementation(project(":common"))
+    }
+}
+
+
 project(":user") {
+    dependencies {
+        implementation(project(":commonEntity"))
+    }
+}
+
+project(":auth") {
     dependencies {
         implementation(project(":common"))
     }
@@ -112,13 +139,14 @@ project(":notice") {
 
 project(":email") {
     dependencies {
+        implementation(project(":commonEntity"))
         implementation(project(":common"))
     }
 }
 
 project(":comment") {
     dependencies {
-        implementation(project(":common"))
+        implementation(project(":commonEntity"))
     }
 }
 
@@ -130,7 +158,7 @@ project(":noticeQuery") {
 
 project(":company") {
     dependencies {
-        implementation(project(":common"))
+        implementation(project(":commonEntity"))
     }
 }
 
@@ -142,13 +170,22 @@ project(":companyQuery") {
 
 project(":applies") {
     dependencies {
-        compileOnly(project(":common"))
     }
 }
 
 project(":aws") {
     dependencies {
-        compileOnly(project(":common"))
+    }
+}
+
+project(":apiGateway") {
+    dependencies {
+        implementation(project(":common"))
+    }
+}
+
+project(":eureka") {
+    dependencies {
     }
 }
 

@@ -2,6 +2,8 @@
 
 dependencies {
     implementation(project(":commonEntity"))
+    //Annotation Processor
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     //Kafka
     implementation("org.springframework.kafka:spring-kafka")
     //JPA

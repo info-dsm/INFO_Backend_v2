@@ -56,7 +56,7 @@ abstract class User(
     }
 
     override fun getUsername(): String {
-        return this.id.toString()
+        return this.email
     }
 
     override fun isAccountNonLocked(): Boolean {

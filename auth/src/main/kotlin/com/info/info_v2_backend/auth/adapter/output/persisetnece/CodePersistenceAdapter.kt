@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service
 
 @Service
 class CodePersistenceAdapter(
-    private val authenticationCodeRepository: CodeRepository
+    private val codeRepository: CodeRepository
 ): SaveCodePort, RemoveCodePort, LoadCodePort {
 
     override fun save(authenticationCode: Code) {
-        authenticationCodeRepository.save(authenticationCode)
+        codeRepository.save(authenticationCode)
     }
 
     override fun remove(targetEmail: String) {
-        authenticationCodeRepository.deleteByTargetEmail(targetEmail)
+        codeRepository.deleteByTargetEmail(targetEmail)
     }
 
     override fun load(email: String): Code {
-        return authenticationCodeRepository.findByTargetEmail(email)
+        return codeRepository.findByTargetEmail(email)
             .orElse(null)?: throw BusinessException(
-            "인증번호를 조회할 수 없습니다. -> ${email}",
+            "데이터를 조회할 수 없습니다. -> ${email}",
             ErrorCode.NO_DATA_FOUND_ERROR
             )
     }

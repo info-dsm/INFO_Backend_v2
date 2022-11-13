@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.email.adapter.input.web.dto
+package com.info.info_v2_backend.common.email.dto
 
 data class SendEmailTextRequest(
     val targetEmail: String,

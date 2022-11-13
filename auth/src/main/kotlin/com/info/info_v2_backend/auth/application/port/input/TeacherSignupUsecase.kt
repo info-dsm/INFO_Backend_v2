@@ -1,9 +1,8 @@
 package com.info.info_v2_backend.auth.application.port.input
 
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.TeacherSignupRequest
-import org.springframework.web.bind.annotation.RequestParam
+import com.info.info_v2_backend.user.adapter.input.event.dto.TeacherDto
 
 interface TeacherSignupUsecase {
 
-    fun command(request: TeacherSignupRequest, emailAuthenticationCode: String, teacherCode: String)
+    fun command(request: TeacherDto, emailAuthenticationCode: String, teacherCode: String)
 }

@@ -3,7 +3,6 @@ package com.info.info_v2_backend.auth.application.service
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenResponse
 import com.info.info_v2_backend.auth.application.port.input.LoginUsecase
-import com.info.info_v2_backend.auth.application.port.output.LoadUserByUsernamePort
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import org.springframework.security.crypto.password.PasswordEncoder

@@ -1,12 +1,12 @@
 package com.info.info_v2_backend.auth.adapter.input.rest
 
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginRequest
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.StudentSignupRequest
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.TeacherSignupRequest
+import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.TokenReissueRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenResponse
-import com.info.info_v2_backend.auth.application.port.input.LoginUsecase
-import com.info.info_v2_backend.auth.application.port.input.StudentSignupUsecase
-import com.info.info_v2_backend.auth.application.port.input.TeacherSignupUsecase
+import com.info.info_v2_backend.auth.application.port.input.*
+import com.info.info_v2_backend.common.auth.AuthenticationCodeType
+import com.info.info_v2_backend.user.adapter.input.event.dto.StudentDto
+import com.info.info_v2_backend.user.adapter.input.event.dto.TeacherDto
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     private val loginUsecase: LoginUsecase,
     private val teacherSignupUsecase: TeacherSignupUsecase,
-    private val studentSignupUsecase: StudentSignupUsecase
+    private val studentSignupUsecase: StudentSignupUsecase,
+    private val reissuePort: ReissueUsecase,
+    private val sendCodeUsecase: SendAuthenticationCodeUsecase
 ) {
 
     @PostMapping("/login")
@@ -29,7 +31,7 @@ class AuthController(
 
     @PostMapping("/signup/student")
     fun studentSignup(
-        @RequestBody request: StudentSignupRequest,
+        @RequestBody request: StudentDto,
         @RequestParam(value = "emailCode") emailAuthenticationCode: String
     ) {
         studentSignupUsecase.command(request, emailAuthenticationCode)
@@ -37,7 +39,7 @@ class AuthController(
 
     @PostMapping("/signup/teacher")
     fun teacherSignup(
-        @RequestBody request: TeacherSignupRequest,
+        @RequestBody request: TeacherDto,
         @RequestParam(value = "emailCode") emailAuthenticationCode: String,
         @RequestParam(value = "teacherCode") teacherCode: String
     ) {
@@ -45,18 +47,20 @@ class AuthController(
     }
 
     @PutMapping("/reissue")
-    fun reissue(): TokenResponse {
-
+    fun reissue(
+        @RequestBody request: TokenReissueRequest
+    ): TokenResponse {
+        return reissuePort.command(request)
     }
 
     @PutMapping("/code")
-    fun sendAuthenticationCode() {
-
+    fun sendSignupAuthenticationCode(
+        @RequestParam email: String
+    ) {
+        sendCodeUsecase.command(
+            email,
+            AuthenticationCodeType.SIGNUP_EMAIL
+        )
     }
-
-
-
-
-
 
 }

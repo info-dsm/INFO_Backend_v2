@@ -3,9 +3,9 @@ package com.info.info_v2_backend.email.application.service
 import com.info.info_v2_backend.common.email.EmailTemplateType
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.common.user.UserEmailIdDto
-import com.info.info_v2_backend.email.adapter.input.web.dto.SendEmailNotificationRequest
-import com.info.info_v2_backend.email.adapter.input.web.dto.SendEmailTextRequest
+import com.info.info_v2_backend.common.email.dto.SendEmailNotificationRequest
+import com.info.info_v2_backend.common.email.dto.SendEmailTextRequest
+import com.info.info_v2_backend.common.security.HeaderProperty
 import com.info.info_v2_backend.email.application.port.input.SendEmailUsecase
 import com.info.info_v2_backend.email.application.port.output.EmailRecordPersistencePort
 import com.info.info_v2_backend.email.application.port.output.LoadEmailUserPort
@@ -16,6 +16,8 @@ import com.info.info_v2_backend.email.domain.user.Sender
 import org.springframework.mail.MailException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 
 @Service
 @Transactional
@@ -25,19 +27,12 @@ class SendEmail(
     private val smtpSendPort: SmtpSendPort
 ): SendEmailUsecase {
 
-    private fun command(targetEmail: String, emailContent: EmailContent) {
-//        val target = emailUserPort.loadEmailUser(targetId)
-//        val requesterId = (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.getHeader("USER_ID")
-//        val sender = emailUserPort.loadEmailUser(requesterId)
-        val target = UserEmailIdDto(
-            "1",
-            "jinwoo794533@gmail.com"
+    private fun command(targetEmail: String, emailContent: EmailContent, senderEmail: String?) {
+        val target = emailUserPort.loadEmailUser(targetEmail)
+        val sender = emailUserPort.loadEmailUser(
+            senderEmail?:
+            (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.getHeader(HeaderProperty.USER_EMAIL)
         )
-        val sender = UserEmailIdDto(
-            "1",
-            "jinwoo794533@gmail.com"
-        )
-
 
         val record = emailRecordPersistencePort.save(
             EmailRecord(
@@ -68,7 +63,7 @@ class SendEmail(
         record.complete()
     }
 
-    override fun sendEmailTextCommand(command: SendEmailTextRequest) {
+    override fun sendEmailTextCommand(command: SendEmailTextRequest, senderEmail: String?) {
         return command(
             command.targetEmail,
             EmailContent(
@@ -76,11 +71,12 @@ class SendEmail(
                 EmailTemplateType.TEXT,
                 null,
                 command.content
-            )
+            ),
+            senderEmail
         )
     }
 
-    override fun sendEmailNotificationCommand(command: SendEmailNotificationRequest) {
+    override fun sendEmailNotificationCommand(command: SendEmailNotificationRequest, senderEmail: String?) {
         return command(
             command.targetEmail,
             EmailContent(
@@ -88,7 +84,8 @@ class SendEmail(
                 EmailTemplateType.TEXT,
                 command.data,
                 null
-            )
+            ),
+            senderEmail
         )
     }
 

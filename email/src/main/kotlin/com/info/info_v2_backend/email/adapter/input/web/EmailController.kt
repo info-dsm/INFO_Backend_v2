@@ -1,6 +1,6 @@
 package com.info.info_v2_backend.email.adapter.input.web
 
-import com.info.info_v2_backend.email.adapter.input.web.dto.SendEmailTextRequest
+import com.info.info_v2_backend.common.email.dto.SendEmailTextRequest
 import com.info.info_v2_backend.email.adapter.output.rest.adapter.UserFeignClient
 import com.info.info_v2_backend.email.application.port.input.SendEmailUsecase
 import org.springframework.web.bind.annotation.PutMapping

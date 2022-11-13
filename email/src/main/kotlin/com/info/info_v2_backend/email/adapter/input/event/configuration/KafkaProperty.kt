@@ -8,9 +8,4 @@ import org.springframework.boot.context.properties.ConstructorBinding
 data class KafkaProperty(
     val kafkaServerAddress: String
 
-) {
-    companion object {
-        const val USER_EMAIL_ID_TOPIC = "user-email-id"
-    }
-}
-
+)

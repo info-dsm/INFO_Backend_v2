@@ -109,12 +109,14 @@ project(":commonEntity") {
 project(":user") {
     dependencies {
         implementation(project(":commonEntity"))
+        implementation(project(":common"))
     }
 }
 
 project(":auth") {
     dependencies {
         implementation(project(":common"))
+        implementation(project(":user"))
     }
 }
 

@@ -1,13 +1,18 @@
 package com.info.info_v2_backend.company.adapter.output.event
 
+import com.info.info_v2_backend.common.event.KafkaTopics
+import com.info.info_v2_backend.common.file.RegisterCompanyFileDto
+import com.info.info_v2_backend.common.file.UploadCompanyFileDto
 import com.info.info_v2_backend.company.application.port.output.UploadFilePort
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 
 @Service
-class FileAdapter: UploadFilePort {
+class FileAdapter(
+    private val fileSender: KafkaTemplate<String, UploadCompanyFileDto>
+): UploadFilePort {
 
-    override fun upload(file: MultipartFile): String {
-        TODO("Not yet implemented")
+    override fun upload(file: UploadCompanyFileDto) {
+        fileSender.send(KafkaTopics.UPLOAD_COMPANY_FILE, file)
     }
 }

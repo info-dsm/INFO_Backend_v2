@@ -8,6 +8,7 @@ import javax.validation.constraints.Size
 
 
 data class RegisterCompanyRequest(
+    val companyId: String,
     @field:Valid
     val companyNameRequest: CompanyNameRequest,
     @field:Valid

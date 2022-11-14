@@ -4,6 +4,7 @@ import com.info.info_v2_backend.company.domain.information.AddressInfo
 import com.info.info_v2_backend.company.domain.information.CompanyInformation
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
+import javax.validation.constraints.Pattern
 
 data class CompanyInformationRequest (
     val homeAddress: AddressInfo,
@@ -13,7 +14,12 @@ data class CompanyInformationRequest (
     @field:Max(100000)
     val workerCount: Int,
     @field:Min(0) @field:Max(1000000000000)
-    val annualSales: Long
+    val annualSales: Long,
+    @field:Pattern(
+        regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}\$",
+        message = "전화번호는 반드시 02 or 0xx-xxxx-xxxx 조합이여야합니다."
+    )
+    val companyPhone: String,
 ) {
 
     fun toCompanyInformation(): CompanyInformation {
@@ -23,7 +29,8 @@ data class CompanyInformationRequest (
             this.representativeName,
             this.establishedAt,
             this.workerCount,
-            this.annualSales
+            this.annualSales,
+            this.companyPhone
         )
     }
 

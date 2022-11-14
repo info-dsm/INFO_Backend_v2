@@ -49,6 +49,7 @@ class RegisterCompany(
             )
             saveCompanyPort.save(
                 Company(
+                    request.companyId,
                     request.companyNameRequest.toCompanyName(),
                     request.companyInformation.toCompanyInformation(),
                     request.companyContact.toContactorId(),

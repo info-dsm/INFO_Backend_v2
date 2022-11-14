@@ -10,14 +10,18 @@ import javax.persistence.*
 
 @Entity
 class Company(
+    companyNumber: String,
     companyName: CompanyName,
     companyInformation: CompanyInformation,
     contactor: ContactorId,
     companyIntroduction: CompanyIntroduction,
     isLeading: Boolean,
 ) {
+    @Id
+    @Column(name = "company_number", nullable = false)
+    val companyNumber: String = companyNumber
 
-    @EmbeddedId
+    @Embedded
     var companyName: CompanyName = companyName
 
     @Embedded
@@ -48,7 +52,6 @@ class Company(
     @Column(name = "company_is_associated", nullable = false)
     var isAssociated: Boolean = false
         protected set
-
 
     fun updateLastNoticeYear() {
         if (!this.noticeRegisteredYearList.contains(

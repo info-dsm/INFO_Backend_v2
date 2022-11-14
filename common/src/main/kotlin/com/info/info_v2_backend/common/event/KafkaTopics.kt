@@ -6,5 +6,7 @@ class KafkaTopics {
         const val SAVE_STUDENT = "save-student"
         const val SAVE_CONTACTOR = "save-contactor"
         const val SEND_EMAIL = "send-email"
+        const val UPLOAD_COMPANY_FILE = "upload-company-file"
+        const val REGISTER_COMPANY_FILE = "register-company-file"
     }
 }

@@ -1,0 +1,52 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  main:
+    web-application-type: REACTIVE
+  application:
+    name: apigateway-service
+  cloud:
+
+    config:
+      enabled: false
+    gateway:
+      default-filters:
+        - name: GlobalFilter
+      routes:
+        - id: email-service
+          predicates:
+            - Path=/email/**
+          uri: lb://EMAIL-SERVICE
+          filters:
+            - RewritePath=/email/(?<segment>.*), /$\{segment}
+
+        - id: user-service
+          predicates:
+            - Path=/user/**
+          uri: lb://USER-SERVICE
+          filters:
+            - RewritePath=/user/(?<segment>.*), /$\{segment}
+
+        - id: auth-service
+          predicates:
+            - Path=/auth/**
+          uri: lb://AUTH-SERVICE
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+
+        - id: company-service
+          predicates:
+            - Path=/company/**
+          uri: lb://COMPANY-SERVICE
+          filters:
+            - RewritePath=/company/(?<segment>.*), /$\{segment}
+
+
+
+

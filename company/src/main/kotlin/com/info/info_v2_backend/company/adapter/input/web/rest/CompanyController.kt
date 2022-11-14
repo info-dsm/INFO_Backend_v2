@@ -33,7 +33,9 @@ class CompanyController(
         @RequestPart(required = true) companyLogo: MultipartFile,
         @RequestPart(required = true) companyPhotoList: List<MultipartFile>
     ) {
-        registerCompanyPort.register()
+        registerCompanyPort.register(
+            emailCheckCode, request, businessRegisteredCertificate, companyIntroductionFile, companyLogo, companyPhotoList
+        )
     }
 
     @GetMapping("/hint")

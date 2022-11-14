@@ -13,11 +13,6 @@ data class CompanyContactRequest(
         regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}\$",
         message = "전화번호는 반드시 02 or 0xx-xxxx-xxxx 조합이여야합니다."
     )
-    val companyPhone: String,
-    @field:Pattern(
-        regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}\$",
-        message = "전화번호는 반드시 02 or 0xx-xxxx-xxxx 조합이여야합니다."
-    )
     val contactorPhone: String?,
     @field:Email(message = "올바른 이메일 형식이 아닙니다.")
     val email: String,

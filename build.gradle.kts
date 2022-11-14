@@ -177,7 +177,7 @@ project(":applies") {
     }
 }
 
-project(":aws") {
+project(":file") {
     dependencies {
     }
 }

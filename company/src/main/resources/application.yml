@@ -1,0 +1,63 @@
+spring:
+  application:
+    name: company-service
+  datasource:
+    url: ${dbDefaultUrl}
+    username: ${dbDefaultUsername}
+    password: ${dbDefaultPw}
+    driver-class-name: ${dbDefaultDriver}
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: false
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: info
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+cloud:
+  circuitbreaker:
+    hystrix:
+      enabled: true
+
+server:
+  port: 0
+eureka:
+  instance:
+    # 표기되는 규칙 변경
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+kafka:
+  kafkaServerAddress: localhost:9092
+
+feign:
+  httpclient:
+    enabled: true
+  circuitbreaker:
+    enabled: true
+
+mail:
+  host: smtp.naver.com
+  port: 587
+  username: ${EMAIL_NAME}
+  password: ${EMAIL_PASSWORD}
+  protocol: smtp
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true

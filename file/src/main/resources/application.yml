@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: file-service
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    show-sql: false
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+  datasource:
+    url: ${dbDefaultUrl}
+    username: ${dbDefaultUsername}
+    password: ${dbDefaultPw}
+    driver-class-name: ${dbDefaultDriver}
+
+server:
+  port: 0
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${S3_IAM_ACCESS_KEY}
+      secret-key: ${S3_IAM_SECRET_KEY}
+    region:
+      static: ${S3_REGION}
+    stack:
+      auto: false
+    s3:
+      bucketName: ${S3_BUCKET_NAME}
+
+kafka:
+  kafkaServerAddress: localhost:9092

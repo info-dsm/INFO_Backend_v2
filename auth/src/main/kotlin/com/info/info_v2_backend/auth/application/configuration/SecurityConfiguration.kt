@@ -3,7 +3,6 @@ package com.info.info_v2_backend.auth.application.configuration
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
@@ -16,14 +15,13 @@ import org.springframework.web.cors.CorsUtils
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
-//    private val tokenProvider: TokenProvider,
-//    private val customAuthDetailsService: CustomAuthDetailsService,
     private val objectMapper: ObjectMapper,
 ) {
     @Bean
-    fun passwordEncoder(): PasswordEncoder {
+    fun passwordEncoder(): BCryptPasswordEncoder {
         return BCryptPasswordEncoder()
     }
+
     @Bean
     @Throws(Exception::class)
     fun webSecurityCustomer(): WebSecurityCustomizer {
@@ -48,8 +46,6 @@ class SecurityConfiguration(
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .and().build()
-//            .apply(FilterConfiguration(tokenProvider, customAuthDetailsService, objectMapper))
-//            .and().build()
     }
 
 }

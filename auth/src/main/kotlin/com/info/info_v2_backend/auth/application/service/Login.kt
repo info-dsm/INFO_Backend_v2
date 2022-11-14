@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service
 @Service
 class Login(
     private val authDetailsService: AuthDetailsService,
-    private val passwordEncoder: PasswordEncoder,
     private val tokenProvider: TokenProvider,
-    private val saveCodePort: SaveCodePort
+    private val saveCodePort: SaveCodePort,
+    private val encoder: PasswordEncoder
 ): LoginUsecase {
 
     override fun command(request: LoginRequest): TokenResponse {
         val userDetails = authDetailsService.loadUserByUsername(request.email)
-        if (userDetails.password == passwordEncoder.encode(request.password)){
+        if (encoder.matches(request.password, userDetails.password)){
             val dto = tokenProvider.encode(userDetails.username)
             saveCodePort.save(
                 Code(

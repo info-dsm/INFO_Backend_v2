@@ -4,6 +4,7 @@ import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import org.springframework.data.annotation.Id
 import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.redis.core.TimeToLive
+import org.springframework.data.redis.core.index.Indexed
 
 @RedisHash
 class Code(
@@ -14,15 +15,16 @@ class Code(
 ) {
 
     @Id
-    val identifyKey: String = identifyKey.plus(type.name)
+    var identifyKey: String = identifyKey.plus(type.name)
 
-    val targetEmail: String = identifyKey
+    @Indexed
+    var targetEmail: String = identifyKey
 
     val data: String = data
 
     val type: AuthenticationCodeType = type
 
     @TimeToLive
-    var ttl: Long = timeToLive
+    var timeToLive: Long = timeToLive
 
 }

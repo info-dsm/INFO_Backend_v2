@@ -4,14 +4,12 @@ import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.TokenReissueRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenResponse
 import com.info.info_v2_backend.auth.application.port.input.*
+import com.info.info_v2_backend.common.auth.AuthenticationCodeDto
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.user.adapter.input.event.dto.StudentDto
 import com.info.info_v2_backend.user.adapter.input.event.dto.TeacherDto
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class AuthController(
@@ -19,7 +17,8 @@ class AuthController(
     private val teacherSignupUsecase: TeacherSignupUsecase,
     private val studentSignupUsecase: StudentSignupUsecase,
     private val reissuePort: ReissueUsecase,
-    private val sendCodeUsecase: SendAuthenticationCodeUsecase
+    private val sendCodeUsecase: SendAuthenticationCodeUsecase,
+    private val checkCodeUsecase: CheckCodeUsecase
 ) {
 
     @PostMapping("/login")
@@ -30,6 +29,7 @@ class AuthController(
     }
 
     @PostMapping("/signup/student")
+    @ResponseStatus(HttpStatus.CREATED)
     fun studentSignup(
         @RequestBody request: StudentDto,
         @RequestParam(value = "emailCode") emailAuthenticationCode: String
@@ -38,6 +38,7 @@ class AuthController(
     }
 
     @PostMapping("/signup/teacher")
+    @ResponseStatus(HttpStatus.CREATED)
     fun teacherSignup(
         @RequestBody request: TeacherDto,
         @RequestParam(value = "emailCode") emailAuthenticationCode: String,
@@ -47,6 +48,7 @@ class AuthController(
     }
 
     @PutMapping("/reissue")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     fun reissue(
         @RequestBody request: TokenReissueRequest
     ): TokenResponse {
@@ -54,6 +56,7 @@ class AuthController(
     }
 
     @PutMapping("/code")
+    @ResponseStatus(HttpStatus.CREATED)
     fun sendSignupAuthenticationCode(
         @RequestParam email: String
     ) {
@@ -61,6 +64,11 @@ class AuthController(
             email,
             AuthenticationCodeType.SIGNUP_EMAIL
         )
+    }
+
+    @GetMapping("/code")
+    fun checkCode(@RequestBody request: AuthenticationCodeDto): Boolean {
+        return checkCodeUsecase.check(request)
     }
 
 }

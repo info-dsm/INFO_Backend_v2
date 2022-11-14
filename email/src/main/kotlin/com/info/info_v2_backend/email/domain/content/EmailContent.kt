@@ -21,7 +21,7 @@ class EmailContent(
     @Convert(converter = EmailDataConverter::class)
     val model: Map<String, String>? = map
 
-    @Column(name = "email_record", nullable = true)
+    @Column(name = "email_text", nullable = true)
     var text: String? = text
 
 }

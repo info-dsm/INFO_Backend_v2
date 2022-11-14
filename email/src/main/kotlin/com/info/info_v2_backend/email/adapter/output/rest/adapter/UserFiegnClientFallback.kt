@@ -1,6 +1,5 @@
 package com.info.info_v2_backend.email.adapter.output.rest.adapter
 
-import com.info.info_v2_backend.common.user.UserEmailIdDto
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.openfeign.FallbackFactory
 import org.springframework.stereotype.Component
@@ -12,8 +11,8 @@ class UserFiegnClientFallback: FallbackFactory<UserFeignClient> {
     override fun create(cause: Throwable?): UserFeignClient {
         return object : UserFeignClient {
 
-            override fun loadEmailUser(userId: String): UserEmailIdDto {
-                TODO("Not yet implemented")
+            override fun loadEmailUser(userEmail: String): String {
+                return userEmail
             }
         }
     }

@@ -31,13 +31,13 @@ class MailConfiguration(
         jms.defaultEncoding = "UTF-8"
 
         val pt = Properties()
-        pt[TLS_REQUIRED] = true
-        pt[TLS_ENABLE] = true
-        pt[SMTP_AUTH] = true
-        pt[SMTP_SOCKET_FACTORY_PORT] = 587;
-        pt[SMTP_SOCKET_FACTORY_FALlBACK] = false;
-        pt[TRANSPORT_PROTOCOL] = env.protocol;
-        pt["mail.debug"] = true
+        pt.put(TLS_REQUIRED, true)
+        pt.put(TLS_ENABLE, true)
+        pt.put(SMTP_AUTH, true)
+        pt.put(SMTP_SOCKET_FACTORY_PORT, 587);
+        pt.put(SMTP_SOCKET_FACTORY_FALlBACK, false);
+        pt.put(TRANSPORT_PROTOCOL, env.protocol);
+        pt.put("mail.debug", true)
 
         jms.javaMailProperties = pt
         return jms

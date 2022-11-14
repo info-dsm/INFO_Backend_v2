@@ -13,7 +13,7 @@ class EmailConsumer(
     private val sendEmailUsecase: SendEmailUsecase
 ) {
 
-    @KafkaListener(topics = [KafkaTopics.SEND_EMAIL], containerFactory = "sendEmailNotificationRequestChangeListener")
+    @KafkaListener(topics = [KafkaTopics.SEND_EMAIL], groupId = "info", containerFactory = "sendEmailNotificationRequestChangeListener")
     fun sendEmailNotification(
         request: SendEmailNotificationRequest
     ) {

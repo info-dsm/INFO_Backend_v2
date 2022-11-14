@@ -5,6 +5,7 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.email.adapter.output.email.configuration.MailProperty
 import com.info.info_v2_backend.email.application.port.output.SmtpSendPort
 import org.springframework.mail.MailException
+import org.springframework.mail.MailParseException
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
@@ -19,7 +20,6 @@ class SmtpSendAdapter(
     private val mailProperty: MailProperty
 ): SmtpSendPort{
 
-    @kotlin.jvm.Throws(MailException::class)
     override fun send(to: String, title: String, templatePath: String, models: Map<String, String>?, data: String?) {
         val message: MimeMessage = jms.createMimeMessage()
 

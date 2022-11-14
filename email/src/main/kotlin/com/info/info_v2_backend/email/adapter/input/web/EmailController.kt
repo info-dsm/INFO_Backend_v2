@@ -18,7 +18,7 @@ class EmailController(
     fun sendEmailText(
         @RequestBody request: SendEmailTextRequest
     ) {
-        sendEmailUsecase.sendEmailTextCommand(request)
+        sendEmailUsecase.sendEmailTextCommand(request, null)
     }
 
 }

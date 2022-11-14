@@ -14,35 +14,38 @@ import com.info.info_v2_backend.email.domain.EmailRecord
 import com.info.info_v2_backend.email.domain.content.EmailContent
 import com.info.info_v2_backend.email.domain.user.Sender
 import org.springframework.mail.MailException
+import org.springframework.mail.MailParseException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 
 @Service
-@Transactional
 class SendEmail(
     private val emailUserPort: LoadEmailUserPort,
     private val emailRecordPersistencePort: EmailRecordPersistencePort,
     private val smtpSendPort: SmtpSendPort
 ): SendEmailUsecase {
 
-    private fun command(targetEmail: String, emailContent: EmailContent, senderEmail: String?) {
-        val target = emailUserPort.loadEmailUser(targetEmail)
+    override fun command(targetEmail: String, emailContent: EmailContent, senderEmail: String?) {
         val sender = emailUserPort.loadEmailUser(
             senderEmail?:
             (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.getHeader(HeaderProperty.USER_EMAIL)
         )
 
+        val target = emailUserPort.loadEmailUser(targetEmail)?: let {
+            if (sender == "system") return@let targetEmail
+            else throw BusinessException("사용자를 찾지 못했습니다. -> ${targetEmail}", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+        }
+
         val record = emailRecordPersistencePort.save(
             EmailRecord(
                 com.info.info_v2_backend.email.domain.user.Target(
-                    target.userEmail,
-                    target.userId
+                    target,
                 ),
                 Sender(
-                    sender.userEmail,
-                    sender.userId
+                    sender,
                 ),
                 emailContent
             )
@@ -50,7 +53,7 @@ class SendEmail(
 
         try {
             smtpSendPort.send(
-                target.userEmail,
+                target,
                 record.content.title,
                 record.content.templateType.templatePath,
                 record.content.model,
@@ -58,9 +61,11 @@ class SendEmail(
             )
         } catch (e: MailException) {
             record.fail()
-            throw BusinessException(e.message, ErrorCode.BAD_GATEWAY)
+            emailRecordPersistencePort.save(record)
+            throw BusinessException(e.message, ErrorCode.BAD_GATEWAY_ERROR)
         }
         record.complete()
+        emailRecordPersistencePort.save(record)
     }
 
     override fun sendEmailTextCommand(command: SendEmailTextRequest, senderEmail: String?) {
@@ -81,7 +86,7 @@ class SendEmail(
             command.targetEmail,
             EmailContent(
                 command.title,
-                EmailTemplateType.TEXT,
+                EmailTemplateType.NOTIFICATION,
                 command.data,
                 null
             ),

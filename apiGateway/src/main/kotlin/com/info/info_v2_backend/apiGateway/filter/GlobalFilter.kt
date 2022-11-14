@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.apiGateway.filter
 
+import com.info.info_v2_backend.apiGateway.exception.GlobalExceptionHandler
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.gateway.filter.GatewayFilter
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory

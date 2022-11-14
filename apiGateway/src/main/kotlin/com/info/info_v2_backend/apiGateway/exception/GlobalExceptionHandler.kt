@@ -3,7 +3,7 @@ package com.info.info_v2_backend.apiGateway.exception
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler
+import com.info.info_v2_backend.common.exception.ErrorResponse
 import org.springframework.core.ResolvableType
 import org.springframework.core.annotation.Order
 import org.springframework.core.codec.Hints
@@ -13,15 +13,14 @@ import org.springframework.http.codec.json.Jackson2JsonEncoder
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
+import org.springframework.web.server.WebExceptionHandler
 import reactor.core.publisher.Mono
-import java.net.ConnectException
-import java.net.SocketException
 
 @Component
 @Order(-1)
 class GlobalExceptionHandler(
     private val objectMapper: ObjectMapper
-): ErrorWebExceptionHandler {
+): WebExceptionHandler {
     override fun handle(exchange: ServerWebExchange, ex: Throwable): Mono<Void> {
         val response = exchange.response
         response.headers.contentType = MediaType.APPLICATION_JSON

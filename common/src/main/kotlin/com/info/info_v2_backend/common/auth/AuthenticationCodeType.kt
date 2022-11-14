@@ -8,5 +8,6 @@ enum class AuthenticationCodeType(
     CHANGE_EMAIL(60 * 60 * 24, 4),
     CHANGE_PASSWORD(60 * 60, 4),
     TEACHER(60 * 60 * 24, 4),
+    REFRESH(60 * 60 * 24 * 14, 0)
 
 }

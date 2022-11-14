@@ -148,7 +148,7 @@ project(":email") {
 
 project(":comment") {
     dependencies {
-        implementation(project(":commonEntity"))
+
     }
 }
 
@@ -160,6 +160,8 @@ project(":noticeQuery") {
 
 project(":company") {
     dependencies {
+        implementation(project(":common"))
+        implementation(project(":user"))
         implementation(project(":commonEntity"))
     }
 }

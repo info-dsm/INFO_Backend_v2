@@ -1,6 +1,8 @@
 package com.info.info_v2_backend.user.domain
 
 import com.info.info_v2_backend.commonEntity.entity.TimeEntity
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CommonUserDetails
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CustomGrantedAuthority
 import org.hibernate.annotations.*
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -82,6 +84,18 @@ abstract class User(
         email.let {
             this.email = it
         }
+    }
+
+    fun toCommonUserDetails(): CommonUserDetails {
+        val authorityList: MutableList<CustomGrantedAuthority> = ArrayList()
+        this.roleList.map {
+            authorityList.add(CustomGrantedAuthority(it.toString()))
+        }
+        return CommonUserDetails(
+            this.password,
+            this.username,
+            authorityList
+        )
     }
 
 }

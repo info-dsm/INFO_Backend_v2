@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.user.adapter.input.event.dto
+package com.info.info_v2_backend.user.adapter.input.web.rest.dto.response
 
 import com.info.info_v2_backend.user.domain.Role
 import org.springframework.security.core.GrantedAuthority
@@ -6,18 +6,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 class CommonUserDetails(
-    val roleList: MutableList<Role>,
     private val password: String,
-    val userEmail: String
+    private val username: String,
+    private val authorities: List<CustomGrantedAuthority>
 ): UserDetails {
 
 
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        var authorityList: MutableList<GrantedAuthority> = ArrayList()
-        this.roleList.map{
-            authorityList.add(SimpleGrantedAuthority(it.toString()))
-        }
-        return authorityList
+    override fun getAuthorities(): List<CustomGrantedAuthority> {
+        return this.authorities
     }
 
     override fun getPassword(): String {
@@ -25,7 +21,7 @@ class CommonUserDetails(
     }
 
     override fun getUsername(): String {
-        return this.userEmail
+        return this.username
     }
 
     override fun isAccountNonExpired(): Boolean {

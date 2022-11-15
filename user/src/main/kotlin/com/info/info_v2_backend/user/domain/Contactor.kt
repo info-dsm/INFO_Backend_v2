@@ -16,18 +16,24 @@ class Contactor(
     password: String,
     role: Role,
     rank: String,
-    phoneNumber: String?
+    phoneNumber: String?,
+    passwordHint: String?,
+    companyNumber: String
 ): User(
     name,
     email,
     password,
-    role
+    role,
+    passwordHint
 ) {
     @Column(name = "contactor_rank", nullable = false)
     val rank: String = rank
 
     @Column(name = "contactor_phone_number", nullable = true, length = 30)
     val phoneNumber: String? = phoneNumber
+
+    @Column(name = "contactor_company_number", nullable = false)
+    val companyNumber: String = companyNumber
 
 
 

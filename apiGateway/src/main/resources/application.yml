@@ -6,6 +6,9 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
+jwt:
+  secretKey: dafdsvdavads
+
 spring:
   main:
     web-application-type: REACTIVE

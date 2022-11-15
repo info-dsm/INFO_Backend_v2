@@ -14,6 +14,7 @@ import javax.servlet.ServletResponse
 
 @SpringBootApplication
 @EnableDiscoveryClient
+@ConfigurationPropertiesScan
 class ApiGatewayApplication
 fun main(args: Array<String>)  {
     runApplication<ApiGatewayApplication>(*args)

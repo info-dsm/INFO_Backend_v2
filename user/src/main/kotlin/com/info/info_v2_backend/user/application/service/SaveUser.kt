@@ -23,7 +23,8 @@ class SaveUser(
     }
 
     override fun saveContactor(contactor: ContactorDto) {
-        saveUserPort.saveContactor(hashPassword(contactor) as ContactorDto)
+        val contactor = hashPassword(contactor) as ContactorDto
+        saveUserPort.saveContactor(contactor)
     }
 
     private fun hashPassword(user: UserDto): UserDto {

@@ -13,10 +13,12 @@ import javax.persistence.Entity
 @DiscriminatorValue("company_introduction_file")
 @OnDelete(action = OnDeleteAction.CASCADE)
 class CompanyFile(
+    id: String,
     fileDto: FileDto,
     companyFileType: CompanyFileClassificationType,
     companyId: String
 ): File(
+    id,
     fileDto.fileUrl,
     fileDto.fileType,
     fileDto.extension,

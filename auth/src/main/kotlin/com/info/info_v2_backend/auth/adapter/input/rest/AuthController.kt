@@ -18,7 +18,7 @@ class AuthController(
     private val studentSignupUsecase: StudentSignupUsecase,
     private val reissuePort: ReissueUsecase,
     private val sendCodeUsecase: SendAuthenticationCodeUsecase,
-    private val checkCodeUsecase: CheckCodeUsecase
+    private val checkCodeUsecase: CheckCodeUsecase,
 ) {
 
     @PostMapping("/login")
@@ -55,6 +55,7 @@ class AuthController(
         return reissuePort.command(request)
     }
 
+
     @PutMapping("/code")
     @ResponseStatus(HttpStatus.CREATED)
     fun sendSignupAuthenticationCode(
@@ -66,7 +67,7 @@ class AuthController(
         )
     }
 
-    @GetMapping("/code")
+    @PostMapping("/code")
     fun checkCode(@RequestBody request: AuthenticationCodeDto): Boolean {
         return checkCodeUsecase.check(request)
     }

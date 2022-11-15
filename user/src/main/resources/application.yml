@@ -32,3 +32,10 @@ eureka:
 
 kafka:
   kafkaServerAddress: localhost:9092
+
+feign:
+  client:
+    config:
+      FileFiegnClient:
+        connectTimeout: 10000
+        readTimeout: 20000

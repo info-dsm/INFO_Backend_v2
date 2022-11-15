@@ -5,5 +5,5 @@ import org.springframework.web.multipart.MultipartFile
 
 interface UploadCompanyFileUsecase {
 
-    fun uploadCompanyFile(file: MultipartFile, classification: CompanyFileClassificationType, companyId: String)
+    fun uploadCompanyFile(file: MultipartFile, classification: CompanyFileClassificationType, companyId: String): String
 }

@@ -19,7 +19,8 @@ class Student(
     name,
     email,
     password,
-    Role.STUDENT
+    Role.STUDENT,
+    null
 ) {
     val studentKey: String = studentKey
 

@@ -9,6 +9,7 @@ import com.info.info_v2_backend.auth.domain.Code
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.common.security.HeaderProperty
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,15 +19,15 @@ class Reissue(
     private val loadCodePort: LoadCodePort
 ): ReissueUsecase {
     override fun command(request: TokenReissueRequest): TokenResponse {
-        val subject = tokenProvider.getSubjectWithExpiredCheck(request.accessToken)
-        val refreshToken = loadCodePort.load(subject).takeIf {
+        val claims = tokenProvider.getClaimsWithExpiredCheck(request.accessToken)
+        val refreshToken = loadCodePort.load(claims.subject).takeIf {
             it.type == AuthenticationCodeType.REFRESH
         }?: throw BusinessException("RefreshToken을 찾지 못했습니다.", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
         if (refreshToken.data == request.refreshToken) {
-            val dto = tokenProvider.encode(subject)
+            val dto = tokenProvider.encode(claims.subject, claims[HeaderProperty.COMPANY_NUMBER] as String?)
             saveCodePort.save(
                 Code(
-                    subject,
+                    claims.subject,
                     dto.refreshToken,
                     AuthenticationCodeType.REFRESH.timeToLive,
                     AuthenticationCodeType.REFRESH

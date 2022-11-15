@@ -22,7 +22,8 @@ class Login(
     override fun command(request: LoginRequest): TokenResponse {
         val userDetails = authDetailsService.loadUserByUsername(request.email)
         if (encoder.matches(request.password, userDetails.password)){
-            val dto = tokenProvider.encode(userDetails.username)
+            val dto = tokenProvider.encode(userDetails.username, userDetails.getCompanyNumber())
+            println("CompanyNumber: ${userDetails.getCompanyNumber()}")
             saveCodePort.save(
                 Code(
                     userDetails.username,

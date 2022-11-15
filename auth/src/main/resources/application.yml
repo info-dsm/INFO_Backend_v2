@@ -12,6 +12,13 @@ spring:
       group-id: info
       auto-offset-reset: latest
 
+eureka:
+  instance:
+    # 표기되는 규칙 변경
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
 
 server:
   port: 0

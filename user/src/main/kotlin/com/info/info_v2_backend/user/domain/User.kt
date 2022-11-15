@@ -21,17 +21,21 @@ abstract class User(
     name: String,
     email: String,
     password: String,
-    role: Role
+    role: Role,
+    passwordHint: String?
 ): TimeEntity(), UserDetails {
 
     @Id
-    var email: String = email
-        protected set
+    private val email: String = email
 
     var name: String = name
         protected set
 
     private var password: String = password
+
+    @Column(name = "password_hint", nullable = true)
+    var passwordHint: String? = passwordHint
+        protected set
 
     override fun getPassword(): String {
         return this.password
@@ -80,11 +84,7 @@ abstract class User(
     fun editPassword(password: String){
         this.password = password
     }
-    fun changeEmail(email: String){
-        email.let {
-            this.email = it
-        }
-    }
+
 
     fun toCommonUserDetails(): CommonUserDetails {
         val authorityList: MutableList<CustomGrantedAuthority> = ArrayList()
@@ -94,7 +94,10 @@ abstract class User(
         return CommonUserDetails(
             this.password,
             this.username,
-            authorityList
+            authorityList,
+            if (this is Contactor) {
+                (this as Contactor).companyNumber
+            } else null
         )
     }
 

@@ -15,6 +15,7 @@ import javax.persistence.*
 @DiscriminatorColumn(name = "file_type", length = 50)
 @Entity
 abstract class File(
+    id: String,
     fileUrl: String,
     fileType: FileType,
     extension: String,
@@ -23,7 +24,7 @@ abstract class File(
 
     @Id
     @Column(name = "file_id", nullable = false)
-    val id: String = UUID.randomUUID().toString()
+    val id: String = id
 
     @Column(name = "file_url", nullable = false, length = 500)
     var fileUrl: String = fileUrl

@@ -29,10 +29,17 @@ class SendEmail(
 ): SendEmailUsecase {
 
     override fun command(targetEmail: String, emailContent: EmailContent, senderEmail: String?) {
-        val sender = emailUserPort.loadEmailUser(
-            senderEmail?:
-            (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.getHeader(HeaderProperty.USER_EMAIL)
-        )
+        var sender = ""
+        if (senderEmail == "system") {
+            sender = "system"
+        } else {
+            sender = emailUserPort.loadEmailUser(
+                senderEmail
+                    ?: (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.getHeader(
+                        HeaderProperty.USER_EMAIL
+                    )
+            )?: throw BusinessException("사용자를 찾지 못했습니다. -> ${targetEmail}", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+        }
 
         val target = emailUserPort.loadEmailUser(targetEmail)?: let {
             if (sender == "system") return@let targetEmail

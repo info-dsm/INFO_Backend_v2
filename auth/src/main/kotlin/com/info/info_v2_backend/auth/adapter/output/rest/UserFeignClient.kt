@@ -13,4 +13,5 @@ interface UserFeignClient: UserServicePort {
         @RequestParam userEmail: String
     ): CommonUserDetails?
 
+
 }

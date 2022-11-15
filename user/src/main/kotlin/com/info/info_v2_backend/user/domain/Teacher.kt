@@ -17,7 +17,8 @@ class Teacher(
     name,
     email,
     password,
-    Role.TEACHER
+    Role.TEACHER,
+    null
 ) {
 
 }

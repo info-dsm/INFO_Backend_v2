@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.company.domain
 
+import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
 import com.info.info_v2_backend.company.domain.businessArea.BusinessAreaTagged
 import com.info.info_v2_backend.company.domain.information.CompanyInformation
 import com.info.info_v2_backend.company.domain.introduction.CompanyIntroduction
@@ -45,7 +46,7 @@ class Company(
         protected set
 
     @ElementCollection
-    var noticeRegisteredYearList: MutableList<Int> = ArrayList()
+    var isNoticeRegisteredYearList: MutableList<Int> = ArrayList()
         protected set
 
 
@@ -53,10 +54,14 @@ class Company(
     var isAssociated: Boolean = false
         protected set
 
+    fun addBusinessAreaTagged(businessAreaTagged: BusinessAreaTagged) {
+        this.businessAreaTaggedList.add(businessAreaTagged)
+    }
+
     fun updateLastNoticeYear() {
-        if (!this.noticeRegisteredYearList.contains(
+        if (!this.isNoticeRegisteredYearList.contains(
                 LocalDate.now().year
-            )) this.noticeRegisteredYearList.add(LocalDate.now().year)
+            )) this.isNoticeRegisteredYearList.add(LocalDate.now().year)
     }
 
     fun makeAssociated() {

@@ -23,8 +23,10 @@ enum class ErrorCode(
     PERSISTENCE_DATA_NOT_FOUND_ERROR(404, "C09", "저장된 값을 찾지 못했습니다."),
 
     //Unauthorized
+    TOKEN_NEED_ERROR(401, "C14", "토큰이 필요합니다."),
     INVALID_TOKEN_ERROR(401, "C11", "올바르지 않은 토큰입니다."),
-    EXPIRED_TOKEN_ERROR(401, "C13", "토큰이 만료되었습니다.")
+    EXPIRED_TOKEN_ERROR(401, "C13", "토큰이 만료되었습니다."),
+    HEADER_NOT_FOUND_ERROR(401, "C15", "헤더를 찾지 못했습니다.")
 
 
 

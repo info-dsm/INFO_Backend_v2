@@ -4,6 +4,7 @@ import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenRespon
 import com.info.info_v2_backend.auth.application.env.JwtProperty
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.common.security.HeaderProperty
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
@@ -19,12 +20,13 @@ class TokenProvider(
     private val jwtProperty: JwtProperty,
     private val customAuthDetailsService: AuthDetailsService
 ){
-    fun encode(subject: String): TokenResponse {
+    fun encode(subject: String, companyNumber: String?): TokenResponse {
         return TokenResponse(
             Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, jwtProperty.secretKey)
                 .setSubject(subject)
                 .claim("type", "access")
+                .claim(HeaderProperty.COMPANY_NUMBER, companyNumber)
                 .setIssuedAt(Date())
                 .setExpiration(Date(Date().time + (jwtProperty.accessExpiredAt * 1000)))
                 .compact()
@@ -49,12 +51,12 @@ class TokenProvider(
         }
     }
 
-    fun getSubjectWithExpiredCheck(token: String): String {
+    fun getClaimsWithExpiredCheck(token: String): Claims {
         val body = decodeBody(token)
         val now = Date()
         if (now.after(Date(body.expiration.time))) throw BusinessException("토큰이 만료되었습니다. -> ${Date(body.expiration.time)}", ErrorCode.EXPIRED_TOKEN_ERROR)
-        return body.subject
-            ?: throw BusinessException("토큰 내부 값이 비었습니다.", ErrorCode.INVALID_TOKEN_ERROR)
+        body.subject?: throw BusinessException("토큰 내부 값이 비었습니다.", ErrorCode.INVALID_TOKEN_ERROR)
+        return body
     }
 
     fun isExpired(token: String): Boolean {
@@ -63,9 +65,5 @@ class TokenProvider(
         return now.after(Date(now.time + body.expiration.time))
     }
 
-    fun authentication(token: String): Authentication {
-        val userDetails: UserDetails = customAuthDetailsService.loadUserByUsername(getSubjectWithExpiredCheck(token))
-        return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
-    }
 
 }

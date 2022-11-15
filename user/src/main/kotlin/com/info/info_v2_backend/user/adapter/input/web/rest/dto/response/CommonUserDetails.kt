@@ -8,9 +8,13 @@ import org.springframework.security.core.userdetails.UserDetails
 class CommonUserDetails(
     private val password: String,
     private val username: String,
-    private val authorities: List<CustomGrantedAuthority>
+    private val authorities: List<CustomGrantedAuthority>,
+    private val companyNumber: String?
 ): UserDetails {
 
+    fun getCompanyNumber(): String? {
+        return this.companyNumber
+    }
 
     override fun getAuthorities(): List<CustomGrantedAuthority> {
         return this.authorities

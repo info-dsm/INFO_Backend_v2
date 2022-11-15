@@ -26,7 +26,10 @@ class GlobalExceptionHandler(
         response.headers.contentType = MediaType.APPLICATION_JSON
 
         val errorResponse = when (ex) {
-            is ResponseStatusException -> ErrorResponse(code = ErrorCode.FRAME_WORK_INTERNAL_ERROR)
+            is ResponseStatusException -> {
+                println(ex.message)
+                ErrorResponse(code = ErrorCode.FRAME_WORK_INTERNAL_ERROR)
+            }
             is BusinessException -> {
                 response.statusCode = HttpStatus.valueOf(ex.errorCode.status)
                 ErrorResponse(code = ex.errorCode)

@@ -8,7 +8,9 @@ class ContactorDto(
     email: String,
     password: String,
     val rank: String,
-    val phoneNumber: String?
+    val phoneNumber: String?,
+    val passwordHint: String?,
+    val companyNumber: String
 ): UserDto(
     name,
     email,
@@ -22,7 +24,9 @@ class ContactorDto(
             this.password,
             Role.CONTACTOR,
             this.rank,
-            this.phoneNumber
+            this.phoneNumber,
+            this.passwordHint,
+            this.companyNumber
         )
     }
 

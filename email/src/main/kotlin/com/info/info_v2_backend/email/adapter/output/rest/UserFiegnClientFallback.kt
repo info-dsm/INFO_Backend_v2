@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.email.adapter.output.rest.adapter
+package com.info.info_v2_backend.email.adapter.output.rest
 
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.openfeign.FallbackFactory

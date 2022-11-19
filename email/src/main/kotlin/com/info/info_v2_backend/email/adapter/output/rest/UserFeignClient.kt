@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.email.adapter.output.rest.adapter
+package com.info.info_v2_backend.email.adapter.output.rest
 
 import com.info.info_v2_backend.email.application.port.output.LoadEmailUserPort
 import org.springframework.cloud.openfeign.FeignClient

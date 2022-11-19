@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface CompanyFileRepostiory: JpaRepository<CompanyFile, String> {
 
+    fun findByCompanyId(companyNumber: String): List<CompanyFile>
 }

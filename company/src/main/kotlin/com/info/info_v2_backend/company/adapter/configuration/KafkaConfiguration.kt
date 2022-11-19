@@ -1,9 +1,9 @@
 package com.info.info_v2_backend.company.adapter.configuration
 
-import com.info.info_v2_backend.common.email.dto.SendEmailNotificationRequest
-import com.info.info_v2_backend.common.file.RegisterCompanyFileDto
-import com.info.info_v2_backend.common.file.UploadCompanyFileDto
-import com.info.info_v2_backend.user.adapter.input.event.dto.ContactorDto
+import com.info.info_v2_backend.common.file.dto.RegisterCompanyFileDto
+import com.info.info_v2_backend.common.file.dto.UploadCompanyFileDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveContactorDto
+import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
@@ -28,7 +28,7 @@ class KafkaConfiguration(
 
 
     @Bean
-    fun contactorDtoProducerFactory(): ProducerFactory<String, ContactorDto> {
+    fun contactorDtoProducerFactory(): ProducerFactory<String, SaveContactorDto> {
         return DefaultKafkaProducerFactory(factoryConfigs())
     }
 
@@ -46,6 +46,23 @@ class KafkaConfiguration(
         )
     }
 
+    @Bean
+    fun stringConsumerFactor(): ConsumerFactory<String, String> {
+        return DefaultKafkaConsumerFactory(
+            stringFactoryConfigs(),
+            StringDeserializer(),
+            StringDeserializer()
+        )
+    }
+
+    private fun stringFactoryConfigs(): MutableMap<String, Any> {
+        val configs: MutableMap<String, Any> = HashMap()
+        configs[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
+        configs[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+        configs[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
+        return configs
+    }
+
     private fun factoryConfigs(): MutableMap<String, Any> {
         val configs: MutableMap<String, Any> = HashMap()
         configs[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
@@ -55,7 +72,7 @@ class KafkaConfiguration(
     }
 
     @Bean
-    fun contactorDtoKafkaTemplate(): KafkaTemplate<String, ContactorDto> {
+    fun contactorDtoKafkaTemplate(): KafkaTemplate<String, SaveContactorDto> {
         return KafkaTemplate(contactorDtoProducerFactory())
     }
 
@@ -68,6 +85,13 @@ class KafkaConfiguration(
     fun registerCompanyFileDtoChangeListener(): ConcurrentKafkaListenerContainerFactory<String, RegisterCompanyFileDto> {
         val factory = ConcurrentKafkaListenerContainerFactory<String, RegisterCompanyFileDto>()
         factory.consumerFactory = registerCompanyFileDtoConsumerFactory()
+        return factory
+    }
+
+    @Bean
+    fun stringChangeListener(): ConcurrentKafkaListenerContainerFactory<String, String> {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
+        factory.consumerFactory = stringConsumerFactor()
         return factory
     }
 

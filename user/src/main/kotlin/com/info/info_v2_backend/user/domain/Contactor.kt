@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.user.domain
 
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.ContactorResponse
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import javax.persistence.Column
@@ -35,6 +36,17 @@ class Contactor(
     @Column(name = "contactor_company_number", nullable = false)
     val companyNumber: String = companyNumber
 
+
+    fun toContactorResponse(): ContactorResponse {
+        return ContactorResponse(
+            this.name,
+            this.email,
+            this.rank,
+            this.phoneNumber,
+            this.passwordHint,
+            this.companyNumber
+        )
+    }
 
 
 }

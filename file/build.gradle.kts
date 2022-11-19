@@ -18,4 +18,7 @@ dependencies {
     //Kafka
     implementation("org.springframework.kafka:spring-kafka")
 
+    implementation("commons-fileupload:commons-fileupload:1.4")
+
+
 }

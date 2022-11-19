@@ -6,5 +6,9 @@ class KafkaTopics {
         const val SAVE_STUDENT = "save-student"
         const val SAVE_CONTACTOR = "save-contactor"
         const val SEND_EMAIL = "send-email"
+        const val REGISTER_COMPANY_FILE = "register-company-file"
+        const val UPDATE_LAST_NOTICED_COMPANY = "update-last-noticed-company-year"
+        const val ADD_NOTICE_APPLIES_COUNT = "add-notice-applies-count"
+        const val MINUS_NOTICE_APPLIES_COUNT = "minus-notice-applies_count"
     }
 }

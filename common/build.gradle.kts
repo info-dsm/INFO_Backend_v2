@@ -4,4 +4,6 @@ val jar: Jar by tasks
 jar.enabled = true
 
 dependencies {
+    implementation("commons-fileupload:commons-fileupload:1.4")
+
 }

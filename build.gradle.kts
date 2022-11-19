@@ -152,11 +152,6 @@ project(":comment") {
     }
 }
 
-project(":noticeQuery") {
-    dependencies {
-        implementation(project(":common"))
-    }
-}
 
 project(":company") {
     dependencies {
@@ -166,11 +161,6 @@ project(":company") {
     }
 }
 
-project(":companyQuery") {
-    dependencies {
-        implementation(project(":common"))
-    }
-}
 
 project(":applies") {
     dependencies {

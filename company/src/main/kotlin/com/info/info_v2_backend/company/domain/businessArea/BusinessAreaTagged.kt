@@ -6,6 +6,7 @@ import org.springframework.data.domain.Persistable
 import javax.persistence.*
 
 
+
 @Entity
 @IdClass(BusinessAreaTaggedIdClass::class)
 @Table(name = "business_area_tagged")
@@ -21,7 +22,7 @@ class BusinessAreaTagged(
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_number", nullable = false)
     var company: Company = company
 
     override fun getId(): String? {

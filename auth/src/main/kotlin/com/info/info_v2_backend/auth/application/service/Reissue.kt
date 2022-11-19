@@ -9,7 +9,7 @@ import com.info.info_v2_backend.auth.domain.Code
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.common.security.HeaderProperty
+import com.info.info_v2_backend.common.auth.HeaderProperty
 import org.springframework.stereotype.Service
 
 @Service
@@ -24,7 +24,7 @@ class Reissue(
             it.type == AuthenticationCodeType.REFRESH
         }?: throw BusinessException("RefreshToken을 찾지 못했습니다.", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
         if (refreshToken.data == request.refreshToken) {
-            val dto = tokenProvider.encode(claims.subject, claims[HeaderProperty.COMPANY_NUMBER] as String?)
+            val dto = tokenProvider.encode(claims.subject, claims[HeaderProperty.COMPANY_NUMBER] as String?, claims[HeaderProperty.AUTH_LEVEL] as String)
             saveCodePort.save(
                 Code(
                     claims.subject,

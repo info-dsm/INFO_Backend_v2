@@ -7,8 +7,8 @@ import com.info.info_v2_backend.auth.application.port.output.SaveUserPort
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.user.adapter.input.event.dto.StudentDto
-import com.info.info_v2_backend.user.adapter.input.event.dto.TeacherDto
+import com.info.info_v2_backend.common.user.SaveStudentDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,7 +17,7 @@ class Signup(
     private val loadAuthenticationCodePort: LoadCodePort
 ): StudentSignupUsecase, TeacherSignupUsecase {
 
-    override fun command(request: StudentDto, emailAuthenticationCode: String) {
+    override fun command(request: SaveStudentDto, emailAuthenticationCode: String) {
         if (authenticateCode(request.email, AuthenticationCodeType.SIGNUP_EMAIL, emailAuthenticationCode)) {
             saveUserPort.saveStudentPort(
                 request
@@ -25,7 +25,7 @@ class Signup(
         } else throw BusinessException("인증번호가 일치하지 않습니다. -> ${emailAuthenticationCode}", ErrorCode.NOT_MATCHED_ERROR)
     }
 
-    override fun command(request: TeacherDto, emailAuthenticationCode: String, teacherCode: String) {
+    override fun command(request: SaveTeacherDto, emailAuthenticationCode: String, teacherCode: String) {
         if (authenticateCode(request.email, AuthenticationCodeType.SIGNUP_EMAIL, emailAuthenticationCode)) {
             if (authenticateCode(request.email, AuthenticationCodeType.TEACHER, teacherCode)) {
                 return saveUserPort.saveTeacherPort(

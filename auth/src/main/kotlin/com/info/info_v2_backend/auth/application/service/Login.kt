@@ -8,6 +8,7 @@ import com.info.info_v2_backend.auth.domain.Code
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.user.domain.Role
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -22,7 +23,7 @@ class Login(
     override fun command(request: LoginRequest): TokenResponse {
         val userDetails = authDetailsService.loadUserByUsername(request.email)
         if (encoder.matches(request.password, userDetails.password)){
-            val dto = tokenProvider.encode(userDetails.username, userDetails.getCompanyNumber())
+            val dto = tokenProvider.encode(userDetails.username, userDetails.getCompanyNumber(), userDetails.authorities.first().role)
             println("CompanyNumber: ${userDetails.getCompanyNumber()}")
             saveCodePort.save(
                 Code(

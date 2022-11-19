@@ -1,13 +1,9 @@
 package com.info.info_v2_backend.company.domain.introduction
 
 
-import com.info.info_v2_backend.common.file.CompanyFileClassificationType
-import javax.persistence.CascadeType
+import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import javax.persistence.Column
 import javax.persistence.Embeddable
-import javax.persistence.JoinColumn
-import javax.persistence.OneToMany
-import javax.persistence.OneToOne
 
 @Embeddable
 class CompanyIntroduction(
@@ -24,6 +20,10 @@ class CompanyIntroduction(
     @Column(name = "company_logo_file_id")
     var companyLogoFileId: String? = null
         protected set
+
+    fun changeIntroduction(introduction: String) {
+        this.introduction = introduction
+    }
 
     fun changeCompanyIntroductionFile(
         fileId: String,

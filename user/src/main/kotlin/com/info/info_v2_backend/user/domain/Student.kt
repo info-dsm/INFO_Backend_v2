@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.user.domain
 
+import com.info.info_v2_backend.common.user.StudentDto
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import java.time.Year
@@ -38,9 +39,19 @@ class Student(
 //    var applicantList: MutableList<Applicant> = ArrayList()
 //        protected set
 
-    @Column(name = "github_link", nullable = false)
+    @Column(name = "github_link")
     var githubLink: String? = githubLink
         protected set
+
+    fun toStudentDto(): StudentDto {
+        return StudentDto(
+            this.studentKey,
+            this.name,
+            this.email,
+            this.entranceYear,
+            this.githubLink
+        )
+    }
 
 
 }

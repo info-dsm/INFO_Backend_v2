@@ -3,7 +3,7 @@ package com.info.info_v2_backend.apiGateway.filter
 import com.info.info_v2_backend.apiGateway.property.JwtProperty
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.common.security.HeaderProperty
+import com.info.info_v2_backend.common.auth.HeaderProperty
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import org.slf4j.LoggerFactory
@@ -45,8 +45,11 @@ class GlobalFilter(
                 request.mutate().header(HeaderProperty.USER_EMAIL, body.subject)
 
                 body[HeaderProperty.COMPANY_NUMBER]?. let {
-                    println(it)
+                    println("Company Number: $it")
                     request.mutate().header(HeaderProperty.COMPANY_NUMBER, it as String)
+                }
+                body[HeaderProperty.AUTH_LEVEL]?.let {
+                    request.mutate().header(HeaderProperty.AUTH_LEVEL, it as String)
                 }
 
                 println(request.headers[HeaderProperty.COMPANY_NUMBER])

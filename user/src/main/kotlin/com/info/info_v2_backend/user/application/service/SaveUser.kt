@@ -1,11 +1,11 @@
 package com.info.info_v2_backend.user.application.service
 
-import com.info.info_v2_backend.user.adapter.input.event.dto.ContactorDto
-import com.info.info_v2_backend.user.adapter.input.event.dto.StudentDto
-import com.info.info_v2_backend.user.adapter.input.event.dto.TeacherDto
-import com.info.info_v2_backend.user.adapter.input.event.dto.UserDto
-import com.info.info_v2_backend.user.application.port.`in`.SaveUserUsecase
-import com.info.info_v2_backend.user.application.port.out.SaveUserPort
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveContactorDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveUserDto
+import com.info.info_v2_backend.user.application.port.input.SaveUserUsecase
+import com.info.info_v2_backend.user.application.port.output.SaveUserPort
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -14,20 +14,20 @@ class SaveUser(
     private val saveUserPort: SaveUserPort,
     private val encoder: PasswordEncoder
 ): SaveUserUsecase {
-    override fun saveStudent(student: StudentDto) {
-        saveUserPort.saveStudent(hashPassword(student) as StudentDto)
+    override fun saveStudent(student: SaveStudentDto) {
+        saveUserPort.saveStudent(hashPassword(student) as SaveStudentDto)
     }
 
-    override fun saveTeacher(teacher: TeacherDto) {
-        saveUserPort.saveTeacher(hashPassword(teacher) as TeacherDto)
+    override fun saveTeacher(teacher: SaveTeacherDto) {
+        saveUserPort.saveTeacher(hashPassword(teacher) as SaveTeacherDto)
     }
 
-    override fun saveContactor(contactor: ContactorDto) {
-        val contactor = hashPassword(contactor) as ContactorDto
+    override fun saveContactor(contactor: SaveContactorDto) {
+        val contactor = hashPassword(contactor) as SaveContactorDto
         saveUserPort.saveContactor(contactor)
     }
 
-    private fun hashPassword(user: UserDto): UserDto {
+    private fun hashPassword(user: SaveUserDto): SaveUserDto {
         val hashed = encoder.encode(user.password)
         user.hashPassword(hashed)
         return user

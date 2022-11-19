@@ -35,6 +35,7 @@ class GlobalExceptionHandler(
                 ErrorResponse(code = ex.errorCode)
             }
             else -> {
+                println(ex)
                 response.statusCode = HttpStatus.valueOf(ErrorCode.UNDEFINED_ERROR.status)
                 ErrorResponse(code = ErrorCode.UNDEFINED_ERROR)
             }

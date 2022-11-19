@@ -1,10 +1,9 @@
 package com.info.info_v2_backend.file.domain
 
-import com.info.info_v2_backend.common.file.type.FileType
+import com.info.info_v2_backend.common.file.dto.type.FileType
 import com.info.info_v2_backend.commonEntity.entity.TimeEntity
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
-import java.util.UUID
 import javax.persistence.*
 
 

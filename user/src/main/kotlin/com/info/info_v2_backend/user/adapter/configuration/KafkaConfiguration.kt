@@ -1,7 +1,7 @@
 package com.info.info_v2_backend.user.adapter.configuration
 
-import com.info.info_v2_backend.user.adapter.input.event.dto.StudentDto
-import com.info.info_v2_backend.user.adapter.input.event.dto.TeacherDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
@@ -21,20 +21,20 @@ class KafkaConfiguration(
     private val bootstrapServers = kafkaProperty.kafkaServerAddress
 
     @Bean
-    fun teacherConsumer(): ConsumerFactory<String, TeacherDto> {
+    fun teacherConsumer(): ConsumerFactory<String, SaveTeacherDto> {
         return DefaultKafkaConsumerFactory(
             consumerFactoryConfigs(),
             StringDeserializer(),
-            JsonDeserializer(TeacherDto::class.java)
+            JsonDeserializer(SaveTeacherDto::class.java)
         )
     }
 
     @Bean
-    fun studentConsumer(): ConsumerFactory<String, StudentDto> {
+    fun studentConsumer(): ConsumerFactory<String, SaveStudentDto> {
         return DefaultKafkaConsumerFactory(
             consumerFactoryConfigs(),
             StringDeserializer(),
-            JsonDeserializer(StudentDto::class.java)
+            JsonDeserializer(SaveStudentDto::class.java)
         )
     }
 
@@ -49,15 +49,15 @@ class KafkaConfiguration(
 
 
     @Bean
-    fun teacherDtoChangeListener(): ConcurrentKafkaListenerContainerFactory<String, TeacherDto> {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, TeacherDto>()
+    fun teacherDtoChangeListener(): ConcurrentKafkaListenerContainerFactory<String, SaveTeacherDto> {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, SaveTeacherDto>()
         factory.consumerFactory = teacherConsumer()
         return factory
     }
 
     @Bean
-    fun studentDtoChangeListener(): ConcurrentKafkaListenerContainerFactory<String, StudentDto> {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, StudentDto>()
+    fun studentDtoChangeListener(): ConcurrentKafkaListenerContainerFactory<String, SaveStudentDto> {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, SaveStudentDto>()
         factory.consumerFactory = studentConsumer()
         return factory
     }

@@ -5,7 +5,7 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.email.dto.SendEmailNotificationRequest
 import com.info.info_v2_backend.common.email.dto.SendEmailTextRequest
-import com.info.info_v2_backend.common.security.HeaderProperty
+import com.info.info_v2_backend.common.auth.HeaderProperty
 import com.info.info_v2_backend.email.application.port.input.SendEmailUsecase
 import com.info.info_v2_backend.email.application.port.output.EmailRecordPersistencePort
 import com.info.info_v2_backend.email.application.port.output.LoadEmailUserPort
@@ -14,10 +14,7 @@ import com.info.info_v2_backend.email.domain.EmailRecord
 import com.info.info_v2_backend.email.domain.content.EmailContent
 import com.info.info_v2_backend.email.domain.user.Sender
 import org.springframework.mail.MailException
-import org.springframework.mail.MailParseException
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Propagation
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 

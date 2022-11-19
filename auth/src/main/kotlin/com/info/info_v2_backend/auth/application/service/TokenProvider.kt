@@ -4,14 +4,11 @@ import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenRespon
 import com.info.info_v2_backend.auth.application.env.JwtProperty
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.common.security.HeaderProperty
+import com.info.info_v2_backend.common.auth.HeaderProperty
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -20,11 +17,12 @@ class TokenProvider(
     private val jwtProperty: JwtProperty,
     private val customAuthDetailsService: AuthDetailsService
 ){
-    fun encode(subject: String, companyNumber: String?): TokenResponse {
+    fun encode(subject: String, companyNumber: String?, authLevel: String): TokenResponse {
         return TokenResponse(
             Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, jwtProperty.secretKey)
                 .setSubject(subject)
+                .claim(HeaderProperty.AUTH_LEVEL, authLevel)
                 .claim("type", "access")
                 .claim(HeaderProperty.COMPANY_NUMBER, companyNumber)
                 .setIssuedAt(Date())

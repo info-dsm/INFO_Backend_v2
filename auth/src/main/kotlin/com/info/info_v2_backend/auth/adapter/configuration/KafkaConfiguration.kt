@@ -1,8 +1,8 @@
 package com.info.info_v2_backend.auth.adapter.configuration
 
 import com.info.info_v2_backend.common.email.dto.SendEmailNotificationRequest
-import com.info.info_v2_backend.user.adapter.input.event.dto.StudentDto
-import com.info.info_v2_backend.user.adapter.input.event.dto.TeacherDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.context.annotation.Bean
@@ -20,12 +20,12 @@ class KafkaConfiguration(
     private val bootstrapServers = kafkaProperty.kafkaServerAddress
 
     @Bean
-    fun teacherDtoProducerFactory(): ProducerFactory<String, TeacherDto> {
+    fun teacherDtoProducerFactory(): ProducerFactory<String, SaveTeacherDto> {
         return DefaultKafkaProducerFactory(factoryConfigs())
     }
 
     @Bean
-    fun studentDtoProducerFactory(): ProducerFactory<String, StudentDto> {
+    fun studentDtoProducerFactory(): ProducerFactory<String, SaveStudentDto> {
         return DefaultKafkaProducerFactory(factoryConfigs())
     }
 
@@ -44,12 +44,12 @@ class KafkaConfiguration(
     }
 
     @Bean
-    fun teacherDtoKafkaTemplate(): KafkaTemplate<String, TeacherDto> {
+    fun teacherDtoKafkaTemplate(): KafkaTemplate<String, SaveTeacherDto> {
         return KafkaTemplate(teacherDtoProducerFactory())
     }
 
     @Bean
-    fun studentDtoKafkaTemplate(): KafkaTemplate<String, StudentDto> {
+    fun studentDtoKafkaTemplate(): KafkaTemplate<String, SaveStudentDto> {
         return KafkaTemplate(studentDtoProducerFactory())
     }
 

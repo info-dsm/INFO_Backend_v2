@@ -40,6 +40,7 @@ eureka:
   instance:
     # 표기되는 규칙 변경
     instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
   client:
     service-url:
       defaultZone: http://127.0.0.1:8761/eureka
@@ -48,10 +49,19 @@ kafka:
   kafkaServerAddress: localhost:9092
 
 feign:
+  client:
+    config:
+      default:
+        connectTimeout: 60000
+        readTimeout: 10000
   httpclient:
     enabled: true
+    connection-timeout: 60000
+    ok-http:
+      read-timeout: 10000
   circuitbreaker:
     enabled: true
+
 
 mail:
   host: smtp.naver.com
@@ -65,3 +75,4 @@ mail:
         auth: true
         starttls:
           enable: true
+

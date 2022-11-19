@@ -1,11 +1,11 @@
 package com.info.info_v2_backend.auth.application.port.input
 
-import com.info.info_v2_backend.user.adapter.input.event.dto.StudentDto
+import com.info.info_v2_backend.common.user.SaveStudentDto
 
 interface StudentSignupUsecase {
 
     fun command(
-        request: StudentDto,
+        request: SaveStudentDto,
         emailAuthenticationCode: String
     )
 }

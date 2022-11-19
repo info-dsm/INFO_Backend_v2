@@ -1,7 +1,8 @@
 package com.info.info_v2_backend.file.domain.company
 
-import com.info.info_v2_backend.common.file.CompanyFileClassificationType
-import com.info.info_v2_backend.common.file.FileDto
+import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
+import com.info.info_v2_backend.common.file.dto.FileDto
+import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
 import com.info.info_v2_backend.file.domain.File
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
@@ -10,7 +11,7 @@ import javax.persistence.DiscriminatorValue
 import javax.persistence.Entity
 
 @Entity
-@DiscriminatorValue("company_introduction_file")
+@DiscriminatorValue("company_file")
 @OnDelete(action = OnDeleteAction.CASCADE)
 class CompanyFile(
     id: String,
@@ -30,5 +31,17 @@ class CompanyFile(
 
     @Column(name = "company_file_classification", nullable = false)
     val companyFileClassification: CompanyFileClassificationType = companyFileType
+
+    fun toCompanyFileResponse(): CompanyFileResponse {
+        return CompanyFileResponse(
+            this.id,
+            this.fileUrl,
+            this.fileContentType,
+            this.extension,
+            this.fileName,
+            this.companyId,
+            this.companyFileClassification
+        )
+    }
 
 }

@@ -8,13 +8,18 @@ import com.info.info_v2_backend.company.application.port.output.company.SaveComp
 import com.info.info_v2_backend.company.domain.Company
 import org.hibernate.JDBCException
 import org.hibernate.exception.ConstraintViolationException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CompanyAdapater(
     private val companyRepository: CompanyRepository
 ): SaveCompanyPort, LoadCompanyPort {
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     override fun save(company: Company) {
         try {
             companyRepository.save(company)
@@ -26,9 +31,16 @@ class CompanyAdapater(
         }
     }
 
-    override fun loadCompany(companyId: String): Company {
+    override fun loadCompany(companyId: String): Company?{
         return companyRepository.findById(companyId).orElse(null)
-            ?: throw BusinessException("company not found -> ${companyId}", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+    }
+
+    override fun loadAllCompanyList(idx: Int, size: Int): Page<Company> {
+        return companyRepository.findAll(PageRequest.of(idx, size))
+    }
+
+    override fun loadAllCompanyListByYear(idx: Int, size: Int, year: Int): Page<Company> {
+        return companyRepository.findByIsNoticeRegisteredYearListContaining(year, PageRequest.of(idx, size))
     }
 
 }

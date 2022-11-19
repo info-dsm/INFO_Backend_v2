@@ -4,33 +4,36 @@ import com.info.info_v2_backend.common.auth.AuthenticationCodeDto
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.common.file.CompanyFileClassificationType
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.RegisterCompanyRequest
+import com.info.info_v2_backend.common.file.FileConvert
+import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.register.RegisterCompanyRequest
 import com.info.info_v2_backend.company.application.port.input.RegisterCompanyUsecase
 import com.info.info_v2_backend.company.application.port.output.*
 import com.info.info_v2_backend.company.application.port.output.businessArea.LoadBusinessAreaPort
 import com.info.info_v2_backend.company.application.port.output.businessArea.SaveBusinessAreaPort
 import com.info.info_v2_backend.company.application.port.output.businessArea.SaveBusinessAreaTaggedPort
+import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SaveCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SaveContactorPort
-import com.info.info_v2_backend.company.application.port.output.file.FilePort
+import com.info.info_v2_backend.company.application.port.output.file.CompanyFilePort
 import com.info.info_v2_backend.company.domain.Company
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
 import com.info.info_v2_backend.company.domain.businessArea.BusinessAreaTagged
 import com.info.info_v2_backend.company.domain.introduction.CompanyIntroduction
-import com.info.info_v2_backend.user.adapter.input.event.dto.ContactorDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveContactorDto
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
 @Service
 class RegisterCompany(
-    private val uploadFilePort: FilePort,
+    private val companyFilePort: CompanyFilePort,
     private val saveCompanyPort: SaveCompanyPort,
     private val saveContactorPort: SaveContactorPort,
     private val checkEmailCodePort: CheckEmailCodePort,
     private val saveBusinessAreaPort: SaveBusinessAreaPort,
+    private val saveBusinessAreaTaggedPort: SaveBusinessAreaTaggedPort,
     private val loadBusinessAreaPort: LoadBusinessAreaPort,
-    private val saveBusinessAreaTaggedPort: SaveBusinessAreaTaggedPort
+    private val loadCompanyPort: LoadCompanyPort
 ): RegisterCompanyUsecase {
 
     override fun register(
@@ -49,8 +52,12 @@ class RegisterCompany(
                 )
             )) {
 
+            loadCompanyPort.loadCompany(request.companyNumber)?.let {
+                throw BusinessException("이미 존재하는 사업자등록번호입니다.", ErrorCode.ALREADY_EXISTS_ERROR)
+            }
+
             saveContactorPort.save(
-                ContactorDto(
+                SaveContactorDto(
                     request.companyContact.contactorName,
                     request.companyContact.email,
                     request.companyContact.password,
@@ -68,9 +75,9 @@ class RegisterCompany(
                 request.companyContact.toContactorId(),
                 CompanyIntroduction(
                     request.introduction
-                ),
-                request.isLeading
+                )
             )
+            saveCompanyPort.save(company)
 
             request.businessAreaList.map {
                 saveBusinessAreaTaggedPort.saveBusinessAreaTagged(
@@ -82,34 +89,44 @@ class RegisterCompany(
                     )
                 )
             }
+            company.created()
 
             saveCompanyPort.save(company)
 
 
-            company.companyIntroduction.changeCompanyIntroductionFile(
-                uploadFile(businessRegisteredCertificate, CompanyFileClassificationType.BUSINESS_CERTIFICATE, request.companyNumber),
-                CompanyFileClassificationType.BUSINESS_CERTIFICATE
-            )
-
-            company.companyIntroduction.changeCompanyIntroductionFile(
-                uploadFile(companyLogo, CompanyFileClassificationType.COMPANY_LOGO, request.companyNumber),
-                CompanyFileClassificationType.COMPANY_LOGO
-            )
+            uploadFile(
+                FileConvert.fileToMultipartFileConvert(
+                    FileConvert.multipartFileToFileConvert(businessRegisteredCertificate, "company/src/main/resources/tmp/")
+                ), CompanyFileClassificationType.BUSINESS_CERTIFICATE, request.companyNumber)
+            uploadFile(
+                FileConvert.fileToMultipartFileConvert(
+                    FileConvert.multipartFileToFileConvert(companyLogo, "company/src/main/resources/tmp/")
+                ), CompanyFileClassificationType.COMPANY_LOGO, request.companyNumber)
             saveCompanyPort.save(company)
+            FileConvert.removeLocalFile("company/src/main/resources/tmp/${businessRegisteredCertificate.originalFilename}")
+            FileConvert.removeLocalFile("company/src/main/resources/tmp/${companyLogo.originalFilename}")
 
             companyPhotoList.map {
-                uploadFile(it, CompanyFileClassificationType.COMPANY_PHOTO, request.companyNumber)
+                uploadFile(
+                    FileConvert.fileToMultipartFileConvert(
+                        FileConvert.multipartFileToFileConvert(it, "company/src/main/resources/tmp/")
+                    ), CompanyFileClassificationType.COMPANY_PHOTO, request.companyNumber)
+                FileConvert.removeLocalFile("company/src/main/resources/tmp/${it.originalFilename}")
             }
             companyIntroductionFile.map {
-                uploadFile(it, CompanyFileClassificationType.COMPANY_INTRODUCTION, request.companyNumber)
+                uploadFile(
+                    FileConvert.fileToMultipartFileConvert(
+                        FileConvert.multipartFileToFileConvert(it, "company/src/main/resources/tmp/")
+                    ), CompanyFileClassificationType.COMPANY_INTRODUCTION, request.companyNumber)
+                FileConvert.removeLocalFile("company/src/main/resources/tmp/${it.originalFilename}")
             }
 
 
         } else throw BusinessException("인증번호가 올바르지 않습니다. -> ${emailCheckCode}", ErrorCode.INVALID_INPUT_DATA_ERROR)
     }
 
-    private fun uploadFile(file: MultipartFile, classificationType: CompanyFileClassificationType, companyId: String): String {
-        return uploadFilePort.upload(
+    private fun uploadFile(file: MultipartFile, classificationType: CompanyFileClassificationType, companyId: String) {
+        return companyFilePort.upload(
             companyId,
             classificationType,
             file

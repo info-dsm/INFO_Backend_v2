@@ -26,7 +26,7 @@ abstract class User(
 ): TimeEntity(), UserDetails {
 
     @Id
-    private val email: String = email
+    val email: String = email
 
     var name: String = name
         protected set

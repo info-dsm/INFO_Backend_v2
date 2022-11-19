@@ -6,8 +6,8 @@ import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenRespon
 import com.info.info_v2_backend.auth.application.port.input.*
 import com.info.info_v2_backend.common.auth.AuthenticationCodeDto
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
-import com.info.info_v2_backend.user.adapter.input.event.dto.StudentDto
-import com.info.info_v2_backend.user.adapter.input.event.dto.TeacherDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
+import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
@@ -31,7 +31,7 @@ class AuthController(
     @PostMapping("/signup/student")
     @ResponseStatus(HttpStatus.CREATED)
     fun studentSignup(
-        @RequestBody request: StudentDto,
+        @RequestBody request: SaveStudentDto,
         @RequestParam(value = "emailCode") emailAuthenticationCode: String
     ) {
         studentSignupUsecase.command(request, emailAuthenticationCode)
@@ -40,7 +40,7 @@ class AuthController(
     @PostMapping("/signup/teacher")
     @ResponseStatus(HttpStatus.CREATED)
     fun teacherSignup(
-        @RequestBody request: TeacherDto,
+        @RequestBody request: SaveTeacherDto,
         @RequestParam(value = "emailCode") emailAuthenticationCode: String,
         @RequestParam(value = "teacherCode") teacherCode: String
     ) {

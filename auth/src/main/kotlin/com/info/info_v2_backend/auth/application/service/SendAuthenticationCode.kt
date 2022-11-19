@@ -19,7 +19,7 @@ class SendAuthenticationCode(
     private val sendEmail: SendEmailPort
 ): SendAuthenticationCodeUsecase {
 
-    override fun command(targetEmail: String, type: AuthenticationCodeType) {
+    override fun send(targetEmail: String, type: AuthenticationCodeType) {
         try {
             loadUserByEmailPort.loadUserDetailsByUsername(targetEmail)?: throw BusinessException("", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
         } catch (e: BusinessException) {

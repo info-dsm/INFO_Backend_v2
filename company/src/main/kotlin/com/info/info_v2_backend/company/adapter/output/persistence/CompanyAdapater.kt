@@ -10,6 +10,7 @@ import org.hibernate.JDBCException
 import org.hibernate.exception.ConstraintViolationException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -36,11 +37,11 @@ class CompanyAdapater(
     }
 
     override fun loadAllCompanyList(idx: Int, size: Int): Page<Company> {
-        return companyRepository.findAll(PageRequest.of(idx, size))
+        return companyRepository.findAll(PageRequest.of(idx, size, Sort.by("created_at").descending()))
     }
 
     override fun loadAllCompanyListByYear(idx: Int, size: Int, year: Int): Page<Company> {
-        return companyRepository.findByIsNoticeRegisteredYearListContaining(year, PageRequest.of(idx, size))
+        return companyRepository.findByIsNoticeRegisteredYearListContaining(year, PageRequest.of(idx, size, Sort.by("created_at").descending()))
     }
 
 }

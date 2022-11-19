@@ -9,6 +9,6 @@ data class CompanyFileResponse(
     val fileType: FileType,
     val extension: String,
     val fileName: String,
-    val companyId: String,
+    val companyNumber: String,
     val companyFileClassificationType: CompanyFileClassificationType
 )

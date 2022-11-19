@@ -14,6 +14,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
+import java.util.*
 
 
 @Component
@@ -74,7 +75,8 @@ class GlobalFilter(
         try {
             claims = Jwts.parser().setSigningKey(jwtProperty.secretKey)
                 .parseClaimsJws(jwt).body
-
+            val now = Date()
+            if (now.after(Date(claims.expiration.time))) return null
             return claims
         } catch (e: Exception) {
             return null

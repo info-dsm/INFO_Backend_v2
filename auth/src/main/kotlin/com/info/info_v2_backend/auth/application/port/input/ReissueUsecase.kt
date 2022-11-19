@@ -5,5 +5,5 @@ import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenRespon
 
 interface ReissueUsecase {
 
-    fun command(request: TokenReissueRequest): TokenResponse
+    fun reissue(request: TokenReissueRequest): TokenResponse
 }

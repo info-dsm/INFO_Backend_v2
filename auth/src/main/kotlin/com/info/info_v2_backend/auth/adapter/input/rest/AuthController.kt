@@ -28,7 +28,7 @@ class AuthController(
     fun login(
         @RequestBody request: LoginRequest
     ): TokenResponse {
-        return loginUsecase.command(request)
+        return loginUsecase.login(request)
     }
 
     @PostMapping("/signup/student")
@@ -37,7 +37,7 @@ class AuthController(
         @RequestBody request: SaveStudentDto,
         @RequestParam(value = "emailCode") emailAuthenticationCode: String
     ) {
-        studentSignupUsecase.command(request, emailAuthenticationCode)
+        studentSignupUsecase.studentSignup(request, emailAuthenticationCode)
     }
 
     @PostMapping("/signup/teacher")
@@ -47,7 +47,7 @@ class AuthController(
         @RequestParam(value = "emailCode") emailAuthenticationCode: String,
         @RequestParam(value = "teacherCode") teacherCode: String
     ) {
-         teacherSignupUsecase.command(request, emailAuthenticationCode, teacherCode)
+         teacherSignupUsecase.teacherSignup(request, emailAuthenticationCode, teacherCode)
     }
 
     @PutMapping("/reissue")
@@ -55,7 +55,7 @@ class AuthController(
     fun reissue(
         @RequestBody request: TokenReissueRequest
     ): TokenResponse {
-        return reissuePort.command(request)
+        return reissuePort.reissue(request)
     }
 
 
@@ -64,7 +64,7 @@ class AuthController(
     fun sendSignupAuthenticationCode(
         @RequestParam email: String
     ) {
-        sendCodeUsecase.command(
+        sendCodeUsecase.send(
             email,
             AuthenticationCodeType.SIGNUP_EMAIL
         )

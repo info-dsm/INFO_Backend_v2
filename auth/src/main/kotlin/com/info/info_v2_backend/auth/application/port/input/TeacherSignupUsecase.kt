@@ -4,5 +4,5 @@ import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeac
 
 interface TeacherSignupUsecase {
 
-    fun command(request: SaveTeacherDto, emailAuthenticationCode: String, teacherCode: String)
+    fun teacherSignup(request: SaveTeacherDto, emailAuthenticationCode: String, teacherCode: String)
 }

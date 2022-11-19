@@ -1,6 +1,7 @@
 package com.info.info_v2_backend.company.domain
 
 import com.info.info_v2_backend.common.company.CompanyDto
+import com.info.info_v2_backend.commonEntity.entity.TimeEntity
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.edit.EditCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.CompanyIntroductionResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
@@ -27,7 +28,7 @@ class Company(
     companyInformation: CompanyInformation,
     contactor: ContactorId,
     companyIntroduction: CompanyIntroduction
-) {
+): TimeEntity() {
     @Id
     @Column(name = "company_number", nullable = false)
     val companyNumber: String = companyNumber
@@ -100,6 +101,10 @@ class Company(
         this.isAssociated = true
     }
 
+    fun makeLeading() {
+        this.isLeading = true
+    }
+
     fun toCompanyDto(): CompanyDto {
         return CompanyDto(
             this.companyNumber,
@@ -110,7 +115,10 @@ class Company(
             this.isLeading
         )
     }
-    fun toMinimumCompanyResponse(companyIntroductionResponse: CompanyIntroductionResponse): MinimumCompanyResponse {
+    fun toMinimumCompanyResponse(
+        companyIntroductionResponse: CompanyIntroductionResponse,
+        totalHiredStudentCount: Int
+    ): MinimumCompanyResponse {
         return MinimumCompanyResponse(
             this.companyNumber,
             this.companyContact.contactorEmail,
@@ -124,6 +132,7 @@ class Company(
             this.isLeading,
             this.isAssociated,
             this.isNoticeRegisteredYearList.maxOrNull(),
+            totalHiredStudentCount,
             companyIntroductionResponse
         )
     }

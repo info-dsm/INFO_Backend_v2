@@ -9,6 +9,7 @@ import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.Maxi
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
 import com.info.info_v2_backend.company.application.port.input.LoadCompanyUsecase
 import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
+import com.info.info_v2_backend.company.application.port.output.employment.LoadEmploymentPort
 import com.info.info_v2_backend.company.application.port.output.file.CompanyFilePort
 import com.info.info_v2_backend.company.application.port.output.user.LoadContactorPort
 import com.info.info_v2_backend.company.domain.Company
@@ -19,13 +20,17 @@ import org.springframework.stereotype.Service
 class LoadCompany(
     private val loadCompanyPort: LoadCompanyPort,
     private val companyFilePort: CompanyFilePort,
-    private val loadContactorPort: LoadContactorPort
+    private val loadContactorPort: LoadContactorPort,
+    private val loadEmploymentPort: LoadEmploymentPort
 ): LoadCompanyUsecase {
 
     override fun loadMinimumCompanyList(idx: Int, size: Int): Page<MinimumCompanyResponse> {
         val companyList = loadCompanyPort.loadAllCompanyList(idx, size).map {
             return@map it.toMinimumCompanyResponse(
-                getCompanyIntroductionResponse(it)
+                getCompanyIntroductionResponse(
+                    it
+                ),
+                loadEmploymentPort.loadEmploymentList(it.companyNumber).size
             )
 
         }
@@ -35,7 +40,8 @@ class LoadCompany(
     override fun loadMinimumCompanyListByYear(idx: Int, size: Int, year: Int): Page<MinimumCompanyResponse> {
         return loadCompanyPort.loadAllCompanyListByYear(idx, size, year).map {
             it.toMinimumCompanyResponse(
-                getCompanyIntroductionResponse(it)
+                getCompanyIntroductionResponse(it),
+                loadEmploymentPort.loadEmploymentList(it.companyNumber).size?:0
             )
         }
     }

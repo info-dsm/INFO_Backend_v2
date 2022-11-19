@@ -20,11 +20,10 @@ class Login(
     private val encoder: PasswordEncoder
 ): LoginUsecase {
 
-    override fun command(request: LoginRequest): TokenResponse {
+    override fun login(request: LoginRequest): TokenResponse {
         val userDetails = authDetailsService.loadUserByUsername(request.email)
         if (encoder.matches(request.password, userDetails.password)){
             val dto = tokenProvider.encode(userDetails.username, userDetails.getCompanyNumber(), userDetails.authorities.first().role)
-            println("CompanyNumber: ${userDetails.getCompanyNumber()}")
             saveCodePort.save(
                 Code(
                     userDetails.username,

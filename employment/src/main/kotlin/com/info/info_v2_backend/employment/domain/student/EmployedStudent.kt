@@ -1,6 +1,8 @@
 package com.info.info_v2_backend.employment.domain.student
 
+import com.info.info_v2_backend.commonEntity.entity.TimeEntity
 import com.info.info_v2_backend.employment.adapter.input.rest.dto.request.EmploymentResponse
+import java.time.LocalDate
 import javax.persistence.Column
 import javax.persistence.Embeddable
 import javax.persistence.Embedded

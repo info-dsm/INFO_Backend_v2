@@ -83,8 +83,11 @@ class RegisterCompany(
                 saveBusinessAreaTaggedPort.saveBusinessAreaTagged(
                     BusinessAreaTagged(
                         loadBusinessAreaPort.loadBusinessArea(it)
-                            ?: saveBusinessAreaPort.saveBusinessArea(BusinessArea(it))
-                       ,
+                            ?: throw BusinessException(
+                                "존재하는 사업분야가 아닙니다. ->$it",
+                                ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR
+                            )
+                        ,
                         company
                     )
                 )

@@ -49,10 +49,8 @@ class TokenProvider(
         }
     }
 
-    fun getClaimsWithExpiredCheck(token: String): Claims {
+    fun getClaims(token: String): Claims {
         val body = decodeBody(token)
-        val now = Date()
-        if (now.after(Date(body.expiration.time))) throw BusinessException("토큰이 만료되었습니다. -> ${Date(body.expiration.time)}", ErrorCode.EXPIRED_TOKEN_ERROR)
         body.subject?: throw BusinessException("토큰 내부 값이 비었습니다.", ErrorCode.INVALID_TOKEN_ERROR)
         return body
     }
@@ -60,7 +58,8 @@ class TokenProvider(
     fun isExpired(token: String): Boolean {
         val body = Jwts.parser().setSigningKey(jwtProperty.secretKey).parseClaimsJws(token).body
         val now = Date()
-        return now.after(Date(now.time + body.expiration.time))
+        if (now.after(Date(body.expiration.time))) return true
+        return false
     }
 
 

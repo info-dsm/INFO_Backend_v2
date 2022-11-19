@@ -16,6 +16,8 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.5")
     //Hystrix
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE")
+    //Validation
+    implementation("org.springframework.boot:spring-boot-starter-validation:2.7.4")
     //Thymeleaf
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     //Mailing

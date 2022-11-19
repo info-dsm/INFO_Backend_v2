@@ -4,7 +4,7 @@ import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStud
 
 interface StudentSignupUsecase {
 
-    fun command(
+    fun studentSignup(
         request: SaveStudentDto,
         emailAuthenticationCode: String
     )

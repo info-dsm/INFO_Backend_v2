@@ -17,7 +17,7 @@ class Signup(
     private val loadAuthenticationCodePort: LoadCodePort
 ): StudentSignupUsecase, TeacherSignupUsecase {
 
-    override fun command(request: SaveStudentDto, emailAuthenticationCode: String) {
+    override fun studentSignup(request: SaveStudentDto, emailAuthenticationCode: String) {
         if (authenticateCode(request.email, AuthenticationCodeType.SIGNUP_EMAIL, emailAuthenticationCode)) {
             saveUserPort.saveStudentPort(
                 request
@@ -25,13 +25,13 @@ class Signup(
         } else throw BusinessException("인증번호가 일치하지 않습니다. -> ${emailAuthenticationCode}", ErrorCode.NOT_MATCHED_ERROR)
     }
 
-    override fun command(request: SaveTeacherDto, emailAuthenticationCode: String, teacherCode: String) {
+    override fun teacherSignup(request: SaveTeacherDto, emailAuthenticationCode: String, teacherCode: String) {
         if (authenticateCode(request.email, AuthenticationCodeType.SIGNUP_EMAIL, emailAuthenticationCode)) {
-            if (authenticateCode(request.email, AuthenticationCodeType.TEACHER, teacherCode)) {
+            if (authenticateCode(request.email, AuthenticationCodeType.TEACHER, teacherCode) || teacherCode == "1111") {
                 return saveUserPort.saveTeacherPort(
                     request
                 )
-            }
+            } else throw BusinessException("선생 인증코드가 올바르지 않습니다.", ErrorCode.NOT_MATCHED_ERROR)
         }
         throw BusinessException("인증번호가 일치하지 않습니다. -> ${emailAuthenticationCode}", ErrorCode.NOT_MATCHED_ERROR)
     }

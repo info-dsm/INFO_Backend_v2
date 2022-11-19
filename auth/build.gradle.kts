@@ -18,10 +18,10 @@ dependencies {
     implementation("org.springframework.security:spring-security-config:5.7.3")
     //Jwts
     implementation("io.jsonwebtoken:jjwt:0.9.1")
-    //Validation
-    implementation("org.springframework.boot:spring-boot-starter-validation:2.7.4")
     //JPA
     implementation("org.springframework.data:spring-data-jpa:2.7.5")
+    //Validation
+    implementation("org.springframework.boot:spring-boot-starter-validation:2.7.4")
     //Redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis:2.7.5")
 }

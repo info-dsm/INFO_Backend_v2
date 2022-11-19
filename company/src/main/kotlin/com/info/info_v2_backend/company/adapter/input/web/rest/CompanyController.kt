@@ -3,6 +3,7 @@ package com.info.info_v2_backend.company.adapter.input.web.rest
 import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.company.CompanyDto
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
+import com.info.info_v2_backend.common.file.dto.FileDto
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.edit.EditCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.register.RegisterCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
@@ -26,7 +27,8 @@ class CompanyController(
     private val removeCompanyFileUsecase: RemoveCompanyFileUsecase,
     private val makeAssociatedUsecase: MakeAssociatedUsecase,
     private val loadCompanyUsecase: LoadCompanyUsecase,
-    private val editCompanyUsecase: EditCompanyUsecase
+    private val editCompanyUsecase: EditCompanyUsecase,
+    private val makeLeadingUsecase: MakeLeadingUsecase
 ) {
 
 
@@ -56,8 +58,8 @@ class CompanyController(
     }
 
     @GetMapping("/business-area")
-    fun getBusinessAreaList(@RequestParam companyNumber: String): List<BusinessArea> {
-        return loadBusinessAreaUsecase.loadByCompanyNumber(companyNumber)
+    fun getBusinessAreaList(): List<BusinessArea> {
+        return loadBusinessAreaUsecase.loadAll()
     }
 
     @PatchMapping("/{companyNumber}/certificate")
@@ -69,10 +71,6 @@ class CompanyController(
         return changeCompanyFileUsecase.change(businessCertificate, Auth.checkCompanyNumber(companyNumber), CompanyFileClassificationType.BUSINESS_CERTIFICATE)
     }
 
-    @GetMapping("/certificate")
-    fun getBusinessCertificate(): List<BusinessArea> {
-        return loadBusinessAreaUsecase.loadAll()
-    }
 
     @PutMapping("/{companyNumber}/introduction")
     @ResponseStatus(HttpStatus.CREATED)
@@ -106,9 +104,9 @@ class CompanyController(
         return addCompanyFileUsecase.add(file, Auth.checkCompanyNumber(companyNumber), CompanyFileClassificationType.COMPANY_PHOTO)
     }
 
-    @DeleteMapping("/{companyNumber}/photo")
+    @DeleteMapping("/{companyNumber}/photo/{fileId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun removeCompanyPhoto(@PathVariable companyNumber: String, @RequestParam fileId: String) {
+    fun removeCompanyPhoto(@PathVariable companyNumber: String, @PathVariable fileId: String) {
         return removeCompanyFileUsecase.remove(companyNumber, fileId, CompanyFileClassificationType.COMPANY_PHOTO)
     }
 
@@ -155,6 +153,12 @@ class CompanyController(
 
 
     //회시 담당자 수정
+
+    @PostMapping("/leading/{companyNumber}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    fun makeLeading(@PathVariable companyNumber: String) {
+        return makeLeadingUsecase.makeLeading(companyNumber)
+    }
 
 
 

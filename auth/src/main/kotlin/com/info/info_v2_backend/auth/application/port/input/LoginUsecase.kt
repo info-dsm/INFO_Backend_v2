@@ -5,5 +5,5 @@ import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenRespon
 
 interface LoginUsecase {
 
-    fun command(request: LoginRequest): TokenResponse
+    fun login(request: LoginRequest): TokenResponse
 }

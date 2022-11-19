@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono
 
 @Component
 @Order(-1)
-class GlobalExceptionHandler(
+class GatewayExceptionHandler(
     private val objectMapper: ObjectMapper
 ): WebExceptionHandler {
     override fun handle(exchange: ServerWebExchange, ex: Throwable): Mono<Void> {

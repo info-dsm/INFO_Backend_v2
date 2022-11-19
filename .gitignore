@@ -37,3 +37,6 @@ out/
 .vscode/
 
 lib/
+
+
+apiGateway/src/main/resources/application.yml

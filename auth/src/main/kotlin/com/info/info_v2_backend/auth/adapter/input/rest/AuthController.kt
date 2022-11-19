@@ -9,9 +9,11 @@ import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
 import org.springframework.http.HttpStatus
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 @RestController
+@Validated
 class AuthController(
     private val loginUsecase: LoginUsecase,
     private val teacherSignupUsecase: TeacherSignupUsecase,
@@ -22,6 +24,7 @@ class AuthController(
 ) {
 
     @PostMapping("/login")
+    @ResponseStatus(HttpStatus.CREATED)
     fun login(
         @RequestBody request: LoginRequest
     ): TokenResponse {

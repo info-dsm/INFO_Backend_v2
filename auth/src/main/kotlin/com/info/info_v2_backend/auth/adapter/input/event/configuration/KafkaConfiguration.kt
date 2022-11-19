@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.auth.adapter.configuration
+package com.info.info_v2_backend.auth.adapter.input.event.configuration
 
 import com.info.info_v2_backend.common.email.dto.SendEmailNotificationRequest
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto

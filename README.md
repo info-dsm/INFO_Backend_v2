@@ -75,3 +75,779 @@
 - SOLID 원칙 준수의 용이
 - 계층 별 의존성 최소화
     - 비즈니스 계층이 표현 계층이나 데이터 액세스 로직에 의존하지 않도록함.
+
+
+```
+📦 
+├─ .gitignore
+├─ README.md
+├─ apiGateway
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        └─ kotlin
+│           └─ com
+│              └─ info
+│                 └─ info_v2_backend
+│                    └─ apiGateway
+│                       ├─ ApiGatewayApplication.kt
+│                       ├─ exception
+│                       │  └─ GlobalExceptionHandler.kt
+│                       ├─ filter
+│                       │  └─ GlobalFilter.kt
+│                       └─ property
+│                          └─ JwtProperty.kt
+├─ applies
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        ├─ kotlin
+│        │  └─ com
+│        │     └─ info
+│        │        └─ info_v2_backend
+│        │           └─ applies
+│        │              ├─ AppliesApplication.kt
+│        │              ├─ adapter
+│        │              │  ├─ input
+│        │              │  │  └─ rest
+│        │              │  │     ├─ AppliesController.kt
+│        │              │  │     └─ dto
+│        │              │  │        └─ respnose
+│        │              │  │           └─ AppliesResponse.kt
+│        │              │  └─ output
+│        │              │     ├─ event
+│        │              │     │  ├─ UpdateNoticeProducer.kt
+│        │              │     │  └─ configuration
+│        │              │     │     ├─ KafkaConfiguration.kt
+│        │              │     │     └─ KafkaProperty.kt
+│        │              │     ├─ persistence
+│        │              │     │  ├─ AppliesAdapter.kt
+│        │              │     │  └─ repository
+│        │              │     │     └─ AppliesRepository.kt
+│        │              │     └─ rest
+│        │              │        ├─ FileFeignClient.kt
+│        │              │        ├─ FileFeignClientFallback.kt
+│        │              │        ├─ NoticeFeignClient.kt
+│        │              │        ├─ NoticeFeignClientFallback.kt
+│        │              │        ├─ UserFeignClient.kt
+│        │              │        └─ UserFeignClientFallback.kt
+│        │              ├─ application
+│        │              │  ├─ port
+│        │              │  │  ├─ input
+│        │              │  │  │  ├─ ApplyAppliesUsecase.kt
+│        │              │  │  │  ├─ ApproveAppliesUsecase.kt
+│        │              │  │  │  ├─ CancelApplyUsecase.kt
+│        │              │  │  │  ├─ LoadAppliesUsecase.kt
+│        │              │  │  │  └─ RejectAppliesUsecase.kt
+│        │              │  │  └─ output
+│        │              │  │     ├─ cancel
+│        │              │  │     │  └─ CancelApplyPort.kt
+│        │              │  │     ├─ load
+│        │              │  │     │  ├─ LoadAppliesPort.kt
+│        │              │  │     │  ├─ LoadNoticePort.kt
+│        │              │  │     │  └─ LoadStudentPort.kt
+│        │              │  │     ├─ notice
+│        │              │  │     │  └─ UpdateNoticePort.kt
+│        │              │  │     ├─ save
+│        │              │  │     │  ├─ SaveAppliesPort.kt
+│        │              │  │     │  └─ UpdateNoticeAppliesCountPort.kt
+│        │              │  │     └─ upload
+│        │              │  │        └─ UploadResumePort.kt
+│        │              │  └─ service
+│        │              │     ├─ ApplyApplies.kt
+│        │              │     ├─ ApproveApplies.kt
+│        │              │     ├─ CancelApply.kt
+│        │              │     ├─ LoadApplies.kt
+│        │              │     └─ RejectApplies.kt
+│        │              └─ domain
+│        │                 ├─ Applies.kt
+│        │                 ├─ notice
+│        │                 │  └─ AppliesNotice.kt
+│        │                 └─ user
+│        │                    └─ Applicant.kt
+│        └─ resources
+│           └─ application.yml
+├─ auth
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        ├─ kotlin
+│        │  └─ com
+│        │     └─ info
+│        │        └─ info_v2_backend
+│        │           └─ auth
+│        │              ├─ AuthApplication.kt
+│        │              ├─ adapter
+│        │              │  ├─ configuration
+│        │              │  │  ├─ KafkaConfiguration.kt
+│        │              │  │  └─ KafkaProperty.kt
+│        │              │  ├─ input
+│        │              │  │  ├─ event
+│        │              │  │  │  └─ AuthConsumer.kt
+│        │              │  │  └─ rest
+│        │              │  │     ├─ AuthController.kt
+│        │              │  │     ├─ configuration
+│        │              │  │     │  └─ AuthExceptionHandler.kt
+│        │              │  │     └─ dto
+│        │              │  │        ├─ request
+│        │              │  │        │  ├─ LoginRequest.kt
+│        │              │  │        │  └─ TokenReissueRequest.kt
+│        │              │  │        └─ response
+│        │              │  │           └─ TokenResponse.kt
+│        │              │  └─ output
+│        │              │     ├─ event
+│        │              │     │  ├─ SaveUserAdapter.kt
+│        │              │     │  └─ SendEmailAdapter.kt
+│        │              │     ├─ persisetnece
+│        │              │     │  ├─ CodePersistenceAdapter.kt
+│        │              │     │  └─ repository
+│        │              │     │     └─ CodeRepository.kt
+│        │              │     └─ rest
+│        │              │        ├─ UserFeignClient.kt
+│        │              │        └─ UserFeignClientFallback.kt
+│        │              ├─ application
+│        │              │  ├─ configuration
+│        │              │  │  └─ SecurityConfiguration.kt
+│        │              │  ├─ env
+│        │              │  │  └─ JwtProperty.kt
+│        │              │  ├─ port
+│        │              │  │  ├─ input
+│        │              │  │  │  ├─ CheckCodeUsecase.kt
+│        │              │  │  │  ├─ LoginUsecase.kt
+│        │              │  │  │  ├─ ReissueUsecase.kt
+│        │              │  │  │  ├─ SendAuthenticationCodeUsecase.kt
+│        │              │  │  │  ├─ StudentSignupUsecase.kt
+│        │              │  │  │  └─ TeacherSignupUsecase.kt
+│        │              │  │  └─ output
+│        │              │  │     ├─ LoadCodePort.kt
+│        │              │  │     ├─ RemoveCodePort.kt
+│        │              │  │     ├─ SaveCodePort.kt
+│        │              │  │     ├─ SaveUserPort.kt
+│        │              │  │     ├─ SendEmailPort.kt
+│        │              │  │     └─ UserServicePort.kt
+│        │              │  └─ service
+│        │              │     ├─ AuthDetailsService.kt
+│        │              │     ├─ CheckCode.kt
+│        │              │     ├─ Login.kt
+│        │              │     ├─ Reissue.kt
+│        │              │     ├─ SendAuthenticationCode.kt
+│        │              │     ├─ Signup.kt
+│        │              │     └─ TokenProvider.kt
+│        │              └─ domain
+│        │                 └─ Code.kt
+│        └─ resources
+│           └─ application.yml
+├─ board
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        ├─ kotlin
+│        │  └─ com
+│        │     └─ info
+│        │        └─ info_v2_backend
+│        │           └─ board
+│        │              ├─ BoardApplication.kt
+│        │              ├─ business
+│        │              │  ├─ BoardService.kt
+│        │              │  └─ BoardServiceImpl.kt
+│        │              └─ presentation
+│        │                 └─ BoardController.kt
+│        └─ resources
+│           └─ application.yml
+├─ build.gradle.kts
+├─ comment
+│  └─ src
+│     └─ main
+│        └─ kotlin
+│           └─ com
+│              └─ info
+│                 └─ info_v2_backend
+│                    └─ comment
+│                       └─ CommentApplication.kt
+├─ common
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        └─ kotlin
+│           └─ com
+│              └─ info
+│                 └─ info_v2_backend
+│                    └─ common
+│                       ├─ applies
+│                       │  ├─ AppliesDto.kt
+│                       │  └─ AppliesStatus.kt
+│                       ├─ auth
+│                       │  ├─ Auth.kt
+│                       │  ├─ AuthenticationCodeDto.kt
+│                       │  ├─ AuthenticationCodeType.kt
+│                       │  └─ HeaderProperty.kt
+│                       ├─ company
+│                       │  └─ CompanyDto.kt
+│                       ├─ email
+│                       │  ├─ EmailTemplateType.kt
+│                       │  └─ dto
+│                       │     ├─ SendEmailNotificationRequest.kt
+│                       │     └─ SendEmailTextRequest.kt
+│                       ├─ event
+│                       │  └─ KafkaTopics.kt
+│                       ├─ exception
+│                       │  ├─ BusinessException.kt
+│                       │  ├─ ErrorCode.kt
+│                       │  └─ ErrorResponse.kt
+│                       ├─ file
+│                       │  ├─ FileConvert.kt
+│                       │  └─ dto
+│                       │     ├─ CompanyFileClassificationType.kt
+│                       │     ├─ FileDto.kt
+│                       │     ├─ RegisterCompanyFileDto.kt
+│                       │     ├─ UploadCompanyFileDto.kt
+│                       │     ├─ response
+│                       │     │  ├─ CompanyFileResponse.kt
+│                       │     │  └─ FileResponse.kt
+│                       │     └─ type
+│                       │        ├─ DocsExt.kt
+│                       │        ├─ FileType.kt
+│                       │        └─ ImageExt.kt
+│                       ├─ filter
+│                       │  └─ ExceptionFilter.kt
+│                       ├─ notice
+│                       │  └─ NoticeDto.kt
+│                       └─ user
+│                          ├─ Generation.kt
+│                          ├─ StudentDto.kt
+│                          └─ UserDto.kt
+├─ commonEntity
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        └─ kotlin
+│           └─ com
+│              └─ info
+│                 └─ info_v2_backend
+│                    └─ commonEntity
+│                       └─ entity
+│                          └─ TimeEntity.kt
+├─ company
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        ├─ kotlin
+│        │  └─ com
+│        │     └─ info
+│        │        └─ info_v2_backend
+│        │           └─ company
+│        │              ├─ CompanyApplication.kt
+│        │              ├─ adapter
+│        │              │  ├─ configuration
+│        │              │  │  ├─ KafkaConfiguration.kt
+│        │              │  │  └─ KafkaProperty.kt
+│        │              │  ├─ input
+│        │              │  │  ├─ event
+│        │              │  │  │  ├─ RegisterCompanyFileConsumer.kt
+│        │              │  │  │  └─ UpdateCompanyLastNoticedConsumer.kt
+│        │              │  │  └─ web
+│        │              │  │     └─ rest
+│        │              │  │        ├─ CompanyController.kt
+│        │              │  │        ├─ configuration
+│        │              │  │        │  └─ CompanyExceptionHandler.kt
+│        │              │  │        └─ dto
+│        │              │  │           ├─ request
+│        │              │  │           │  ├─ edit
+│        │              │  │           │  │  ├─ EditCompanyInformationRequest.kt
+│        │              │  │           │  │  ├─ EditCompanyRequest.kt
+│        │              │  │           │  │  └─ EditContactorRequest.kt
+│        │              │  │           │  └─ register
+│        │              │  │           │     ├─ CompanyContactRequest.kt
+│        │              │  │           │     ├─ CompanyInformationRequest.kt
+│        │              │  │           │     ├─ CompanyNameRequest.kt
+│        │              │  │           │     └─ RegisterCompanyRequest.kt
+│        │              │  │           └─ response
+│        │              │  │              ├─ CompanyIntroductionResponse.kt
+│        │              │  │              ├─ MaximumCompanyResponse.kt
+│        │              │  │              └─ MinimumCompanyResponse.kt
+│        │              │  └─ output
+│        │              │     ├─ event
+│        │              │     │  ├─ UserAdapter.kt
+│        │              │     │  └─ configuration
+│        │              │     │     └─ FormConfiguration.kt
+│        │              │     ├─ persistence
+│        │              │     │  ├─ BusinessAreaAdapter.kt
+│        │              │     │  ├─ BusinessAreaTaggedAdapter.kt
+│        │              │     │  ├─ CompanyAdapater.kt
+│        │              │     │  └─ repository
+│        │              │     │     ├─ BusinessAreaRepository.kt
+│        │              │     │     ├─ BusinessAreaTaggedRepository.kt
+│        │              │     │     └─ CompanyRepository.kt
+│        │              │     └─ rest
+│        │              │        ├─ AuthFeignClient.kt
+│        │              │        ├─ AuthFeignClientFallbackFactory.kt
+│        │              │        ├─ FileFeignClient.kt
+│        │              │        ├─ FileFeignClientFallbackFactory.kt
+│        │              │        ├─ UserFeignClient.kt
+│        │              │        └─ configuration
+│        │              │           └─ FeignAuthConfiguration.kt
+│        │              ├─ application
+│        │              │  ├─ configuration
+│        │              │  │  └─ SecurityConfiguration.kt
+│        │              │  ├─ port
+│        │              │  │  ├─ input
+│        │              │  │  │  ├─ EditCompanyUsecase.kt
+│        │              │  │  │  ├─ LoadBusinessAreaUsecase.kt
+│        │              │  │  │  ├─ LoadCompanyUsecase.kt
+│        │              │  │  │  ├─ MakeAssociatedUsecase.kt
+│        │              │  │  │  ├─ RegisterCompanyUsecase.kt
+│        │              │  │  │  ├─ RemoveCompanyFileUsecase.kt
+│        │              │  │  │  ├─ UpdateLastNoticedCompanyUsecase.kt
+│        │              │  │  │  └─ file
+│        │              │  │  │     ├─ AddCompanyFileUsecase.kt
+│        │              │  │  │     ├─ ChangeCompanyFileUsecase.kt
+│        │              │  │  │     └─ RegisterCompanyFileUsecase.kt
+│        │              │  │  └─ output
+│        │              │  │     ├─ CheckEmailCodePort.kt
+│        │              │  │     ├─ businessArea
+│        │              │  │     │  ├─ LoadBusinessAreaPort.kt
+│        │              │  │     │  ├─ LoadBusinessAreaTaggedByCompanyNumberPort.kt
+│        │              │  │     │  ├─ SaveBusinessAreaPort.kt
+│        │              │  │     │  └─ SaveBusinessAreaTaggedPort.kt
+│        │              │  │     ├─ company
+│        │              │  │     │  ├─ LoadCompanyPort.kt
+│        │              │  │     │  ├─ SaveCompanyPort.kt
+│        │              │  │     │  └─ SaveContactorPort.kt
+│        │              │  │     ├─ file
+│        │              │  │     │  └─ CompanyFilePort.kt
+│        │              │  │     └─ user
+│        │              │  │        └─ LoadContactorPort.kt
+│        │              │  └─ service
+│        │              │     ├─ AddIntroductionFile.kt
+│        │              │     ├─ ChangeBusinessCertificate.kt
+│        │              │     ├─ EditCompany.kt
+│        │              │     ├─ LoadBusinessArea.kt
+│        │              │     ├─ LoadCompany.kt
+│        │              │     ├─ MakeAssociated.kt
+│        │              │     ├─ RegisterCompany.kt
+│        │              │     ├─ RegisterCompanyFile.kt
+│        │              │     ├─ RemoveCompanyFile.kt
+│        │              │     └─ UpdateLastNoticedCompany.kt
+│        │              └─ domain
+│        │                 ├─ Company.kt
+│        │                 ├─ ContactorId.kt
+│        │                 ├─ businessArea
+│        │                 │  ├─ BusinessArea.kt
+│        │                 │  ├─ BusinessAreaTagged.kt
+│        │                 │  └─ BusinessAreaTaggedIdClass.kt
+│        │                 ├─ information
+│        │                 │  ├─ AddressInfo.kt
+│        │                 │  └─ CompanyInformation.kt
+│        │                 ├─ introduction
+│        │                 │  └─ CompanyIntroduction.kt
+│        │                 ├─ name
+│        │                 │  └─ CompanyName.kt
+│        │                 └─ status
+│        │                    └─ CompanyCreationStatus.kt
+│        └─ resources
+│           └─ application.yml
+├─ email
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        ├─ kotlin
+│        │  └─ com
+│        │     └─ info
+│        │        └─ info_v2_backend
+│        │           └─ email
+│        │              ├─ EmailApplication.kt
+│        │              ├─ adapter
+│        │              │  ├─ input
+│        │              │  │  ├─ event
+│        │              │  │  │  ├─ adapter
+│        │              │  │  │  │  └─ EmailConsumer.kt
+│        │              │  │  │  └─ configuration
+│        │              │  │  │     ├─ KafkaConfiguration.kt
+│        │              │  │  │     └─ KafkaProperty.kt
+│        │              │  │  └─ web
+│        │              │  │     ├─ EmailController.kt
+│        │              │  │     └─ configuration
+│        │              │  │        └─ EmailExceptionHandler.kt
+│        │              │  └─ output
+│        │              │     ├─ email
+│        │              │     │  ├─ adapter
+│        │              │     │  │  └─ SmtpSendAdapter.kt
+│        │              │     │  └─ configuration
+│        │              │     │     ├─ MailConfiguration.kt
+│        │              │     │     └─ MailProperty.kt
+│        │              │     ├─ event
+│        │              │     │  └─ UserEventAdapter.kt
+│        │              │     ├─ persistence
+│        │              │     │  ├─ adapter
+│        │              │     │  │  └─ EmailRecordPersistencePortAdapter.kt
+│        │              │     │  └─ repository
+│        │              │     │     └─ EmailRecordRepository.kt
+│        │              │     └─ rest
+│        │              │        ├─ adapter
+│        │              │        │  ├─ UserFeignClient.kt
+│        │              │        │  └─ UserFiegnClientFallback.kt
+│        │              │        └─ configuration
+│        │              │           └─ HystrixConfiguration.kt
+│        │              ├─ application
+│        │              │  ├─ port
+│        │              │  │  ├─ input
+│        │              │  │  │  └─ SendEmailUsecase.kt
+│        │              │  │  └─ output
+│        │              │  │     ├─ EmailRecordPersistencePort.kt
+│        │              │  │     ├─ LoadEmailUserPort.kt
+│        │              │  │     └─ SmtpSendPort.kt
+│        │              │  └─ service
+│        │              │     └─ SendEmail.kt
+│        │              └─ domain
+│        │                 ├─ EmailRecord.kt
+│        │                 ├─ EmailStatus.kt
+│        │                 ├─ content
+│        │                 │  ├─ EmailContent.kt
+│        │                 │  └─ EmailDataConverter.kt
+│        │                 └─ user
+│        │                    ├─ Sender.kt
+│        │                    └─ Target.kt
+│        └─ resources
+│           ├─ application.yml
+│           └─ templates
+│              └─ notification.html
+├─ employment
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        ├─ kotlin
+│        │  └─ com
+│        │     └─ info
+│        │        └─ info_v2_backend
+│        │           └─ employment
+│        │              ├─ EmploymentApplication.kt
+│        │              ├─ adapter
+│        │              │  ├─ input
+│        │              │  │  └─ rest
+│        │              │  │     ├─ EmploymentController.kt
+│        │              │  │     └─ dto
+│        │              │  │        └─ request
+│        │              │  │           └─ EmploymentResponse.kt
+│        │              │  └─ output
+│        │              │     ├─ persistence
+│        │              │     │  ├─ EmploymentAdapter.kt
+│        │              │     │  └─ repository
+│        │              │     │     └─ EmploymentRepository.kt
+│        │              │     └─ rest
+│        │              │        ├─ AppliesFeignClient.kt
+│        │              │        ├─ AppliesFeignClientFallback.kt
+│        │              │        ├─ CompanyFeignClient.kt
+│        │              │        ├─ CompanyFeignClientFallback.kt
+│        │              │        ├─ NoticeFeignClient.kt
+│        │              │        └─ NoticeFeignClientFallback.kt
+│        │              ├─ application
+│        │              │  ├─ port
+│        │              │  │  ├─ input
+│        │              │  │  │  ├─ ConfirmEmploymentUsecase.kt
+│        │              │  │  │  ├─ EmployStudentUsecase.kt
+│        │              │  │  │  ├─ FailEmploymentUsecase.kt
+│        │              │  │  │  └─ LoadEmploymentUsecase.kt
+│        │              │  │  └─ output
+│        │              │  │     ├─ LoadAppliesStudentPort.kt
+│        │              │  │     ├─ LoadCompanyPort.kt
+│        │              │  │     ├─ LoadEmploymentPort.kt
+│        │              │  │     ├─ LoadNoticePort.kt
+│        │              │  │     └─ SaveEmploymentPort.kt
+│        │              │  └─ service
+│        │              │     ├─ ConfirmEmployment.kt
+│        │              │     ├─ EmployStudent.kt
+│        │              │     ├─ FailEmployment.kt
+│        │              │     └─ LoadEmployment.kt
+│        │              └─ domain
+│        │                 ├─ Employment.kt
+│        │                 ├─ company
+│        │                 │  ├─ EmploymentCompany.kt
+│        │                 │  └─ EmploymentContactor.kt
+│        │                 ├─ notice
+│        │                 │  └─ EmploymentNotice.kt
+│        │                 ├─ status
+│        │                 │  └─ EmploymentStatus.kt
+│        │                 └─ student
+│        │                    └─ EmployedStudent.kt
+│        └─ resources
+│           └─ application.yml
+├─ eureka
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        ├─ kotlin
+│        │  └─ com
+│        │     └─ info
+│        │        └─ info_v2_backend
+│        │           └─ eureka
+│        │              └─ EurekaApplication.kt
+│        └─ resources
+│           └─ application.yml
+├─ file
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        ├─ kotlin
+│        │  └─ com
+│        │     └─ info
+│        │        └─ info_v2_backend
+│        │           └─ file
+│        │              ├─ FileApplication.kt
+│        │              ├─ adapter
+│        │              │  ├─ configuration
+│        │              │  │  ├─ KafkaConfiguration.kt
+│        │              │  │  └─ KafkaProperty.kt
+│        │              │  ├─ input
+│        │              │  │  └─ rest
+│        │              │  │     └─ FileController.kt
+│        │              │  └─ output
+│        │              │     ├─ aws
+│        │              │     │  ├─ S3Uploader.kt
+│        │              │     │  └─ configuration
+│        │              │     │     ├─ S3Configuration.kt
+│        │              │     │     └─ S3Property.kt
+│        │              │     ├─ event
+│        │              │     │  └─ RegisterCompanyFileAdapter.kt
+│        │              │     └─ persistence
+│        │              │        ├─ LoadCompanyFileAdapter.kt
+│        │              │        ├─ RemoveFileAdapter.kt
+│        │              │        ├─ ResumeFileAdapter.kt
+│        │              │        ├─ SaveCompanyFileAdapter.kt
+│        │              │        └─ repository
+│        │              │           ├─ CompanyFileRepostiory.kt
+│        │              │           ├─ FileRepository.kt
+│        │              │           └─ ResumeRepository.kt
+│        │              ├─ application
+│        │              │  ├─ configuration
+│        │              │  │  └─ AsyncConfiguration.kt
+│        │              │  ├─ port
+│        │              │  │  ├─ input
+│        │              │  │  │  ├─ LoadCompanyFileUsecase.kt
+│        │              │  │  │  ├─ RemoveCompanyFileUsecase.kt
+│        │              │  │  │  ├─ UploadCompanyFileUsecase.kt
+│        │              │  │  │  └─ UploadResumeUsecase.kt
+│        │              │  │  └─ output
+│        │              │  │     ├─ LoadCompanyFilePort.kt
+│        │              │  │     ├─ RegisterCompanyFilePort.kt
+│        │              │  │     ├─ RemoveFilePort.kt
+│        │              │  │     ├─ UploadFilePort.kt
+│        │              │  │     └─ save
+│        │              │  │        ├─ SaveCompanyFilePort.kt
+│        │              │  │        └─ SaveResumeFilePort.kt
+│        │              │  └─ service
+│        │              │     ├─ LoadCompanyFile.kt
+│        │              │     ├─ RemoveCompanyFile.kt
+│        │              │     └─ UploadFile.kt
+│        │              └─ domain
+│        │                 ├─ File.kt
+│        │                 ├─ applicant
+│        │                 │  └─ Reporter.kt
+│        │                 ├─ applies
+│        │                 │  └─ Resume.kt
+│        │                 ├─ company
+│        │                 │  └─ CompanyFile.kt
+│        │                 └─ notice
+│        │                    ├─ AttachmentNotice.kt
+│        │                    └─ FormAttachment.kt
+│        └─ resources
+│           └─ application.yml
+├─ gradle
+│  └─ wrapper
+│     ├─ gradle-wrapper.jar
+│     └─ gradle-wrapper.properties
+├─ gradlew
+├─ gradlew.bat
+├─ notice
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        ├─ kotlin
+│        │  └─ com
+│        │     └─ info
+│        │        └─ info_v2_backend
+│        │           └─ notice
+│        │              ├─ NoticeApplication.kt
+│        │              ├─ adapter
+│        │              │  ├─ input
+│        │              │  │  └─ rest
+│        │              │  │     ├─ NoticeController.kt
+│        │              │  │     └─ dto
+│        │              │  │        ├─ request
+│        │              │  │        │  ├─ CreateNoticeRequest.kt
+│        │              │  │        │  ├─ EditNoticeRequest.kt
+│        │              │  │        │  ├─ NoticeOpenPeriodRequest.kt
+│        │              │  │        │  ├─ openPeriod
+│        │              │  │        │  │  └─ EditNoticeOpenPeriodRequest.kt
+│        │              │  │        │  ├─ pay
+│        │              │  │        │  │  ├─ EditEmploymentPayRequest.kt
+│        │              │  │        │  │  ├─ EditPayRequest.kt
+│        │              │  │        │  │  ├─ EmploymentPayRequest.kt
+│        │              │  │        │  │  └─ PayRequest.kt
+│        │              │  │        │  ├─ support
+│        │              │  │        │  │  ├─ EditMealSupportRequest.kt
+│        │              │  │        │  │  ├─ MealSupportRequest.kt
+│        │              │  │        │  │  ├─ WelfareRequest.kt
+│        │              │  │        │  │  └─ WorkTimeRequest.kt
+│        │              │  │        │  ├─ welfare
+│        │              │  │        │  │  └─ EditWelfareRequest.kt
+│        │              │  │        │  ├─ workPlace
+│        │              │  │        │  │  ├─ EditWorkPlaceRequest.kt
+│        │              │  │        │  │  └─ WorkPlaceRequest.kt
+│        │              │  │        │  └─ worktime
+│        │              │  │        │     └─ EditWorkTimeRequest.kt
+│        │              │  │        └─ response
+│        │              │  │           ├─ LanguageResponse.kt
+│        │              │  │           ├─ MaximumNoticeResponse.kt
+│        │              │  │           ├─ MinimumNoticeResponse.kt
+│        │              │  │           ├─ certificate
+│        │              │  │           │  └─ CertificateResponse.kt
+│        │              │  │           ├─ classification
+│        │              │  │           │  ├─ BigClassificationResponse.kt
+│        │              │  │           │  └─ ClassificationResponse.kt
+│        │              │  │           └─ technology
+│        │              │  │              └─ TechnologyResponse.kt
+│        │              │  └─ output
+│        │              │     ├─ event
+│        │              │     │  └─ CompanyAdapter.kt
+│        │              │     ├─ persistence
+│        │              │     │  ├─ BigRecruitmentClassificationAdapter.kt
+│        │              │     │  ├─ NoticeAdapter.kt
+│        │              │     │  ├─ SmallRecruitmentClassificationAdapter.kt
+│        │              │     │  └─ repository
+│        │              │     │     ├─ NoticeRepository.kt
+│        │              │     │     ├─ RecruitmentBigClassificationRepository.kt
+│        │              │     │     └─ RecruitmentSmallClassificationRepository.kt
+│        │              │     └─ rest
+│        │              │        └─ CompanyFeignClient.kt
+│        │              ├─ application
+│        │              │  ├─ port
+│        │              │  │  ├─ input
+│        │              │  │  │  ├─ ConcludeNoticeUsecase.kt
+│        │              │  │  │  ├─ CreateNoticeUsecase.kt
+│        │              │  │  │  ├─ EditNoticeUsecase.kt
+│        │              │  │  │  ├─ LoadNoticeUsecase.kt
+│        │              │  │  │  └─ RemoveNoticeUsecase.kt
+│        │              │  │  └─ output
+│        │              │  │     ├─ LoadCompanyPort.kt
+│        │              │  │     ├─ LoadNoticePort.kt
+│        │              │  │     ├─ RemoveNoticePort.kt
+│        │              │  │     ├─ SaveNoticePort.kt
+│        │              │  │     ├─ UpdateCompanyPort.kt
+│        │              │  │     ├─ bigClassification
+│        │              │  │     │  ├─ LoadBigClassificationPort.kt
+│        │              │  │     │  └─ SaveBigClassificationPort.kt
+│        │              │  │     └─ smallClassification
+│        │              │  │        ├─ LoadSmallClassificationPort.kt
+│        │              │  │        └─ SaveSmallClassificationPort.kt
+│        │              │  └─ service
+│        │              │     ├─ ConcludeNotice.kt
+│        │              │     ├─ CreateNotice.kt
+│        │              │     ├─ EditNotice.kt
+│        │              │     ├─ LoadNotice.kt
+│        │              │     └─ RemoveNotice.kt
+│        │              └─ domain
+│        │                 ├─ Notice.kt
+│        │                 ├─ certificate
+│        │                 │  ├─ Certificate.kt
+│        │                 │  ├─ CertificateUsage.kt
+│        │                 │  └─ CertificateUsageIdClass.kt
+│        │                 ├─ company
+│        │                 │  └─ NoticeCompany.kt
+│        │                 ├─ interview
+│        │                 │  ├─ InterviewProcess.kt
+│        │                 │  └─ InterviewProcessUsage.kt
+│        │                 ├─ language
+│        │                 │  ├─ Language.kt
+│        │                 │  ├─ LanguageUsage.kt
+│        │                 │  └─ LanguageUsageIdClass.kt
+│        │                 ├─ openPeriod
+│        │                 │  └─ NoticeOpenPeriod.kt
+│        │                 ├─ recruitmentBusiness
+│        │                 │  ├─ RecruitmentBigClassification.kt
+│        │                 │  └─ RecruitmentSmallClassification.kt
+│        │                 ├─ status
+│        │                 │  └─ NoticeWaitingStatus.kt
+│        │                 ├─ support
+│        │                 │  ├─ MealSupport.kt
+│        │                 │  ├─ Pay.kt
+│        │                 │  ├─ Welfare.kt
+│        │                 │  └─ WorkTime.kt
+│        │                 ├─ technology
+│        │                 │  ├─ Technology.kt
+│        │                 │  ├─ TechnologyUsage.kt
+│        │                 │  └─ TechnologyUsageIdClass.kt
+│        │                 └─ workPlace
+│        │                    └─ WorkPlace.kt
+│        └─ resources
+│           └─ application.yml
+├─ settings.gradle.kts
+└─ user
+   ├─ build.gradle.kts
+   └─ src
+      └─ main
+         ├─ kotlin
+         │  └─ com
+         │     └─ info
+         │        └─ info_v2_backend
+         │           └─ user
+         │              ├─ UserApplication.kt
+         │              ├─ adapter
+         │              │  ├─ configuration
+         │              │  │  ├─ KafkaConfiguration.kt
+         │              │  │  └─ KafkaProperty.kt
+         │              │  ├─ input
+         │              │  │  ├─ event
+         │              │  │  │  └─ SaveUserEventConsumer.kt
+         │              │  │  └─ web
+         │              │  │     └─ rest
+         │              │  │        ├─ UserController.kt
+         │              │  │        ├─ configuration
+         │              │  │        │  └─ UserExceptionHandler.kt
+         │              │  │        └─ dto
+         │              │  │           ├─ request
+         │              │  │           │  ├─ SaveContactorDto.kt
+         │              │  │           │  ├─ SaveStudentDto.kt
+         │              │  │           │  ├─ SaveTeacherDto.kt
+         │              │  │           │  └─ SaveUserDto.kt
+         │              │  │           └─ response
+         │              │  │              ├─ CommonUserDetails.kt
+         │              │  │              ├─ ContactorResponse.kt
+         │              │  │              └─ CustomGrantedAuthority.kt
+         │              │  └─ output
+         │              │     └─ persistence
+         │              │        ├─ UserPersistenceAdapter.kt
+         │              │        └─ repository
+         │              │           ├─ ContactorRepository.kt
+         │              │           ├─ StudentRepository.kt
+         │              │           ├─ TeacherRepository.kt
+         │              │           └─ UserRepository.kt
+         │              ├─ application
+         │              │  ├─ configuration
+         │              │  │  └─ SecurityConfiguration.kt
+         │              │  ├─ port
+         │              │  │  ├─ input
+         │              │  │  │  ├─ LoadCommonUserDetailsUsecase.kt
+         │              │  │  │  ├─ LoadContactorUsecase.kt
+         │              │  │  │  ├─ LoadPasswordHintUsecase.kt
+         │              │  │  │  ├─ LoadStudentUsecase.kt
+         │              │  │  │  └─ SaveUserUsecase.kt
+         │              │  │  └─ output
+         │              │  │     ├─ LoadContactorPort.kt
+         │              │  │     ├─ LoadStudentPort.kt
+         │              │  │     ├─ LoadUserPort.kt
+         │              │  │     └─ SaveUserPort.kt
+         │              │  └─ service
+         │              │     ├─ LoadCommonUserDetails.kt
+         │              │     ├─ LoadPasswordHint.kt
+         │              │     ├─ LoadUser.kt
+         │              │     └─ SaveUser.kt
+         │              └─ domain
+         │                 ├─ Contactor.kt
+         │                 ├─ Role.kt
+         │                 ├─ Student.kt
+         │                 ├─ Teacher.kt
+         │                 └─ User.kt
+         └─ resources
+            └─ application.yml
+```
+©generated by [Project Tree Generator](https://woochanleee.github.io/project-tree-generator)

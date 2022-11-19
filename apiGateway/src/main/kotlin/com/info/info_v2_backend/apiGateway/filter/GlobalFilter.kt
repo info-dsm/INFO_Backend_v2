@@ -1,7 +1,6 @@
 package com.info.info_v2_backend.apiGateway.filter
 
 import com.info.info_v2_backend.apiGateway.property.JwtProperty
-import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.auth.HeaderProperty
@@ -44,7 +43,6 @@ class GlobalFilter(
                     log.info("Global Filter End: response code -> {}", response.getStatusCode())
                 }))
             } else {
-                println("Authorization Header Detected")
                 val authorizationHeader = request.headers[HttpHeaders.AUTHORIZATION]!![0]
                 val jwt = authorizationHeader.replace("Bearer ", "")
                 val body = getTokenBody(jwt)

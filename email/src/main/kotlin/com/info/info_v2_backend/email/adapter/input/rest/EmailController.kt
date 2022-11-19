@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.email.adapter.input.web
+package com.info.info_v2_backend.email.adapter.input.rest
 
 import com.info.info_v2_backend.common.email.dto.SendEmailTextRequest
 import com.info.info_v2_backend.email.adapter.output.rest.adapter.UserFeignClient

@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.email.adapter.input.web.configuration
+package com.info.info_v2_backend.email.adapter.input.rest.configuration
 
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorResponse

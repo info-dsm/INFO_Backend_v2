@@ -20,7 +20,6 @@ data class EmploymentResponse(
     )
     data class EmploymentCompanyResponse(
         val companyNumber: String,
-        val companyName: String
     )
     data class EmploymentContactorResponse(
         val contactorEmail: String

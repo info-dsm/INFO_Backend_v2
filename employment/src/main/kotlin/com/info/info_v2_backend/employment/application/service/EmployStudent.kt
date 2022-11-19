@@ -10,6 +10,7 @@ import com.info.info_v2_backend.employment.application.port.output.SaveEmploymen
 import com.info.info_v2_backend.employment.domain.Employment
 import com.info.info_v2_backend.employment.domain.company.EmploymentCompany
 import com.info.info_v2_backend.employment.domain.company.EmploymentContactor
+import com.info.info_v2_backend.employment.domain.notice.EmploymentNotice
 import com.info.info_v2_backend.employment.domain.student.EmployedStudent
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -44,6 +45,9 @@ class EmployStudent(
         val employmentId = UUID.randomUUID().toString()
         val employment = Employment(
             employmentId,
+            EmploymentNotice(
+                notice.noticeId
+            ),
             EmployedStudent(
                 studentEmail,
                 applies.applicant.name,
@@ -51,7 +55,6 @@ class EmployStudent(
             ),
             EmploymentCompany(
                 notice.companyNumber,
-                notice.companyName
             ),
             EmploymentContactor(
                 company.contactorEmail

@@ -25,13 +25,6 @@ spring:
       default-filters:
         - name: GlobalFilter
       routes:
-        - id: email-service
-          predicates:
-            - Path=/email/**
-          uri: lb://EMAIL-SERVICE
-          filters:
-            - RewritePath=/email/(?<segment>.*), /$\{segment}
-
         - id: user-service
           predicates:
             - Path=/user/**
@@ -52,6 +45,7 @@ spring:
           uri: lb://COMPANY-SERVICE
           filters:
             - RewritePath=/company/(?<segment>.*), /$\{segment}
+
         - id: applies-service
           predicates:
             - Path=/applies/**

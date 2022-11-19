@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class NoticeFeignClientFallback: FallbackFactory<NoticeFeignClient> {
     override fun create(cause: Throwable?): NoticeFeignClient {
         return object : NoticeFeignClient {
-            override fun loadNotice(noticeId: String): NoticeDto? {
+            override fun loadAvailableNotice(noticeId: String): NoticeDto? {
                 return null
             }
 

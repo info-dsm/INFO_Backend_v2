@@ -1,6 +1,7 @@
 package com.info.info_v2_backend.apiGateway.filter
 
 import com.info.info_v2_backend.apiGateway.property.JwtProperty
+import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.auth.HeaderProperty
@@ -28,6 +29,15 @@ class GlobalFilter(
             val response: ServerHttpResponse = exchange.response
 
             log.info("Global Filter start: request id -> {}, path -> {}", request.getId(), request.path)
+            if (request.headers.containsKey(HeaderProperty.USER_EMAIL)) {
+                request.mutate().header(HeaderProperty.USER_EMAIL, null)
+            }
+            if (request.headers.containsKey(HeaderProperty.AUTH_LEVEL)) {
+                request.mutate().header(HeaderProperty.AUTH_LEVEL, null)
+            }
+            if (request.headers.containsKey(HeaderProperty.COMPANY_NUMBER)) {
+                request.mutate().header(HeaderProperty.COMPANY_NUMBER, null)
+            }
 
             if (!request.headers.containsKey(HttpHeaders.AUTHORIZATION)) {
                 chain.filter(exchange).then(Mono.fromRunnable(Runnable {

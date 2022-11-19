@@ -4,7 +4,7 @@ import com.info.info_v2_backend.applies.application.port.input.CancelApplyUsecas
 import com.info.info_v2_backend.applies.application.port.output.cancel.CancelApplyPort
 import com.info.info_v2_backend.applies.application.port.output.load.LoadAppliesPort
 import com.info.info_v2_backend.applies.application.port.output.save.UpdateNoticeAppliesCountPort
-import com.info.info_v2_backend.applies.domain.status.AppliesStatus
+import com.info.info_v2_backend.common.applies.AppliesStatus
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import org.springframework.stereotype.Service

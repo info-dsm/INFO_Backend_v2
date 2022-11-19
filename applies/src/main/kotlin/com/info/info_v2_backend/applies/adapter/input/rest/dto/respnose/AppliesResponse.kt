@@ -1,6 +1,6 @@
 package com.info.info_v2_backend.applies.adapter.input.rest.dto.respnose
 
-import com.info.info_v2_backend.applies.domain.status.AppliesStatus
+import com.info.info_v2_backend.common.applies.AppliesStatus
 
 data class AppliesResponse(
     val appliesId: String,

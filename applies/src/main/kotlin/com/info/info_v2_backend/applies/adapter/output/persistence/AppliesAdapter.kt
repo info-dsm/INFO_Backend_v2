@@ -5,7 +5,7 @@ import com.info.info_v2_backend.applies.application.port.output.save.SaveApplies
 import com.info.info_v2_backend.applies.application.port.output.cancel.CancelApplyPort
 import com.info.info_v2_backend.applies.application.port.output.load.LoadAppliesPort
 import com.info.info_v2_backend.applies.domain.Applies
-import com.info.info_v2_backend.applies.domain.status.AppliesStatus
+import com.info.info_v2_backend.common.applies.AppliesStatus
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 

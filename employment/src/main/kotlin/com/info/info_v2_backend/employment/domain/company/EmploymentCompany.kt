@@ -7,18 +7,14 @@ import javax.persistence.Embeddable
 @Embeddable
 class EmploymentCompany(
     companyNumber: String,
-    companyName: String
 ) {
     @Column(name = "employment_company_number", nullable = false)
     val companyNumber: String = companyNumber
 
-    @Column(name = "employment_company_name", nullable = false)
-    val companyName = companyName
 
     fun toEmploymentCompanyResponse(): EmploymentResponse.EmploymentCompanyResponse {
         return EmploymentResponse.EmploymentCompanyResponse(
             this.companyNumber,
-            this.companyName
         )
     }
 

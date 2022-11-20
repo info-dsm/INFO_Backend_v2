@@ -7,5 +7,5 @@ interface LoadAppliesPort {
 
     fun loadAppliesList(noticeId: String, status: AppliesStatus): List<Applies>
     fun loadApplies(appliesId: String): Applies?
-    fun loadAppliesByNoticeAndStudentEmail(noticeId: String, studenEmail: String): Applies?
+    fun loadAppliesByNoticeAndStudentEmail(noticeId: String, studentEmail: String): Applies?
 }

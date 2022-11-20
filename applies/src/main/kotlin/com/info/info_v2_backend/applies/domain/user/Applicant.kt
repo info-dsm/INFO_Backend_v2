@@ -17,7 +17,7 @@ class Applicant(
     @Column(name = "applicant_name", nullable = false)
     val name: String = name
 
-    @Column(name = "entrance_year", nullable = false)
+    @Column(name = "applicant_entrance_year", nullable = false)
     val entranceYear: Int = entranceYear
 
     fun toApplicantDto(): AppliesDto.ApplicantDto {

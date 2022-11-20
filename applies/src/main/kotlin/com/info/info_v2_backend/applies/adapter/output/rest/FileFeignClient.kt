@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile
 @FeignClient(name = "FILE-SERVICE", )
 interface FileFeignClient: UploadResumePort {
 
-    @PutMapping("/notice/{noticeId}/resume")
+    @PutMapping("/applies/{noticeId}/resume")
     @Async
     override fun uploadResume(@PathVariable noticeId: String, @RequestPart resume: MultipartFile)
 

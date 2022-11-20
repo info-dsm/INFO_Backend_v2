@@ -6,17 +6,18 @@ import com.info.info_v2_backend.applies.domain.user.Applicant
 import com.info.info_v2_backend.common.applies.AppliesDto
 import com.info.info_v2_backend.common.applies.AppliesStatus
 import com.info.info_v2_backend.commonEntity.entity.TimeEntity
+import java.time.LocalDate
 import java.util.UUID
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
+@Table(name = "applies")
 class Applies(
     applicant: Applicant,
     notice: AppliesNotice
 ): TimeEntity() {
     @Id
+    @Column(name = "id", nullable = false)
     val id: String = UUID.randomUUID().toString()
 
     var applicant: Applicant = applicant
@@ -26,8 +27,23 @@ class Applies(
     var notice: AppliesNotice = notice
         protected set
 
+    @Column(name = "applies_status")
+    @Enumerated(value = EnumType.STRING)
     var status: AppliesStatus = AppliesStatus.WAITING
         protected set
+
+    constructor(
+        id: String,
+        applicant: Applicant,
+        notice: AppliesNotice,
+        createdAt: LocalDate,
+        updatedAt: LocalDate,
+        status: AppliesStatus): this(applicant, notice) {
+            var id: String = id
+            var createdAt: LocalDate = createdAt
+            var updatedat: LocalDate = updatedAt
+            var status: AppliesStatus = status
+        }
 
     fun approve() {
         this.status = AppliesStatus.APPROVE

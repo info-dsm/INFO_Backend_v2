@@ -5,6 +5,6 @@ import org.springframework.web.multipart.MultipartFile
 
 interface FilePort {
 
-    fun saveFile(noticeId: String, file: MultipartFile)
+    fun saveFile(noticeId: String, file: List<MultipartFile>)
     fun loadAttachmentList(noticeId: String): List<AttachmentResponse>
 }

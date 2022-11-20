@@ -4,5 +4,5 @@ import org.springframework.web.multipart.MultipartFile
 
 interface UploadResumePort {
 
-    fun uploadResume(noticeId: String, resume: MultipartFile)
+    fun uploadResume(noticeId: String, studentEmail: String, resume: MultipartFile)
 }

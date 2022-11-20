@@ -11,7 +11,7 @@ class FileFeignClientFallback: FallbackFactory<FileFeignClient> {
 
     override fun create(cause: Throwable?): FileFeignClient {
         return object : FileFeignClient {
-            override fun uploadResume(noticeId: String, resume: MultipartFile) {
+            override fun uploadResume(noticeId: String, studentEmail: String, resume: MultipartFile) {
                 throw BusinessException("File을 업로드하던 중 오류가 발생했습니다. -> ${resume.originalFilename}", ErrorCode.BAD_GATEWAY_ERROR)
             }
 

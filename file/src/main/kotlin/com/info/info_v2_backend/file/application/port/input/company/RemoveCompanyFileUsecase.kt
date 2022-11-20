@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.file.application.port.input
+package com.info.info_v2_backend.file.application.port.input.company
 
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 

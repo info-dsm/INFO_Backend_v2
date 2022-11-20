@@ -70,9 +70,8 @@ class CreateNotice(
         )
         updateCompanyPort.updateLastNoticedYear(companyNumber)
 
-        attachment.map {
-            filePort.saveFile(notice.id, it)
-        }
+        filePort.saveFile(notice.id, attachment)
+
 
         saveNoticePort.saveNotice(
             notice

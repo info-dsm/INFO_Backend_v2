@@ -12,7 +12,7 @@ interface FileFeignClient: FilePort {
     @PutMapping("/notice/{noticeId}/attachment")
     override fun saveFile(
         @PathVariable noticeId: String,
-        @RequestPart file: MultipartFile
+        @RequestPart file: List<MultipartFile>
     )
 
     @GetMapping("/notice/{noticeId}/attachment")

@@ -1,13 +1,15 @@
 package com.info.info_v2_backend.file.adapter.input.rest
 
 import com.info.info_v2_backend.common.file.FileConvert
+import com.info.info_v2_backend.common.file.dto.AttachmentResponse
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
-import com.info.info_v2_backend.file.application.port.input.LoadCompanyFileUsecase
-import com.info.info_v2_backend.file.application.port.input.RemoveCompanyFileUsecase
-import com.info.info_v2_backend.file.application.port.input.UploadCompanyFileUsecase
-import com.info.info_v2_backend.file.application.port.input.UploadResumeUsecase
-import com.info.info_v2_backend.file.application.port.output.LoadCompanyFilePort
+import com.info.info_v2_backend.file.application.port.input.notice.UploadAttachmentUsecase
+import com.info.info_v2_backend.file.application.port.input.company.LoadCompanyFileUsecase
+import com.info.info_v2_backend.file.application.port.input.company.RemoveCompanyFileUsecase
+import com.info.info_v2_backend.file.application.port.input.company.UploadCompanyFileUsecase
+import com.info.info_v2_backend.file.application.port.input.applies.UploadResumeUsecase
+import com.info.info_v2_backend.file.application.port.input.notice.LoadAttachmentUsecase
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,7 +26,9 @@ class FileController(
     private val uploadCompanyFileUsecase: UploadCompanyFileUsecase,
     private val removeCompanyFileUsecase: RemoveCompanyFileUsecase,
     private val loadCompanyFileUsecase: LoadCompanyFileUsecase,
-    private val uploadResumeUsecase: UploadResumeUsecase
+    private val uploadResumeUsecase: UploadResumeUsecase,
+    private val uploadAttachmentUsecase: UploadAttachmentUsecase,
+    private val loadAttachmentUsecase: LoadAttachmentUsecase
 ) {
     companion object {
         const val IMAGE_PATH = "file/src/main/resources/tmp/"
@@ -60,9 +64,10 @@ class FileController(
     }
 
 
-    @PutMapping("/notice/{noticeId}/resume")
+    @PutMapping("/applies/{noticeId}/{studentEmail}/resume")
     fun uploadResume(
         @PathVariable noticeId: String,
+        @PathVariable studentEmail: String,
         @RequestPart(value = "resume") resume: MultipartFile
     ) {
         uploadResumeUsecase.uploadResume(
@@ -71,9 +76,35 @@ class FileController(
                 "$IMAGE_PATH${resume.originalFilename}"
                 )
             ),
-            noticeId
+            noticeId,
+            studentEmail
         )
         FileConvert.removeLocalFile("$IMAGE_PATH${resume.originalFilename}")
+    }
+
+    @PutMapping("/notice/{noticeId}/attachment")
+    fun uploadAttachment(
+        @PathVariable noticeId: String,
+        @RequestPart attachment: List<MultipartFile>
+    ) {
+        attachment.map {
+            uploadAttachmentUsecase.uploadAttachment(
+                FileConvert.fileToMultipartFileConvert(
+                    FileConvert.multipartFileToFileConvert(it,
+                        "$IMAGE_PATH${it.originalFilename}"
+                    )
+                ),
+                noticeId
+            )
+            FileConvert.removeLocalFile("$IMAGE_PATH${it.originalFilename}")
+        }
+    }
+
+    @GetMapping("/notice/{noticeId}/attachment")
+    fun getAttachmentList(
+        @PathVariable noticeId: String
+    ): List<AttachmentResponse> {
+        return loadAttachmentUsecase.loadAttachmentList(noticeId)
     }
 
 

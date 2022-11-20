@@ -44,4 +44,11 @@ abstract class File(
     var isDeleted: Boolean = false
         protected set
 
+    var isNew: Boolean = true
+        protected set
+
+    fun changeOld(){
+        this.isNew = false
+    }
+
 }

@@ -17,7 +17,7 @@ class CompanyFile(
     id: String,
     fileDto: FileDto,
     companyFileType: CompanyFileClassificationType,
-    companyId: String
+    companyNumber: String
 ): File(
     id,
     fileDto.fileUrl,
@@ -27,7 +27,7 @@ class CompanyFile(
 ) {
 
     @Column(name = "file_company_id", nullable = false)
-    val companyId: String = companyId
+    val companyNumber: String = companyNumber
 
     @Column(name = "company_file_classification", nullable = false)
     val companyFileClassification: CompanyFileClassificationType = companyFileType
@@ -39,7 +39,7 @@ class CompanyFile(
             this.fileContentType,
             this.extension,
             this.fileName,
-            this.companyId,
+            this.companyNumber,
             this.companyFileClassification
         )
     }

@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.multipart.MultipartFile
 
-@FeignClient(name = "FILE-SERVICE", )
+@FeignClient(name = "FILE-SERVICE", fallbackFactory = FileFeignClientFallback::class)
 interface FileFeignClient: UploadResumePort {
 
-    @PutMapping("/applies/{noticeId}/resume")
+    @PutMapping("/applies/{noticeId}/{studentEmail}/resume")
     @Async
-    override fun uploadResume(@PathVariable noticeId: String, @RequestPart resume: MultipartFile)
+    override fun uploadResume(@PathVariable noticeId: String, @PathVariable studentEmail: String, @RequestPart resume: MultipartFile)
 
 
 }

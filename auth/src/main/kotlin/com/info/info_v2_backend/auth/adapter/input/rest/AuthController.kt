@@ -75,4 +75,11 @@ class AuthController(
         return checkCodeUsecase.check(request)
     }
 
+    @PutMapping("/password")
+    fun changePassword(
+
+    ) {
+
+    }
+
 }

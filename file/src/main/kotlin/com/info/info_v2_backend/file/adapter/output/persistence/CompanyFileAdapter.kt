@@ -1,16 +1,17 @@
 package com.info.info_v2_backend.file.adapter.output.persistence
 
-import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
+import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.file.adapter.output.persistence.repository.CompanyFileRepostiory
-import com.info.info_v2_backend.file.adapter.output.persistence.repository.FileRepository
-import com.info.info_v2_backend.file.application.port.output.LoadCompanyFilePort
+import com.info.info_v2_backend.file.application.port.output.company.LoadCompanyFilePort
+import com.info.info_v2_backend.file.application.port.output.company.RemoveCompanyFilePort
+import com.info.info_v2_backend.file.application.port.output.company.SaveCompanyFilePort
 import com.info.info_v2_backend.file.domain.company.CompanyFile
 import org.springframework.stereotype.Service
 
 @Service
-class LoadCompanyFileAdapter(
+class CompanyFileAdapter(
     private val companyFileRepository: CompanyFileRepostiory
-): LoadCompanyFilePort {
+): LoadCompanyFilePort, SaveCompanyFilePort, RemoveCompanyFilePort {
     override fun load(fileId: String): CompanyFile? {
         return companyFileRepository.findById(fileId).orElse(null)
     }
@@ -18,4 +19,13 @@ class LoadCompanyFileAdapter(
     override fun loadByCompanyNumber(companyNumber: String): List<CompanyFile> {
         return companyFileRepository.findByCompanyId(companyNumber)
     }
+
+    override fun save(file: CompanyFile) {
+        companyFileRepository.save(file)
+    }
+
+    override fun remove(classificationType: CompanyFileClassificationType, companyNumber: String) {
+        companyFileRepository.deleteByCompanyFileClassificationAndCompanyId(classificationType, companyNumber)
+    }
+
 }

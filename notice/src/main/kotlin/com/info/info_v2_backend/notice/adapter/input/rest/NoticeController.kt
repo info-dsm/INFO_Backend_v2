@@ -31,7 +31,8 @@ class NoticeController(
     private val removeNoticeUsecase: RemoveNoticeUsecase,
     private val concludeNoticeUsecase: ConcludeNoticeUsecase,
     private val approveNoticeUsecase: ApproveNoticeUsecase,
-    private val loadWaitingNoticeUsecase: LoadWaitingNoticeUsecase
+    private val loadWaitingNoticeUsecase: LoadWaitingNoticeUsecase,
+    private val changeAttachmentUsecase: ChangeAttachmentUsecase
 ){
 
     @PostMapping
@@ -52,7 +53,23 @@ class NoticeController(
         return editNoticeUsecase.edit(noticeId, request, Auth.checkCompanyNumber(companyNumber))
     }
 
+    @PatchMapping("/{companyNumber}/{noticeId}/attachment")
+    fun changeAttachment(
+        @PathVariable companyNumber: String,
+        @PathVariable noticeId: String,
+        @RequestPart file: List<MultipartFile>
+    ) {
+        return changeAttachmentUsecase.change(Auth.checkCompanyNumber(companyNumber), noticeId, file)
+    }
+
     //채용과정 수정
+    @PatchMapping("/{companyNumber}/interview")
+    fun changeInterview(
+        @PathVariable companyNumber: String
+    ) {
+
+    }
+
 
     @GetMapping("/waiting-list")
     fun getWaitingNoticeList(

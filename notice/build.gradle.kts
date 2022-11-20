@@ -21,4 +21,6 @@ dependencies {
     implementation("commons-fileupload:commons-fileupload:1.4")
     //Validation
     implementation("org.springframework.boot:spring-boot-starter-validation:2.7.4")
+    //StringUtils
+    implementation("org.apache.commons:commons-lang3:3.12.0")
 }

@@ -7,13 +7,16 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNo
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
 import com.info.info_v2_backend.notice.application.port.input.LoadNoticeUsecase
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
+import com.info.info_v2_backend.notice.application.port.output.file.FilePort
+import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
 class LoadNotice(
-    private val loadNoticePort: LoadNoticePort
+    private val loadNoticePort: LoadNoticePort,
+    private val filePort: FilePort
 ): LoadNoticeUsecase {
 
     override fun loadMaximumNotice(noticeId: String): MaximumNoticeResponse {
@@ -21,11 +24,11 @@ class LoadNotice(
             ?: throw BusinessException(
                 "Notice를 조회하지 못했습니다.",
                 ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR
-            )).toMaximumNoticeResponse()
+            )).toMaximumNoticeResponse(filePort.loadAttachmentList(noticeId))
     }
 
     override fun loadMinimumNoticeList(idx: Int, size: Int): Page<MinimumNoticeResponse> {
-        return loadNoticePort.loadOnDateAndApproveNoticeList(idx, size, LocalDate.now()).map {
+        return loadNoticePort.loadOnDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE).map {
             it.toMinimumNoticeResponse()
         }
     }

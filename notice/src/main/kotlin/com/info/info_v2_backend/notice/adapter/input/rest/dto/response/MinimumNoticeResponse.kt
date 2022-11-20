@@ -10,7 +10,7 @@ data class MinimumNoticeResponse(
     val detailBusinessDescription: String?,
     val numberOfEmployee: Int,
     val gradeCutLine: Int?,
-    val applicantCount: Int
-
+    val applicantCount: Int,
+    val isPersonalContact: Boolean
 
 )

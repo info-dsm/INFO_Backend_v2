@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.notice.domain
 
+import com.info.info_v2_backend.common.file.dto.AttachmentResponse
 import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.commonEntity.entity.TimeEntity
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
@@ -26,6 +27,7 @@ import com.info.info_v2_backend.notice.domain.technology.TechnologyUsage
 import com.info.info_v2_backend.notice.domain.workPlace.WorkPlace
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
+import java.time.LocalDate
 import javax.persistence.*
 
 
@@ -60,6 +62,7 @@ class Notice(
 ): TimeEntity() {
 
     @Id
+    @Column(name = "id", nullable = false)
     val id: String = id
 
     var company: NoticeCompany = company
@@ -154,15 +157,78 @@ class Notice(
         protected set
 
     @Column(name = "notice_is_approve", nullable = false)
+    @Enumerated(value = EnumType.STRING)
     var approveStatus: NoticeWaitingStatus = NoticeWaitingStatus.WAITING
         protected set
 
+    @Column(name = "applicant_count")
     var applicantCount: Int = 0
         protected set
 
     @Column(name = "notice_is_conclude", nullable = false)
     var isConclude: Boolean = false
         protected set
+
+    constructor(
+        id: String,
+        company: NoticeCompany,
+
+        bigClassification: RecruitmentBigClassification,
+        smallClassification: RecruitmentSmallClassification,
+        detailBusinessDescription: String?,
+        numberOfEmployee: Int,
+        gradeCutLine: Int?,
+
+        workTime: WorkTime,
+        pay: Pay,
+
+        mealSupport: MealSupport,
+        welfare: Welfare,
+
+        noticeOpenPeriod: NoticeOpenPeriod,
+
+        needDocuments: String?,
+
+        otherFeatures: String?,
+        workPlace: WorkPlace,
+        isPersonalContact: Boolean,
+        isDelete: Boolean,
+        approveStatus: NoticeWaitingStatus,
+        applicantCount: Int,
+        isConclude: Boolean,
+        createdAt: LocalDate,
+        updatedAt: LocalDate
+        ): this(
+            id,
+            company,
+            bigClassification,
+            smallClassification,
+            detailBusinessDescription,
+            numberOfEmployee,
+            gradeCutLine,
+            workTime,
+            pay,
+            mealSupport,
+            welfare,
+            noticeOpenPeriod,
+            needDocuments,
+            otherFeatures,
+            workPlace,
+            isPersonalContact,
+        ) {
+
+        var isDelete: Boolean = isDelete
+
+        var approveStatus: NoticeWaitingStatus = approveStatus
+
+        var applicantCount: Int = applicantCount
+
+        var isConclude: Boolean = isConclude
+
+        var createdAt: LocalDate = createdAt
+
+        var updatedAt: LocalDate = updatedAt
+    }
 
     fun addCount() {
         this.applicantCount++
@@ -186,6 +252,10 @@ class Notice(
 
     fun conclude(){
         this.isConclude = true
+    }
+
+    fun approve(){
+        this.approveStatus = NoticeWaitingStatus.APPROVE
     }
 
     fun checkIsAvailableAppliesStatus(): Boolean {
@@ -263,12 +333,13 @@ class Notice(
             this.detailBusinessDescription,
             this.numberOfEmplyee,
             this.gradeCutLine,
-            this.applicantCount
+            this.applicantCount,
+            this.isPersonalContact
         )
 
     }
 
-    fun toMaximumNoticeResponse(): MaximumNoticeResponse {
+    fun toMaximumNoticeResponse(attachmentResponseList: List<AttachmentResponse>): MaximumNoticeResponse {
         return MaximumNoticeResponse(
             this.id,
             this.company,
@@ -306,7 +377,9 @@ class Notice(
             this.needDocuments,
             this.otherFeatures,
             this.workPlace.toWorkPlaceRequest(),
-            this.applicantCount
+            this.applicantCount,
+            attachmentResponseList,
+            this.isPersonalContact
         )
     }
 

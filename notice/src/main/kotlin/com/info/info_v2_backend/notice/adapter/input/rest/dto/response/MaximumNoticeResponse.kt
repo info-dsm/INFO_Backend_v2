@@ -1,5 +1,7 @@
 package com.info.info_v2_backend.notice.adapter.input.rest.dto.response
 
+import com.info.info_v2_backend.common.file.dto.AttachmentResponse
+import com.info.info_v2_backend.common.file.dto.FileDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.NoticeOpenPeriodRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.support.MealSupportRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.support.WelfareRequest
@@ -28,6 +30,8 @@ data class MaximumNoticeResponse(
     val needDocuments: String?,
     val otherFeatures: String?,
     val workPlace: WorkPlaceRequest,
-    val applicantCount: Int
+    val applicantCount: Int,
+    val attachmentFileList: List<AttachmentResponse>,
+    val isPersonalContact: Boolean
 
 )

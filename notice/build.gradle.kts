@@ -5,6 +5,8 @@ dependencies {
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     //JPA
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    //JDBC
+    implementation("org.springframework.boot:spring-boot-starter-jdbc:2.7.5")
     //MySQL driver
     implementation("mysql:mysql-connector-java:8.0.31")
     //Eureka Client
@@ -19,5 +21,4 @@ dependencies {
     implementation("commons-fileupload:commons-fileupload:1.4")
     //Validation
     implementation("org.springframework.boot:spring-boot-starter-validation:2.7.4")
-
 }

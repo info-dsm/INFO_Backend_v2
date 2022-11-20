@@ -14,9 +14,6 @@ class Pay(
     yearPayEnd: Long,
 ) {
 
-    @Id
-    val id: Long? = null
-
     @Column(name = "field_training_pay", nullable = false)
     var fieldTrainingPayPerMonth: Long = fieldTrainingPayPerMonth
 

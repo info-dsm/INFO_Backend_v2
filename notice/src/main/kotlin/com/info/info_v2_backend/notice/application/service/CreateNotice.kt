@@ -9,6 +9,7 @@ import com.info.info_v2_backend.notice.application.port.output.SaveNoticePort
 import com.info.info_v2_backend.notice.application.port.output.UpdateCompanyPort
 import com.info.info_v2_backend.notice.application.port.output.bigClassification.LoadBigClassificationPort
 import com.info.info_v2_backend.notice.application.port.output.bigClassification.SaveBigClassificationPort
+import com.info.info_v2_backend.notice.application.port.output.file.FilePort
 import com.info.info_v2_backend.notice.application.port.output.smallClassification.LoadSmallClassificationPort
 import com.info.info_v2_backend.notice.application.port.output.smallClassification.SaveSmallClassificationPort
 import com.info.info_v2_backend.notice.domain.Notice
@@ -16,6 +17,7 @@ import com.info.info_v2_backend.notice.domain.company.NoticeCompany
 import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentBigClassification
 import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassification
 import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
 
 @Service
@@ -26,10 +28,11 @@ class CreateNotice(
     private val saveBigClassificationPort: SaveBigClassificationPort,
     private val loadSmallClassificationPort: LoadSmallClassificationPort,
     private val saveSmallClassificationPort: SaveSmallClassificationPort,
-    private val updateCompanyPort: UpdateCompanyPort
+    private val updateCompanyPort: UpdateCompanyPort,
+    private val filePort: FilePort
 ): CreateNoticeUsecase {
 
-    override fun create(companyNumber: String, request: CreateNoticeRequest) {
+    override fun create(companyNumber: String, request: CreateNoticeRequest, attachment: List<MultipartFile>) {
         val companyDto = loadCompanyPort.loadCompany(companyNumber)
             ?: throw BusinessException("회사를 조회하지 못했습니다. -> $companyNumber",
             ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
@@ -66,6 +69,10 @@ class CreateNotice(
             request.isPersonalContact
         )
         updateCompanyPort.updateLastNoticedYear(companyNumber)
+
+        attachment.map {
+            filePort.saveFile(notice.id, it)
+        }
 
         saveNoticePort.saveNotice(
             notice

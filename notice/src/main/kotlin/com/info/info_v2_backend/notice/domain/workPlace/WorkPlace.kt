@@ -13,7 +13,7 @@ class WorkPlace(
     otherPlace: String?
 ) {
 
-    @Column(name = "isSameWithCompanyAddress", nullable = false)
+    @Column(name = "is_same_with_company_address", nullable = false)
     var isSameWithCompanyAddress: Boolean = isSameWithCompanyAddress
         protected set
 

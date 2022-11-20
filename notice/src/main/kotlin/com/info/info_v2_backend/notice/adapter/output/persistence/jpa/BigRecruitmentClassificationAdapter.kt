@@ -1,7 +1,6 @@
-package com.info.info_v2_backend.notice.adapter.output.persistence
+package com.info.info_v2_backend.notice.adapter.output.persistence.jpa
 
-import com.info.info_v2_backend.notice.adapter.output.persistence.repository.RecruitmentBigClassificationRepository
-import com.info.info_v2_backend.notice.adapter.output.persistence.repository.RecruitmentSmallClassificationRepository
+import com.info.info_v2_backend.notice.adapter.output.persistence.jpa.repository.RecruitmentBigClassificationRepository
 import com.info.info_v2_backend.notice.application.port.output.bigClassification.LoadBigClassificationPort
 import com.info.info_v2_backend.notice.application.port.output.bigClassification.SaveBigClassificationPort
 import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentBigClassification

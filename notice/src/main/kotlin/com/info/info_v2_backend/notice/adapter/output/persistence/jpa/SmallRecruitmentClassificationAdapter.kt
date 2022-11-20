@@ -1,6 +1,6 @@
-package com.info.info_v2_backend.notice.adapter.output.persistence
+package com.info.info_v2_backend.notice.adapter.output.persistence.jpa
 
-import com.info.info_v2_backend.notice.adapter.output.persistence.repository.RecruitmentSmallClassificationRepository
+import com.info.info_v2_backend.notice.adapter.output.persistence.jpa.repository.RecruitmentSmallClassificationRepository
 import com.info.info_v2_backend.notice.application.port.output.smallClassification.LoadSmallClassificationPort
 import com.info.info_v2_backend.notice.application.port.output.smallClassification.SaveSmallClassificationPort
 import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassification

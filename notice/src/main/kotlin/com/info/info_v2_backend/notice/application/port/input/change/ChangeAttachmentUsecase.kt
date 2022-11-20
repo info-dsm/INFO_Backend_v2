@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.notice.application.port.input
+package com.info.info_v2_backend.notice.application.port.input.change
 
 import org.springframework.web.multipart.MultipartFile
 

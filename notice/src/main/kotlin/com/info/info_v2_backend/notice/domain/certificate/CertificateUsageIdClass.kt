@@ -4,5 +4,5 @@ import java.io.Serializable
 
 data class CertificateUsageIdClass(
     var certificate: String? = null,
-    var notice: Long? = null
+    var notice: String? = null
 ): Serializable

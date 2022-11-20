@@ -8,8 +8,8 @@ import javax.persistence.*
 
 
 @Entity
-@Table(name = "ceritifcate_usage")
 @IdClass(CertificateUsageIdClass::class)
+@Table(name = "certificate_usage")
 class CertificateUsage(
     certificate: Certificate,
     notice: Notice

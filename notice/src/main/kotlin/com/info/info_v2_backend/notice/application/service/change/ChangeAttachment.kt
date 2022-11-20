@@ -1,8 +1,8 @@
-package com.info.info_v2_backend.notice.application.service
+package com.info.info_v2_backend.notice.application.service.change
 
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.notice.application.port.input.ChangeAttachmentUsecase
+import com.info.info_v2_backend.notice.application.port.input.change.ChangeAttachmentUsecase
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
 import com.info.info_v2_backend.notice.application.port.output.file.FilePort
 import org.springframework.stereotype.Service

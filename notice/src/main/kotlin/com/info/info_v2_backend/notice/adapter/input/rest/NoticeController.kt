@@ -9,6 +9,11 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNotice
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
 import com.info.info_v2_backend.notice.application.port.input.*
+import com.info.info_v2_backend.notice.application.port.input.change.ChangeAttachmentUsecase
+import com.info.info_v2_backend.notice.application.port.input.change.ChangeCertificateUsecase
+import com.info.info_v2_backend.notice.application.port.input.change.ChangeInterviewProcessUsecase
+import com.info.info_v2_backend.notice.application.port.input.change.ChangeTechnologyUsecase
+import com.info.info_v2_backend.notice.domain.interview.InterviewProcess
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -32,7 +37,10 @@ class NoticeController(
     private val concludeNoticeUsecase: ConcludeNoticeUsecase,
     private val approveNoticeUsecase: ApproveNoticeUsecase,
     private val loadWaitingNoticeUsecase: LoadWaitingNoticeUsecase,
-    private val changeAttachmentUsecase: ChangeAttachmentUsecase
+    private val changeAttachmentUsecase: ChangeAttachmentUsecase,
+    private val changeInterviewProcessUsecase: ChangeInterviewProcessUsecase,
+    private val changeCertificateUsage: ChangeCertificateUsecase,
+    private val changeTechnologyUsecase: ChangeTechnologyUsecase
 ){
 
     @PostMapping
@@ -62,12 +70,34 @@ class NoticeController(
         return changeAttachmentUsecase.change(Auth.checkCompanyNumber(companyNumber), noticeId, file)
     }
 
-    //채용과정 수정
-    @PatchMapping("/{companyNumber}/interview")
+    @PatchMapping("/{companyNumber}/{noticeId}/interview")
     fun changeInterview(
-        @PathVariable companyNumber: String
+        @PathVariable companyNumber: String,
+        @PathVariable noticeId: String,
+        @RequestBody interviewProcessMap: Map<Int, InterviewProcess>
     ) {
+        Auth.checkCompanyNumber(companyNumber)
+        changeInterviewProcessUsecase.change(noticeId, interviewProcessMap)
+    }
 
+    @PatchMapping("/{companyNumber}/{noticeId}/certificate")
+    fun changeCertificate(
+        @PathVariable companyNumber: String,
+        @PathVariable noticeId: String,
+        @RequestBody certificateList: List<String>
+    ) {
+        Auth.checkCompanyNumber(companyNumber)
+        changeCertificateUsage.change(noticeId, certificateList)
+    }
+
+    @PatchMapping("/{companyNumber}/{noticeId}/technology")
+    fun changeTechnology(
+        @PathVariable companyNumber: String,
+        @PathVariable noticeId: String,
+        @RequestBody technologyList: MutableList<String>
+    ) {
+        Auth.checkCompanyNumber(companyNumber)
+        changeTechnologyUsecase.change(noticeId, technologyList)
     }
 
 

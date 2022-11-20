@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.notice.adapter.output.persistence
+package com.info.info_v2_backend.notice.adapter.output.persistence.jpa
 
 import com.info.info_v2_backend.notice.adapter.output.persistence.jdbc.mapper.NoticeMapper
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort

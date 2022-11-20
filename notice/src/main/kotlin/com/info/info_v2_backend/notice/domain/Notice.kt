@@ -13,7 +13,7 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classific
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.technology.TechnologyResponse
 import com.info.info_v2_backend.notice.domain.certificate.CertificateUsage
 import com.info.info_v2_backend.notice.domain.company.NoticeCompany
-import com.info.info_v2_backend.notice.domain.interview.InterviewProcessUsage
+import com.info.info_v2_backend.notice.domain.interview.InterviewProcess
 import com.info.info_v2_backend.notice.domain.language.LanguageUsage
 import com.info.info_v2_backend.notice.domain.openPeriod.NoticeOpenPeriod
 import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentBigClassification
@@ -134,7 +134,8 @@ class Notice(
 
 
     @ElementCollection
-    var interviewProcessList: MutableList<InterviewProcessUsage> = kotlin.collections.ArrayList()
+    @MapKeyColumn(name = "interview_process_sequence")
+    var interviewProcessMap: MutableMap<Int, InterviewProcess> = HashMap()
         protected set
 
     @Column(name = "need_documents", nullable = true)
@@ -230,6 +231,14 @@ class Notice(
         var updatedAt: LocalDate = updatedAt
     }
 
+    fun changeInterviewProcess(interviewProcessMap: MutableMap<Int, InterviewProcess>) {
+        this.interviewProcessMap = interviewProcessMap
+    }
+
+    fun changeCertificate(certificateList: MutableSet<CertificateUsage>) {
+        this.needCertificateList = certificateList
+    }
+
     fun addCount() {
         this.applicantCount++
     }
@@ -303,18 +312,6 @@ class Notice(
 //            )
 //    }
 
-    fun removeInterviewProcess(key: Int) {
-        this.interviewProcessList.first {
-            it.sequence == key
-        }.let {
-            this.interviewProcessList.remove(it)
-        }
-        this.interviewProcessList.filter {
-            it.sequence >= key
-        }.map {
-            it.pullSequence(key)
-        }
-    }
 
     fun approveNotice() {
         this.approveStatus = NoticeWaitingStatus.APPROVE
@@ -371,8 +368,8 @@ class Notice(
             this.mealSupport.toMealSupportRequest(),
             this.welfare.toWelfare(),
             this.noticeOpenPeriod.toNoticeOpenPeriod(),
-            this.interviewProcessList.map {
-                return@map mapOf(Pair(it.sequence, it.interviewProcess.meaning))
+            this.interviewProcessMap.map {
+                return@map mapOf(Pair(it.key, it.value.meaning))
             },
             this.needDocuments,
             this.otherFeatures,

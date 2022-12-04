@@ -1,6 +1,6 @@
-package com.info.info_v2_backend.company.adapter.output.persistence
+package com.info.info_v2_backend.company.adapter.output.persistence.rdb
 
-import com.info.info_v2_backend.company.adapter.output.persistence.repository.BusinessAreaTaggedRepository
+import com.info.info_v2_backend.company.adapter.output.persistence.rdb.repository.BusinessAreaTaggedRepository
 import com.info.info_v2_backend.company.application.port.output.businessArea.LoadBusinessAreaTaggedByCompanyNumberPort
 import com.info.info_v2_backend.company.application.port.output.businessArea.SaveBusinessAreaTaggedPort
 import com.info.info_v2_backend.company.domain.businessArea.BusinessAreaTagged

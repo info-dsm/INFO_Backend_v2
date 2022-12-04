@@ -25,4 +25,6 @@ dependencies {
     implementation("org.springframework.security:spring-security-config:5.7.3")
     implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
     implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
+    //Mongo
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 }

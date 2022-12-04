@@ -4,12 +4,15 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
+import com.info.info_v2_backend.company.application.port.input.FailCompanyUsecase
 import org.springframework.cloud.openfeign.FallbackFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 
 @Component
-class FileFeignClientFallbackFactory: FallbackFactory<FileFeignClient> {
+class FileFeignClientFallbackFactory(
+    private val failCompanyUsecase: FailCompanyUsecase
+): FallbackFactory<FileFeignClient> {
     override fun create(cause: Throwable): FileFeignClient {
         return object : FileFeignClient {
             override fun upload(
@@ -17,6 +20,7 @@ class FileFeignClientFallbackFactory: FallbackFactory<FileFeignClient> {
                 classification: CompanyFileClassificationType,
                 file: MultipartFile
             ) {
+                failCompanyUsecase.fail(companyId)
                 throw BusinessException("File Upload 중 오류가 발생했습니다.", ErrorCode.BAD_GATEWAY_ERROR)
             }
 
@@ -26,7 +30,7 @@ class FileFeignClientFallbackFactory: FallbackFactory<FileFeignClient> {
             }
 
             override fun loadCompanyFile(companyNumber: String): List<CompanyFileResponse> {
-                TODO("Not yet implemented")
+                return ArrayList()
             }
 
         }

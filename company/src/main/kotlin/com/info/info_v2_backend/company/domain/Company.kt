@@ -74,9 +74,6 @@ class Company(
     var creationStatus: CompanyCreationStatus = CompanyCreationStatus.WAITING
         protected set
 
-    fun created() {
-        this.creationStatus = CompanyCreationStatus.CREATED
-    }
 
     fun updateLastNoticeYear() {
         if (!this.isNoticeRegisteredYearList.contains(
@@ -95,6 +92,14 @@ class Company(
             this.companyIntroduction.changeIntroduction(it)
         }
 
+    }
+
+    fun makeComplete() {
+        this.creationStatus = CompanyCreationStatus.CREATED
+    }
+
+    fun makeFailed() {
+        this.creationStatus = CompanyCreationStatus.FAILED
     }
 
     fun makeAssociated() {

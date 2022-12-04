@@ -1,8 +1,6 @@
-package com.info.info_v2_backend.company.adapter.output.persistence
+package com.info.info_v2_backend.company.adapter.output.persistence.rdb
 
-import com.info.info_v2_backend.common.exception.BusinessException
-import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.company.adapter.output.persistence.repository.BusinessAreaRepository
+import com.info.info_v2_backend.company.adapter.output.persistence.rdb.repository.BusinessAreaRepository
 import com.info.info_v2_backend.company.application.port.output.businessArea.LoadBusinessAreaPort
 import com.info.info_v2_backend.company.application.port.output.businessArea.SaveBusinessAreaPort
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea

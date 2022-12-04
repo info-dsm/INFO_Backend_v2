@@ -166,6 +166,15 @@ class CompanyController(
     }
 
 
+    @GetMapping("/search")
+    fun searchCompany(
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "20") size: Int,
+        @RequestParam name: String
+    ): Page<MinimumCompanyResponse> {
+        return loadCompanyUsecase.searchCompany(idx, size, name)
+    }
+
     //회시 담당자 수정
 
     @PostMapping("/leading/{companyNumber}")

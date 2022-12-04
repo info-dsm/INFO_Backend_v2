@@ -11,4 +11,5 @@ interface LoadCompanyUsecase {
     fun loadMinimumCompanyListByYear(idx: Int, size: Int, year: Int): Page<MinimumCompanyResponse>
     fun loadMaximumCompany(companyNumber: String): MaximumCompanyResponse
     fun loadCompanyDto(companyNumber: String): CompanyDto?
+    fun searchCompany(idx: Int, size: Int, query: String): Page<MinimumCompanyResponse>
 }

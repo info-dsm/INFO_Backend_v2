@@ -15,10 +15,12 @@ import com.info.info_v2_backend.company.application.port.output.businessArea.Sav
 import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SaveCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SaveContactorPort
+import com.info.info_v2_backend.company.application.port.output.document.SaveCompanyDocumentPort
 import com.info.info_v2_backend.company.application.port.output.file.CompanyFilePort
 import com.info.info_v2_backend.company.domain.Company
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
 import com.info.info_v2_backend.company.domain.businessArea.BusinessAreaTagged
+import com.info.info_v2_backend.company.domain.document.CompanyDocument
 import com.info.info_v2_backend.company.domain.introduction.CompanyIntroduction
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveContactorDto
 import org.springframework.scheduling.annotation.Async
@@ -33,11 +35,13 @@ class RegisterCompany(
     private val checkEmailCodePort: CheckEmailCodePort,
     private val saveBusinessAreaTaggedPort: SaveBusinessAreaTaggedPort,
     private val loadBusinessAreaPort: LoadBusinessAreaPort,
-    private val loadCompanyPort: LoadCompanyPort
+    private val loadCompanyPort: LoadCompanyPort,
+    private val saveCompanyDocumentPort: SaveCompanyDocumentPort
 ): RegisterCompanyUsecase {
 
     companion object {
-        val COMPANY_FILE_PATH = "/tmp/spring/company"
+//        val COMPANY_FILE_PATH = "/tmp/spring/company"
+        val COMPANY_FILE_PATH = "/Users/anjin-u/Documents/project/INFO_v2_Backend/company/src/main/resources/tmp"
     }
 
     override fun register(
@@ -96,38 +100,51 @@ class RegisterCompany(
                     )
                 )
             }
-            company.created()
 
             saveCompanyPort.save(company)
 
-
-            uploadFile(
-                FileConvert.fileToMultipartFileConvert(
-                    FileConvert.multipartFileToFileConvert(businessRegisteredCertificate, "$COMPANY_FILE_PATH/")
-                ), CompanyFileClassificationType.BUSINESS_CERTIFICATE, request.companyNumber)
-            uploadFile(
-                FileConvert.fileToMultipartFileConvert(
-                    FileConvert.multipartFileToFileConvert(companyLogo, "$COMPANY_FILE_PATH/")
-                ), CompanyFileClassificationType.COMPANY_LOGO, request.companyNumber)
-            FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${businessRegisteredCertificate.originalFilename}")
-            FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${companyLogo.originalFilename}")
-
-            companyPhotoList.map {
+            try {
                 uploadFile(
                     FileConvert.fileToMultipartFileConvert(
-                        FileConvert.multipartFileToFileConvert(it, "$COMPANY_FILE_PATH/")
-                    ), CompanyFileClassificationType.COMPANY_PHOTO, request.companyNumber)
-                FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${it.originalFilename}")
-            }
-            companyIntroductionFile.map {
+                        FileConvert.multipartFileToFileConvert(businessRegisteredCertificate, "$COMPANY_FILE_PATH/")
+                    ), CompanyFileClassificationType.BUSINESS_CERTIFICATE, request.companyNumber
+                )
                 uploadFile(
                     FileConvert.fileToMultipartFileConvert(
-                        FileConvert.multipartFileToFileConvert(it, "$COMPANY_FILE_PATH/")
-                    ), CompanyFileClassificationType.COMPANY_INTRODUCTION, request.companyNumber)
-                FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${it.originalFilename}")
+                        FileConvert.multipartFileToFileConvert(companyLogo, "$COMPANY_FILE_PATH/")
+                    ), CompanyFileClassificationType.COMPANY_LOGO, request.companyNumber
+                )
+                FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${businessRegisteredCertificate.originalFilename}")
+                FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${companyLogo.originalFilename}")
+
+                companyPhotoList.map {
+                    uploadFile(
+                        FileConvert.fileToMultipartFileConvert(
+                            FileConvert.multipartFileToFileConvert(it, "$COMPANY_FILE_PATH/")
+                        ), CompanyFileClassificationType.COMPANY_PHOTO, request.companyNumber
+                    )
+                    FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${it.originalFilename}")
+                }
+                companyIntroductionFile.map {
+                    uploadFile(
+                        FileConvert.fileToMultipartFileConvert(
+                            FileConvert.multipartFileToFileConvert(it, "$COMPANY_FILE_PATH/")
+                        ), CompanyFileClassificationType.COMPANY_INTRODUCTION, request.companyNumber
+                    )
+                    FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${it.originalFilename}")
+                }
+            } catch (e: java.lang.RuntimeException) {
+                company.makeFailed()
+                saveCompanyPort.save(company)
+                throw BusinessException("파일을 처리하던 중 오류가 발생했습니다.", ErrorCode.BAD_GATEWAY_ERROR)
             }
 
-
+            saveCompanyDocumentPort.save(
+                CompanyDocument(
+                    company.companyName.companyName,
+                    company.companyNumber
+                )
+            )
         } else throw BusinessException("인증번호가 올바르지 않습니다. -> ${emailCheckCode}", ErrorCode.INVALID_INPUT_DATA_ERROR)
     }
 

@@ -1,8 +1,10 @@
 package com.info.info_v2_backend.company.domain.status
 
-enum class CompanyCreationStatus {
+enum class CompanyCreationStatus(
+    val sequence: Int
+) {
 
-    WAITING,
-    CREATED,
-    FAILED
+    WAITING(0),
+    CREATED(1),
+    FAILED(2)
 }

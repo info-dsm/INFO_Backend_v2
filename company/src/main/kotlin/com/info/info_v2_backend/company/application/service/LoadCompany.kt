@@ -7,8 +7,11 @@ import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.CompanyIntroductionResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
+import com.info.info_v2_backend.company.domain.document.CompanyDocument
 import com.info.info_v2_backend.company.application.port.input.LoadCompanyUsecase
 import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
+import com.info.info_v2_backend.company.application.port.output.document.RemoveCompanyDocumentPort
+import com.info.info_v2_backend.company.application.port.output.document.SearchCompanyDocumentPort
 import com.info.info_v2_backend.company.application.port.output.employment.LoadEmploymentPort
 import com.info.info_v2_backend.company.application.port.output.file.CompanyFilePort
 import com.info.info_v2_backend.company.application.port.output.user.LoadContactorPort
@@ -21,7 +24,9 @@ class LoadCompany(
     private val loadCompanyPort: LoadCompanyPort,
     private val companyFilePort: CompanyFilePort,
     private val loadContactorPort: LoadContactorPort,
-    private val loadEmploymentPort: LoadEmploymentPort
+    private val loadEmploymentPort: LoadEmploymentPort,
+    private val searchCompanyDocumentPort: SearchCompanyDocumentPort,
+    private val removeCompanyDocumentPort: RemoveCompanyDocumentPort
 ): LoadCompanyUsecase {
 
     override fun loadMinimumCompanyList(idx: Int, size: Int): Page<MinimumCompanyResponse> {
@@ -55,6 +60,22 @@ class LoadCompany(
 
     override fun loadCompanyDto(companyNumber: String): CompanyDto? {
         return loadCompanyPort.loadCompany(companyNumber)?.toCompanyDto()
+    }
+
+    override fun searchCompany(idx: Int, size: Int, query: String): Page<MinimumCompanyResponse> {
+        return searchCompanyDocumentPort.search(
+            idx, size, query
+        ).map {
+            document: CompanyDocument ->
+            val company = loadCompanyPort.loadCompany(document.companyNumber)?: let {
+                removeCompanyDocumentPort.remove(document.companyNumber)
+                throw BusinessException(errorCode = ErrorCode.BAD_GATEWAY_ERROR)
+            }
+            return@map company.toMinimumCompanyResponse(
+                getCompanyIntroductionResponse(company),
+                loadEmploymentPort.loadEmploymentList(company.companyNumber).size?:0
+            )
+        }
     }
 
     private fun getCompanyIntroductionResponse(company: Company): CompanyIntroductionResponse {

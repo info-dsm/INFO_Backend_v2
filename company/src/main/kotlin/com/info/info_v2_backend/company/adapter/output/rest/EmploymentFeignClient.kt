@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 
-@FeignClient(name = "EMPLOYMENT-SERVICE", )
+@FeignClient(name = "EMPLOYMENT-SERVICE", fallbackFactory = EmploymentFeignClientFalllback::class)
 interface EmploymentFeignClient: LoadEmploymentPort {
 
     @GetMapping("/{companyNumber}")

@@ -1,7 +1,7 @@
 package com.info.info_v2_backend.notice.domain.technology
 
-import com.info.info_v2_backend.commonEntity.entity.TimeEntity
 import com.info.info_v2_backend.notice.domain.Notice
+import com.info.info_v2_backend.notice.domain.time.TimeEntity
 import org.springframework.data.domain.Persistable
 import java.io.Serializable
 import javax.persistence.Entity

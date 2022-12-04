@@ -37,11 +37,11 @@ class CompanyAdapater(
     }
 
     override fun loadAllCompanyList(idx: Int, size: Int): Page<Company> {
-        return companyRepository.findAll(PageRequest.of(idx, size, Sort.by("created_at").descending()))
+        return companyRepository.findAll(PageRequest.of(idx, size, Sort.by("createdAt").descending()))
     }
 
     override fun loadAllCompanyListByYear(idx: Int, size: Int, year: Int): Page<Company> {
-        return companyRepository.findByIsNoticeRegisteredYearListContaining(year, PageRequest.of(idx, size, Sort.by("created_at").descending()))
+        return companyRepository.findByIsNoticeRegisteredYearListContaining(year, PageRequest.of(idx, size, Sort.by("createdAt").descending()))
     }
 
 }

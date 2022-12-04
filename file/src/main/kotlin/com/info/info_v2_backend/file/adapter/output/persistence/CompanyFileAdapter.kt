@@ -17,7 +17,7 @@ class CompanyFileAdapter(
     }
 
     override fun loadByCompanyNumber(companyNumber: String): List<CompanyFile> {
-        return companyFileRepository.findByCompanyId(companyNumber)
+        return companyFileRepository.findByCompanyNumber(companyNumber)
     }
 
     override fun save(file: CompanyFile) {
@@ -25,7 +25,7 @@ class CompanyFileAdapter(
     }
 
     override fun remove(classificationType: CompanyFileClassificationType, companyNumber: String) {
-        companyFileRepository.deleteByCompanyFileClassificationAndCompanyId(classificationType, companyNumber)
+        companyFileRepository.deleteByCompanyFileClassificationAndCompanyNumber(classificationType, companyNumber)
     }
 
 }

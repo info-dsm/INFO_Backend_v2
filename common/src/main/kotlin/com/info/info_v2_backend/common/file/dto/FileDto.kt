@@ -3,13 +3,15 @@ package com.info.info_v2_backend.common.file.dto
 import com.info.info_v2_backend.common.file.dto.type.FileType
 
 class FileDto(
-    val fileUrl: String,
-    val fileType: FileType,
-    val extension: String,
-    val fileName: String
-) {
+    fileUrl: String,
+    fileType: FileType,
+    extension: String,
+    fileName: String
 
-    override fun toString(): String {
-        return "url: $fileUrl, type: $fileType, extension: $extension"
-    }
+) {
+    val fileUrl: String = fileUrl
+    val fileType: FileType = fileType
+    val extension: String = extension
+    val fileName: String = fileName
+
 }

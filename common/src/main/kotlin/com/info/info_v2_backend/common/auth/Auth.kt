@@ -6,12 +6,12 @@ import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 
 object Auth {
-    fun companyNumber(): String {
-        return (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.getHeader(
+    fun companyNumber(): String? {
+        return (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?)?.request?.getHeader(
             HeaderProperty.COMPANY_NUMBER)
     }
-    fun authLevel(): String {
-        return (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.getHeader(
+    fun authLevel(): String? {
+        return (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?)?.request?.getHeader(
             HeaderProperty.AUTH_LEVEL)
     }
     fun checkCompanyNumber(companyNumber: String): String {
@@ -20,7 +20,7 @@ object Auth {
     fun checkIsTeacher(): Boolean {
         return authLevel() == "TEACHER"
     }
-    fun getUserEmail(): String {
+    fun getUserEmail(): String? {
         return (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.getHeader(
             HeaderProperty.USER_EMAIL
         )

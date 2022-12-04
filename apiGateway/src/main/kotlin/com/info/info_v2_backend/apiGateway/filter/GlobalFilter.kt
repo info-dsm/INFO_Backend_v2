@@ -54,14 +54,12 @@ class GlobalFilter(
                 request.mutate().header(HeaderProperty.USER_EMAIL, body.subject)
 
                 body[HeaderProperty.COMPANY_NUMBER]?. let {
-                    println("Company Number: $it")
+                    log.info("Company Number: $it")
                     request.mutate().header(HeaderProperty.COMPANY_NUMBER, it as String)
                 }
                 body[HeaderProperty.AUTH_LEVEL]?.let {
                     request.mutate().header(HeaderProperty.AUTH_LEVEL, it as String)
                 }
-
-                println(request.headers[HeaderProperty.COMPANY_NUMBER])
 
                 chain.filter(exchange).then(Mono.fromRunnable(Runnable {
                     log.info("Global Filter End: response code -> {}", response.getStatusCode())

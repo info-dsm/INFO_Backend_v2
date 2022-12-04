@@ -7,6 +7,7 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNo
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
 import com.info.info_v2_backend.notice.application.port.input.LoadNoticeUsecase
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
+import com.info.info_v2_backend.notice.application.port.output.LoadWithConditionPort
 import com.info.info_v2_backend.notice.application.port.output.file.FilePort
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import org.springframework.data.domain.Page
@@ -16,22 +17,34 @@ import java.time.LocalDate
 @Service
 class LoadNotice(
     private val loadNoticePort: LoadNoticePort,
+    private val loadWithConditionPort: LoadWithConditionPort,
     private val filePort: FilePort
 ): LoadNoticeUsecase {
 
     override fun loadMaximumNotice(noticeId: String): MaximumNoticeResponse {
-        return (loadNoticePort.loadNotice(noticeId)
+        val maximumNoticeResponse = (loadNoticePort.loadNotice(noticeId)
             ?: throw BusinessException(
                 "Notice를 조회하지 못했습니다.",
-                ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR
-            )).toMaximumNoticeResponse(filePort.loadAttachmentList(noticeId))
+                ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+                ).toMaximumNoticeResponse()
+        maximumNoticeResponse.addAllAttachmentFileList(filePort.loadAttachmentList(noticeId).toMutableList())
+        return maximumNoticeResponse
     }
 
-    override fun loadMinimumNoticeList(idx: Int, size: Int): Page<MinimumNoticeResponse> {
-        return loadNoticePort.loadOnDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE).map {
+    override fun loadNotEndedMinimumNoticeList(idx: Int, size: Int): Page<MinimumNoticeResponse> {
+        return loadWithConditionPort.loadBeforeEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
+    }
+
+    override fun loadEndedMinimumNoticeList(idx: Int, size: Int): Page<MinimumNoticeResponse> {
+        return loadWithConditionPort.loadAfterEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
+    }
+
+    override fun loadCompanyMiniumumNoticeList(companyNumber: String): List<MinimumNoticeResponse> {
+        return loadNoticePort.loadNoticeByCompany(companyNumber).map {
             it.toMinimumNoticeResponse()
         }
     }
+
 
     override fun loadAvailableNotice(noticeId: String): NoticeDto? {
         val notice = loadNoticePort.loadNotice(noticeId)

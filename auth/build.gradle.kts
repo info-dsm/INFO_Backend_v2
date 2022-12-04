@@ -24,4 +24,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation:2.7.4")
     //Redis
     implementation("org.springframework.boot:spring-boot-starter-data-redis:2.7.5")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
+    implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
 }

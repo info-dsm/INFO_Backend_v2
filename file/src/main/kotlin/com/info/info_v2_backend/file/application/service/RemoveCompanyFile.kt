@@ -25,7 +25,7 @@ class RemoveCompanyFile(
             throw BusinessException("소유자가 다릅니다. -> $companyNumber", ErrorCode.INVALID_INPUT_DATA_ERROR)
 
         removeFilePort.remove(
-            ,
+            file.id
         )
     }
 

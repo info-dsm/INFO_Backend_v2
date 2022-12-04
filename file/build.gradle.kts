@@ -1,5 +1,4 @@
 dependencies {
-    implementation(project(":commonEntity"))
     implementation(project(":common"))
     //Annotation Processor
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
@@ -17,8 +16,9 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
     //Kafka
     implementation("org.springframework.kafka:spring-kafka")
-
+    //Multipartfile
     implementation("commons-fileupload:commons-fileupload:1.4")
-
+    implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
+    implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
 
 }

@@ -7,11 +7,11 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.kafka.annotation.EnableKafka
 
-@SpringBootApplication
 @EnableFeignClients
 @EnableDiscoveryClient
 @EnableJpaAuditing
 @EnableKafka
+@SpringBootApplication
 class NoticeApplication
 fun main(args: Array<String>) {
     runApplication<NoticeApplication>(*args)

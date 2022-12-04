@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface CompanyFileRepostiory: JpaRepository<CompanyFile, String> {
 
-    fun findByCompanyId(companyNumber: String): List<CompanyFile>
-    fun deleteByCompanyFileClassificationAndCompanyId(classificationType: CompanyFileClassificationType, companyNumber: String)
+    fun findByCompanyNumber(companyNumber: String): List<CompanyFile>
+    fun deleteByCompanyFileClassificationAndCompanyNumber(classificationType: CompanyFileClassificationType, companyNumber: String)
 }

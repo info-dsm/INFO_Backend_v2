@@ -1,7 +1,6 @@
 
 
 dependencies {
-    implementation(project(":commonEntity"))
     //Annotation Processor
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     //Kafka
@@ -22,5 +21,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     //Mailing
     implementation("org.springframework.boot:spring-boot-starter-mail")
-
+    implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
+    implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
 }

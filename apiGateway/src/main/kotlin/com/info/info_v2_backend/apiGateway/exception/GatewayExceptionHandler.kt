@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.exception.ErrorResponse
+import org.slf4j.LoggerFactory
 import org.springframework.core.ResolvableType
 import org.springframework.core.annotation.Order
 import org.springframework.core.codec.Hints
@@ -21,26 +22,33 @@ import reactor.core.publisher.Mono
 class GatewayExceptionHandler(
     private val objectMapper: ObjectMapper
 ): WebExceptionHandler {
+
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
     override fun handle(exchange: ServerWebExchange, ex: Throwable): Mono<Void> {
         val response = exchange.response
         response.headers.contentType = MediaType.APPLICATION_JSON
 
         val errorResponse = when (ex) {
             is ResponseStatusException -> {
-                println(ex.message)
+                if (ex.status == HttpStatus.NOT_FOUND) {
+                    ErrorResponse(code = ErrorCode.NO_DATA_FOUND_ERROR)
+                }
+                log.warn(ex.message)
                 ErrorResponse(code = ErrorCode.FRAME_WORK_INTERNAL_ERROR)
             }
             is BusinessException -> {
+                log.warn(ex.message)
                 response.statusCode = HttpStatus.valueOf(ex.errorCode.status)
                 ErrorResponse(code = ex.errorCode)
             }
             else -> {
-                println(ex)
+                log.warn(ex.message)
                 response.statusCode = HttpStatus.valueOf(ErrorCode.UNDEFINED_ERROR.status)
                 ErrorResponse(code = ErrorCode.UNDEFINED_ERROR)
             }
         }
-
+        response.statusCode = HttpStatus.valueOf(errorResponse.status)
         return response.writeWith(
             Jackson2JsonEncoder(objectMapper).encode(
                 Mono.just(errorResponse),

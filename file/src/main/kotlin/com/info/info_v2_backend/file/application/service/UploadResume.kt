@@ -3,6 +3,7 @@ package com.info.info_v2_backend.file.application.service
 import com.info.info_v2_backend.file.application.port.input.applies.UploadResumeUsecase
 import com.info.info_v2_backend.file.application.port.output.RemoveFilePort
 import com.info.info_v2_backend.file.application.port.output.UploadFilePort
+import com.info.info_v2_backend.file.application.port.output.applies.LoadResumePort
 import com.info.info_v2_backend.file.application.port.output.applies.SaveResumeFilePort
 import com.info.info_v2_backend.file.domain.applies.Resume
 import com.info.info_v2_backend.file.domain.applies.ResumeNotice
@@ -16,7 +17,8 @@ import java.util.*
 class UploadResume(
     private val saveResumeFilePort: SaveResumeFilePort,
     private val uploadFilePort: UploadFilePort,
-    private val removeFilePort: RemoveFilePort
+    private val removeFilePort: RemoveFilePort,
+    private val loadResumePort: LoadResumePort
 ): UploadResumeUsecase {
 
     @Async
@@ -33,7 +35,10 @@ class UploadResume(
                 studentEmail
             )
         )
-        removeFilePort.remove()
+        loadResumePort.load(noticeId, studentEmail)?.let {
+            removeFilePort.remove(it.id)
+        }
+
         saveResumeFilePort.save(resume)
     }
 }

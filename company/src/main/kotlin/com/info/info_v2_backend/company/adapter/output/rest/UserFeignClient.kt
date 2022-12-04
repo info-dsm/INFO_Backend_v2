@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam
 interface UserFeignClient: LoadContactorPort {
 
     @GetMapping("/contactor")
-    override fun loadContactor(@RequestParam companyNumber: String): ContactorResponse
+    override fun loadContactor(@RequestParam companyNumber: String): ContactorResponse?
 
 }

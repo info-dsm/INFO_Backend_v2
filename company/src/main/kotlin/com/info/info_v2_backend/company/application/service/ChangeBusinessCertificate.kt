@@ -23,14 +23,7 @@ class ChangeBusinessCertificate(
             HeaderProperty.COMPANY_NUMBER) as String
         if (company.companyNumber != requesterCompanyNumber)
             throw BusinessException("요청자의 CompanyNumber가 해당 회사와 다릅니다. -> $requesterCompanyNumber", ErrorCode.NO_AUTHORIZATION_ERROR)
-        company.companyIntroduction.businessRegisteredCertificateFileId?.let {
-            companyFilePort.change(
-                it,
-                companyNumber,
-                CompanyFileClassificationType.BUSINESS_CERTIFICATE,
-                file
-            )
-        }?:companyFilePort.upload(
+        companyFilePort.upload(
             companyNumber,
             CompanyFileClassificationType.BUSINESS_CERTIFICATE,
             file

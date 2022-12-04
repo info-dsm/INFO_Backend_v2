@@ -2,6 +2,7 @@ package com.info.info_v2_backend.applies.adapter.output.event.configuration
 
 import com.info.info_v2_backend.common.file.dto.RegisterCompanyFileDto
 import com.info.info_v2_backend.common.file.dto.UploadCompanyFileDto
+import com.info.info_v2_backend.common.notice.UpdateNoticeAppliesCountDto
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -26,6 +27,11 @@ class KafkaConfiguration(
         return DefaultKafkaProducerFactory(stringProducerFactoryConfigs())
     }
 
+    @Bean
+    fun updateNoticeAppliesCountDtoProducerFactory(): ProducerFactory<String, UpdateNoticeAppliesCountDto> {
+        return DefaultKafkaProducerFactory(jsonProducerFactoryConfigs())
+    }
+
     private fun stringProducerFactoryConfigs(): MutableMap<String, Any> {
         val configs: MutableMap<String, Any> = HashMap()
         configs[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
@@ -34,7 +40,7 @@ class KafkaConfiguration(
         return configs
     }
 
-    private fun factoryConfigs(): MutableMap<String, Any> {
+    private fun jsonProducerFactoryConfigs(): MutableMap<String, Any> {
         val configs: MutableMap<String, Any> = HashMap()
         configs[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = bootstrapServers
         configs[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
@@ -48,6 +54,10 @@ class KafkaConfiguration(
         return KafkaTemplate(stringProducerFactory())
     }
 
+    @Bean
+    fun updateNoticeAppliesCountDtoKafkaTemplate(): KafkaTemplate<String, UpdateNoticeAppliesCountDto> {
+        return KafkaTemplate(updateNoticeAppliesCountDtoProducerFactory())
+    }
 
 
 

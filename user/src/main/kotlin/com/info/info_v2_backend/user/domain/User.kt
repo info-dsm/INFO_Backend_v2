@@ -1,8 +1,8 @@
 package com.info.info_v2_backend.user.domain
 
-import com.info.info_v2_backend.commonEntity.entity.TimeEntity
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CommonUserDetails
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CustomGrantedAuthority
+import com.info.info_v2_backend.user.domain.time.TimeEntity
 import org.hibernate.annotations.*
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority

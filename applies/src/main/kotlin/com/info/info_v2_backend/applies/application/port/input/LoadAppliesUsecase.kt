@@ -7,6 +7,8 @@ import java.util.Optional
 
 interface LoadAppliesUsecase {
 
-    fun loadAppliesListByStatus(noticeId: String, status: AppliesStatus): List<AppliesResponse>
+    fun loadAppliesListByStatus(companyNumber: String, noticeId: String, status: AppliesStatus?): List<AppliesResponse>
     fun loadApplies(noticeId: String, studentEmail: String): AppliesDto?
+    fun loadEveryAppliesListByStatus(status: AppliesStatus): List<AppliesResponse>
+    fun loadAppliesListByStudentEmail(studentEmail: String): List<AppliesResponse>
 }

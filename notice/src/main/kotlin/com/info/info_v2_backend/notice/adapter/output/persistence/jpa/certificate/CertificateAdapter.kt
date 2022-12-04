@@ -14,5 +14,9 @@ class CertificateAdapter(
         return certificateRepository.findByIdOrNull(certificateName)
     }
 
+    override fun loadAll(): List<Certificate> {
+        return certificateRepository.findAll()
+    }
+
 
 }

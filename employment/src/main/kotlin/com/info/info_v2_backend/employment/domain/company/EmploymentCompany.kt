@@ -1,6 +1,6 @@
 package com.info.info_v2_backend.employment.domain.company
 
-import com.info.info_v2_backend.employment.adapter.input.rest.dto.request.EmploymentResponse
+import com.info.info_v2_backend.common.employment.EmploymentDto
 import javax.persistence.Column
 import javax.persistence.Embeddable
 
@@ -12,10 +12,14 @@ class EmploymentCompany(
     val companyNumber: String = companyNumber
 
 
-    fun toEmploymentCompanyResponse(): EmploymentResponse.EmploymentCompanyResponse {
-        return EmploymentResponse.EmploymentCompanyResponse(
+    fun toEmploymentCompanyResponse(): EmploymentDto.EmploymentCompanyResponse {
+        return EmploymentDto.EmploymentCompanyResponse(
             this.companyNumber,
         )
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (other is EmploymentCompany) return this.companyNumber == other.companyNumber
+        return super.equals(other)
+    }
 }

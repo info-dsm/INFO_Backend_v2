@@ -19,7 +19,7 @@ class AddIntroductionFile(
             companyNumber,
             classificationType,
             FileConvert.fileToMultipartFileConvert(
-                FileConvert.multipartFileToFileConvert(file, "company/src/main/resources/tmp")
+                FileConvert.multipartFileToFileConvert(file, "/tmp/spring")
             )
         )
     }

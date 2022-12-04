@@ -1,11 +1,13 @@
 package com.info.info_v2_backend.common.applies
 
+import java.time.LocalDate
+
 data class AppliesDto (
     val id: String,
     val applicant: ApplicantDto,
     val notice: AppliesNoticeDto,
     val status: AppliesStatus,
-
+    val applicatedDate: LocalDate
 
 ) {
     data class ApplicantDto(

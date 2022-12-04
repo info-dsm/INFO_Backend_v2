@@ -18,6 +18,7 @@ class DatasourceConfiguration(
         dataSource.setDriverClassName(
             env["spring.datasource.driver-class-name"] ?: throw java.lang.RuntimeException("데이터베이스 연결 오류")
         )
+        println("This is Latest Docker Image!!!!!!!!!")
         dataSource.url = env["spring.datasource.url"]
         dataSource.username = env["spring.datasource.username"]
         dataSource.password = env["spring.datasource.password"]

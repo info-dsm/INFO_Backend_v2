@@ -1,6 +1,5 @@
 package com.info.info_v2_backend.file.domain.applicant
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.info.info_v2_backend.common.file.dto.FileDto
 import com.info.info_v2_backend.file.domain.File
 import org.hibernate.annotations.OnDelete

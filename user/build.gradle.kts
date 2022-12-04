@@ -1,7 +1,6 @@
 dependencies {
 
     //Common
-    implementation(project(":commonEntity"))
     implementation(project(":common"))
     // Eureka Client
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.4")
@@ -22,4 +21,6 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     //Kafka
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
+    implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
 }

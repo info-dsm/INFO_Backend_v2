@@ -1,13 +1,12 @@
 package com.info.info_v2_backend.employment.domain
 
-import com.info.info_v2_backend.commonEntity.entity.TimeEntity
-import com.info.info_v2_backend.employment.adapter.input.rest.dto.request.EmploymentResponse
-import com.info.info_v2_backend.employment.application.service.EmployStudent
+import com.info.info_v2_backend.common.employment.EmploymentDto
 import com.info.info_v2_backend.employment.domain.company.EmploymentCompany
 import com.info.info_v2_backend.employment.domain.company.EmploymentContactor
 import com.info.info_v2_backend.employment.domain.notice.EmploymentNotice
 import com.info.info_v2_backend.employment.domain.status.EmploymentStatus
 import com.info.info_v2_backend.employment.domain.student.EmployedStudent
+import com.info.info_v2_backend.employment.domain.time.TimeEntity
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -53,8 +52,8 @@ class Employment(
         this.status = EmploymentStatus.RECRUITMENT_FAILED
     }
 
-    fun toEmploymentResponse(): EmploymentResponse {
-        return EmploymentResponse(
+    fun toEmploymentResponse(): EmploymentDto {
+        return EmploymentDto(
             this.id,
             this.notice.toEmploymentNoticeResponse(),
             this.student.toEmploymentStudentResponse(),

@@ -1,12 +1,11 @@
 dependencies {
-    implementation(project(":commonEntity"))
     implementation(project(":common"))
     //Annotation Processor
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     //JPA
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     //JDBC
-    implementation("org.springframework.boot:spring-boot-starter-jdbc:2.7.5")
+    implementation("org.springframework:spring-jdbc:6.0.0")
     //MySQL driver
     implementation("mysql:mysql-connector-java:8.0.31")
     //Eureka Client
@@ -23,4 +22,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation:2.7.4")
     //StringUtils
     implementation("org.apache.commons:commons-lang3:3.12.0")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
+    implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
 }

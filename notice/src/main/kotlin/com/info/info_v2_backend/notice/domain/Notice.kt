@@ -1,8 +1,6 @@
 package com.info.info_v2_backend.notice.domain
 
-import com.info.info_v2_backend.common.file.dto.AttachmentResponse
 import com.info.info_v2_backend.common.notice.NoticeDto
-import com.info.info_v2_backend.commonEntity.entity.TimeEntity
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
@@ -16,17 +14,18 @@ import com.info.info_v2_backend.notice.domain.company.NoticeCompany
 import com.info.info_v2_backend.notice.domain.interview.InterviewProcess
 import com.info.info_v2_backend.notice.domain.language.LanguageUsage
 import com.info.info_v2_backend.notice.domain.openPeriod.NoticeOpenPeriod
-import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentBigClassification
-import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassification
+import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassificationUsage
 import com.info.info_v2_backend.notice.domain.support.Pay
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import com.info.info_v2_backend.notice.domain.support.MealSupport
 import com.info.info_v2_backend.notice.domain.support.Welfare
 import com.info.info_v2_backend.notice.domain.support.WorkTime
 import com.info.info_v2_backend.notice.domain.technology.TechnologyUsage
+import com.info.info_v2_backend.notice.domain.time.TimeEntity
 import com.info.info_v2_backend.notice.domain.workPlace.WorkPlace
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -38,9 +37,6 @@ import javax.persistence.*
 class Notice(
     id: String,
     company: NoticeCompany,
-
-    bigClassification: RecruitmentBigClassification,
-    smallClassification: RecruitmentSmallClassification,
     detailBusinessDescription: String?,
     numberOfEmployee: Int,
     gradeCutLine: Int?,
@@ -58,6 +54,7 @@ class Notice(
     otherFeatures: String?,
     workPlace: WorkPlace,
     isPersonalContact: Boolean,
+    interviewProcessMap: MutableMap<Int, InterviewProcess>
 
 ): TimeEntity() {
 
@@ -67,20 +64,8 @@ class Notice(
 
     var company: NoticeCompany = company
 
-    @ManyToOne
-    @JoinColumn(
-        name = "notice_big_classification",
-        nullable = false
-    )
-    var bigClassification: RecruitmentBigClassification = bigClassification
-        protected set
-
-    @ManyToOne
-    @JoinColumn(
-        name = "notice_small_classification",
-        nullable = false
-    )
-    var smallClassification: RecruitmentSmallClassification = smallClassification
+    @OneToMany(mappedBy = "notice")
+    var smallClassificationUsageList: MutableList<RecruitmentSmallClassificationUsage> = ArrayList()
         protected set
 
     @Column(
@@ -92,7 +77,7 @@ class Notice(
 
 
     @Column(name = "number_of_emplyee", nullable = false)
-    var numberOfEmplyee: Int = numberOfEmployee
+    var numberOfEmployee: Int = numberOfEmployee
         protected set
 
     @Column(name = "recruitment_business_grade_cut_line", nullable = true)
@@ -101,15 +86,15 @@ class Notice(
 
 
     @OneToMany(mappedBy = "notice", orphanRemoval = true)
-    var languageUsageList: MutableSet<LanguageUsage> = HashSet()
+    var languageUsage: MutableList<LanguageUsage> = ArrayList()
         protected set
 
     @OneToMany(mappedBy = "notice", orphanRemoval = true)
-    var technologyList: MutableSet<TechnologyUsage> = HashSet()
+    var technologyUsage: MutableList<TechnologyUsage> = ArrayList()
         protected set
 
     @OneToMany(mappedBy = "notice", orphanRemoval = true, cascade = [CascadeType.REMOVE])
-    var needCertificateList: MutableSet<CertificateUsage> = HashSet()
+    var needCertificateUsage: MutableList<CertificateUsage> = ArrayList()
         protected set
 
     @Embedded
@@ -135,7 +120,7 @@ class Notice(
 
     @ElementCollection
     @MapKeyColumn(name = "interview_process_sequence")
-    var interviewProcessMap: MutableMap<Int, InterviewProcess> = HashMap()
+    var interviewProcessMap: MutableMap<Int, InterviewProcess> = interviewProcessMap
         protected set
 
     @Column(name = "need_documents", nullable = true)
@@ -166,101 +151,25 @@ class Notice(
     var applicantCount: Int = 0
         protected set
 
-    @Column(name = "notice_is_conclude", nullable = false)
-    var isConclude: Boolean = false
-        protected set
 
-    constructor(
-        id: String,
-        company: NoticeCompany,
-
-        bigClassification: RecruitmentBigClassification,
-        smallClassification: RecruitmentSmallClassification,
-        detailBusinessDescription: String?,
-        numberOfEmployee: Int,
-        gradeCutLine: Int?,
-
-        workTime: WorkTime,
-        pay: Pay,
-
-        mealSupport: MealSupport,
-        welfare: Welfare,
-
-        noticeOpenPeriod: NoticeOpenPeriod,
-
-        needDocuments: String?,
-
-        otherFeatures: String?,
-        workPlace: WorkPlace,
-        isPersonalContact: Boolean,
-        isDelete: Boolean,
-        approveStatus: NoticeWaitingStatus,
-        applicantCount: Int,
-        isConclude: Boolean,
-        createdAt: LocalDate,
-        updatedAt: LocalDate
-        ): this(
-            id,
-            company,
-            bigClassification,
-            smallClassification,
-            detailBusinessDescription,
-            numberOfEmployee,
-            gradeCutLine,
-            workTime,
-            pay,
-            mealSupport,
-            welfare,
-            noticeOpenPeriod,
-            needDocuments,
-            otherFeatures,
-            workPlace,
-            isPersonalContact,
-        ) {
-
-        var isDelete: Boolean = isDelete
-
-        var approveStatus: NoticeWaitingStatus = approveStatus
-
-        var applicantCount: Int = applicantCount
-
-        var isConclude: Boolean = isConclude
-
-        var createdAt: LocalDate = createdAt
-
-        var updatedAt: LocalDate = updatedAt
+    fun changeSmallClassification(smallClassificationUsageList: MutableList<RecruitmentSmallClassificationUsage>) {
+        this.smallClassificationUsageList = smallClassificationUsageList
     }
 
     fun changeInterviewProcess(interviewProcessMap: MutableMap<Int, InterviewProcess>) {
         this.interviewProcessMap = interviewProcessMap
     }
 
-    fun changeCertificate(certificateList: MutableSet<CertificateUsage>) {
-        this.needCertificateList = certificateList
+    fun updateCount(count: Int) {
+        this.applicantCount += count
     }
 
-    fun addCount() {
-        this.applicantCount++
-    }
-
-    fun minusCount() {
-        this.applicantCount--
-    }
-
-    fun addNeedCertificate(certificate: CertificateUsage) {
-        this.needCertificateList.add(certificate)
-    }
-
-    fun addLanguage(language: LanguageUsage) {
-        this.languageUsageList.add(language)
-    }
-
-    fun addTechnology(technology: TechnologyUsage) {
-        this.technologyList.add(technology)
-    }
 
     fun conclude(){
-        this.isConclude = true
+        this.noticeOpenPeriod = NoticeOpenPeriod(
+            this.noticeOpenPeriod.startDate,
+            LocalDate.now().minusDays(1)
+        )
     }
 
     fun approve(){
@@ -268,7 +177,8 @@ class Notice(
     }
 
     fun checkIsAvailableAppliesStatus(): Boolean {
-        if (this.isConclude) return false
+        if (this.noticeOpenPeriod.endDate <= LocalDate.now()
+            || this.noticeOpenPeriod.startDate >= LocalDate.now()) return false
         else if (this.isDelete) return false
         else if (this.isPersonalContact) return false
         return true
@@ -321,14 +231,17 @@ class Notice(
         return MinimumNoticeResponse(
             this.id,
             this.company,
-            ClassificationResponse(
-                BigClassificationResponse(
-                    this.bigClassification.name
-                ),
-                this.smallClassification.name
-            ),
+            this.smallClassificationUsageList.map {
+                smallClassification: RecruitmentSmallClassificationUsage ->
+                ClassificationResponse(
+                    BigClassificationResponse(
+                        smallClassification.smallClassification.bigClassification.name
+                    ),
+                    smallClassification.smallClassification.name
+                )
+            },
             this.detailBusinessDescription,
-            this.numberOfEmplyee,
+            this.numberOfEmployee,
             this.gradeCutLine,
             this.applicantCount,
             this.isPersonalContact
@@ -336,30 +249,34 @@ class Notice(
 
     }
 
-    fun toMaximumNoticeResponse(attachmentResponseList: List<AttachmentResponse>): MaximumNoticeResponse {
+    fun toMaximumNoticeResponse(): MaximumNoticeResponse {
         return MaximumNoticeResponse(
             this.id,
             this.company,
-            ClassificationResponse(
-                BigClassificationResponse(
-                    this.bigClassification.name
-                ),
-                this.smallClassification.name
-            ),
+            this.smallClassificationUsageList.map {
+                    smallClassification: RecruitmentSmallClassificationUsage ->
+                ClassificationResponse(
+                    BigClassificationResponse(
+                        smallClassification.smallClassification.bigClassification.name
+                    ),
+                    smallClassification.smallClassification.name
+                )
+            },
             this.detailBusinessDescription,
-            this.numberOfEmplyee,
+            this.numberOfEmployee,
             this.gradeCutLine,
-            this.languageUsageList.map {
+            this.interviewProcessMap.mapValues { it.value.meaning }.toMutableMap(),
+            this.languageUsage.map {
                 LanguageResponse(
                     it.language.name
                 )
-            }.toSet(),
-            this.technologyList.map {
+            },
+            this.technologyUsage.map {
                 TechnologyResponse(
                     it.technology.name
                 )
-            }.toSet(),
-            this.needCertificateList.map {
+            },
+            this.needCertificateUsage.map {
                 CertificateResponse(
                     it.certificate.name
                 )
@@ -368,14 +285,11 @@ class Notice(
             this.mealSupport.toMealSupportRequest(),
             this.welfare.toWelfare(),
             this.noticeOpenPeriod.toNoticeOpenPeriod(),
-            this.interviewProcessMap.map {
-                return@map mapOf(Pair(it.key, it.value.meaning))
-            },
             this.needDocuments,
             this.otherFeatures,
             this.workPlace.toWorkPlaceRequest(),
             this.applicantCount,
-            attachmentResponseList,
+            ArrayList(),
             this.isPersonalContact
         )
     }
@@ -385,7 +299,7 @@ class Notice(
             this.detailBusinessDescription = it
         }
         r.numberOfEmployee?.let {
-            this.numberOfEmplyee = it
+            this.numberOfEmployee = it
         }
         r.gradeCutLine?.let {
             this.gradeCutLine = it

@@ -1,7 +1,6 @@
 package com.info.info_v2_backend.company.domain
 
 import com.info.info_v2_backend.common.company.CompanyDto
-import com.info.info_v2_backend.commonEntity.entity.TimeEntity
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.edit.EditCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.CompanyIntroductionResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
@@ -11,6 +10,7 @@ import com.info.info_v2_backend.company.domain.information.CompanyInformation
 import com.info.info_v2_backend.company.domain.introduction.CompanyIntroduction
 import com.info.info_v2_backend.company.domain.name.CompanyName
 import com.info.info_v2_backend.company.domain.status.CompanyCreationStatus
+import com.info.info_v2_backend.company.domain.time.TimeEntity
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.ContactorResponse
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where

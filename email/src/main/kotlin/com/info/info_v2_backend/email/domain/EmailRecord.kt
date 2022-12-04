@@ -1,7 +1,7 @@
 package com.info.info_v2_backend.email.domain
 
-import com.info.info_v2_backend.commonEntity.entity.TimeEntity
 import com.info.info_v2_backend.email.domain.content.EmailContent
+import com.info.info_v2_backend.email.domain.time.TimeEntity
 import com.info.info_v2_backend.email.domain.user.*
 import java.util.UUID
 import javax.persistence.Column

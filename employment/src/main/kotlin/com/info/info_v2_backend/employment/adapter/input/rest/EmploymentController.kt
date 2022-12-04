@@ -1,6 +1,9 @@
 package com.info.info_v2_backend.employment.adapter.input.rest
 
-import com.info.info_v2_backend.employment.adapter.input.rest.dto.request.EmploymentResponse
+import com.info.info_v2_backend.common.auth.Auth
+import com.info.info_v2_backend.common.employment.EmploymentDto
+import com.info.info_v2_backend.common.exception.BusinessException
+import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.employment.application.port.input.ConfirmEmploymentUsecase
 import com.info.info_v2_backend.employment.application.port.input.EmployStudentUsecase
 import com.info.info_v2_backend.employment.application.port.input.FailEmploymentUsecase
@@ -11,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
@@ -23,13 +25,14 @@ class EmploymentController(
     private val failEmploymentUsecase: FailEmploymentUsecase
 ) {
 
-    @PostMapping("/employ/{studentEmail}")
+    @PostMapping("/{noticeId}/{studentEmail}")
     @ResponseStatus(HttpStatus.CREATED)
     fun employApplies(
+        @PathVariable noticeId: String,
         @PathVariable studentEmail: String,
-        @RequestParam noticeId: String
     ) {
-        employStudentUsecase.employ(studentEmail, noticeId)
+        if (Auth.checkIsTeacher()) employStudentUsecase.employ(studentEmail, noticeId)
+        else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
     @DeleteMapping("/{companyNumber}/{studentEmail}")
@@ -42,6 +45,7 @@ class EmploymentController(
     }
 
     @PutMapping("/{companyNumber}/{studentEmail}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     fun confirmEmployment(
         @PathVariable companyNumber: String,
         @PathVariable studentEmail: String
@@ -51,9 +55,10 @@ class EmploymentController(
 
     @GetMapping("/{companyNumber}")
     fun getEmploymentList(
-        @PathVariable companyNumber: String
-    ): List<EmploymentResponse> {
-        return loadEmploymentUsecase.loadCompanyEmploymentLine(companyNumber)
+        @PathVariable companyNumber: String,
+    ): List<EmploymentDto> {
+        if (Auth.checkIsTeacher()) return loadEmploymentUsecase.loadCompanyEmploymentLine(companyNumber)
+        return loadEmploymentUsecase.loadCompanyConfirmedEmploymentLine(companyNumber)
     }
 
 }

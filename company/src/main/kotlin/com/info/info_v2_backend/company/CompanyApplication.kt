@@ -12,11 +12,12 @@ import org.springframework.scheduling.annotation.EnableAsync
 
 @ConfigurationPropertiesScan
 @EnableFeignClients
+@EnableCircuitBreaker
 @EnableDiscoveryClient
-@SpringBootApplication
 @EnableJpaAuditing
 @EnableAsync
 @EnableKafka
+@SpringBootApplication
 class CompanyApplication
 fun main(args: Array<String>) {
     runApplication<CompanyApplication>(*args)

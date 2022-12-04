@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface AttachmentRepository: JpaRepository<Attachment, String> {
 
     fun deleteByNotice(notice: AttachmentNotice)
+    fun findByNotice(notice: AttachmentNotice): List<Attachment>
 }

@@ -1,47 +1,12 @@
 spring:
-  servlet:
-    multipart:
-      max-file-size: 7MB
-      max-request-size: 30MB
-  application:
-    name: file-service
-  jpa:
-    database: mysql
-    hibernate:
-      ddl-auto: update
-    generate-ddl: true
-    show-sql: false
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-
-  datasource:
-    url: ${dbDefaultUrl}
-    username: ${dbDefaultUsername}
-    password: ${dbDefaultPw}
-    driver-class-name: ${dbDefaultDriver}
-
-server:
-  port: 0
-
-cloud:
-  aws:
-    credentials:
-      access-key: ${S3_IAM_ACCESS_KEY}
-      secret-key: ${S3_IAM_SECRET_KEY}
-    region:
-      static: ${S3_REGION}
-    stack:
-      auto: false
-    s3:
-      bucketName: ${S3_BUCKET_NAME}
-
-kafka:
-  kafkaServerAddress: localhost:9092
-
-eureka:
-  instance:
-    # 표기되는 규칙 변경
-    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
-    prefer-ip-address: true
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
+  config:
+    import: ${SPRING_CONFIG_IMPORT}
+  cloud:
+    config:
+      name: file
+      profile: default
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh

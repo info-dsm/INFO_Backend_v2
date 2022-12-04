@@ -1,7 +1,6 @@
 
 dependencies {
     implementation(project(":common"))
-    implementation(project(":commonEntity"))
     //MySQL driver
     implementation("mysql:mysql-connector-java:8.0.31")
     //Kafka
@@ -15,10 +14,12 @@ dependencies {
     //Hystrix
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE")
     //Validation
-    implementation("org.springframework.boot:spring-boot-starter-validation:2.7.4")
+    implementation("org.springframework.boot:spring-boot-starter-validation:2.7.5")
     //JPA
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.7.5")
     //Annotation Processor
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
+    implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
 
 }

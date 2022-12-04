@@ -9,8 +9,7 @@ import com.info.info_v2_backend.notice.domain.interview.InterviewProcess
 import javax.validation.Valid
 
 data class CreateNoticeRequest (
-    val bigClassification: String,
-    val smallClassification: String,
+    val smallClassificationList: List<String>,
     val numberOfEmployee: Int,
     val detailBusinessDescription: String?,
     val gradeCutLine: Int?,
@@ -25,7 +24,7 @@ data class CreateNoticeRequest (
     @field:Valid
     val welfare: WelfareRequest,
     val noticeOpenPeriod: NoticeOpenPeriodRequest,
-    val interviewProcessList: List<InterviewProcess>,
+    val interviewProcessMap: Map<Int, InterviewProcess>,
     val needDocuments: String?,
     val otherFeatures: String?,
     val workPlace: WorkPlaceRequest,

@@ -1,44 +1,12 @@
 spring:
-  application:
-    name: applies-service
-  datasource:
-    url: ${dbDefaultUrl}
-    username: ${dbDefaultUsername}
-    password: ${dbDefaultPw}
-    driver-class-name: ${dbDefaultDriver}
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: info
-      auto-offset-reset: latest
-
-eureka:
-  instance:
-    # 표기되는 규칙 변경
-    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
-    prefer-ip-address: true
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
-
-feign:
-  client:
+  config:
+    import: ${SPRING_CONFIG_IMPORT}
+  cloud:
     config:
-      default:
-        connectTimeout: 60000
-        readTimeout: 10000
-  httpclient:
-    enabled: true
-    connection-timeout: 60000
-    ok-http:
-      read-timeout: 10000
-  circuitbreaker:
-    enabled: true
-
-
-
-server:
-  port: 0
-
-kafka:
-  kafkaServerAddress: localhost:9092
+      name: applies
+      profile: default
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh

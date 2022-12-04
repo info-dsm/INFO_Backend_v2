@@ -9,6 +9,7 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,6 +17,7 @@ class Signup(
     private val saveUserPort: SaveUserPort,
     private val loadAuthenticationCodePort: LoadCodePort
 ): StudentSignupUsecase, TeacherSignupUsecase {
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     override fun studentSignup(request: SaveStudentDto, emailAuthenticationCode: String) {
         if (authenticateCode(request.email, AuthenticationCodeType.SIGNUP_EMAIL, emailAuthenticationCode)) {
@@ -39,11 +41,7 @@ class Signup(
     private fun authenticateCode(email: String, type: AuthenticationCodeType, code: String): Boolean {
         return ((loadAuthenticationCodePort.load(
             email
-        ).takeIf { it.type == type })
-            ?: throw BusinessException(
-                "인증번호를 조회하지 못했습니다. -> ${email}",
-                ErrorCode.NO_DATA_FOUND_ERROR
-            )).data == code
+        ).takeIf { it.type == type })?.data == code)
     }
 
 

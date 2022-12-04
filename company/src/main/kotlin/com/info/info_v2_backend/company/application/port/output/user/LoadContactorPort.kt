@@ -4,5 +4,5 @@ import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.Contact
 
 interface LoadContactorPort {
 
-    fun loadContactor(companyNumber: String): ContactorResponse
+    fun loadContactor(companyNumber: String): ContactorResponse?
 }

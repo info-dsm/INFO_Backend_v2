@@ -8,11 +8,11 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.scheduling.annotation.EnableAsync
 
-@SpringBootApplication
 @EnableJpaAuditing
 @EnableFeignClients
 @EnableDiscoveryClient
 @ConfigurationPropertiesScan
+@SpringBootApplication
 class EmploymentApplication
 fun main(args: Array<String>) {
     runApplication<EmploymentApplication>(*args)

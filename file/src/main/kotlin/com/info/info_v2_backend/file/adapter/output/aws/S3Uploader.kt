@@ -12,7 +12,6 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.FileDto
 import com.info.info_v2_backend.file.adapter.output.aws.configuration.S3Property
 import com.info.info_v2_backend.file.application.port.output.UploadFilePort
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream

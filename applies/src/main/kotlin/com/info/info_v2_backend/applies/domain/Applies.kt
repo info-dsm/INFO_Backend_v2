@@ -2,10 +2,11 @@ package com.info.info_v2_backend.applies.domain
 
 import com.info.info_v2_backend.applies.adapter.input.rest.dto.respnose.AppliesResponse
 import com.info.info_v2_backend.applies.domain.notice.AppliesNotice
+import com.info.info_v2_backend.applies.domain.time.TimeEntity
 import com.info.info_v2_backend.applies.domain.user.Applicant
 import com.info.info_v2_backend.common.applies.AppliesDto
 import com.info.info_v2_backend.common.applies.AppliesStatus
-import com.info.info_v2_backend.commonEntity.entity.TimeEntity
+import com.info.info_v2_backend.common.file.dto.response.FileResponse
 import java.time.LocalDate
 import java.util.UUID
 import javax.persistence.*
@@ -53,7 +54,7 @@ class Applies(
         this.status = AppliesStatus.REJECT
     }
 
-    fun toAppliesResponse(): AppliesResponse {
+    fun toAppliesResponse(file: FileResponse): AppliesResponse {
         return AppliesResponse(
             this.id,
             AppliesResponse.ApplierResponse(
@@ -61,7 +62,8 @@ class Applies(
                 this.applicant.name
             ),
             this.notice.noticeId,
-            this.status
+            this.status,
+            file
         )
     }
     fun toAppliesDto(): AppliesDto {
@@ -69,7 +71,8 @@ class Applies(
             this.id,
             this.applicant.toApplicantDto(),
             this.notice.toAppliesNoticeDto(),
-            this.status
+            this.status,
+            (this.createdAt?.toLocalDate())?: LocalDate.now()
         )
     }
 }

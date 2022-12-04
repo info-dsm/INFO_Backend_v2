@@ -1,7 +1,9 @@
 package com.info.info_v2_backend.file.domain
 
+import com.info.info_v2_backend.common.file.dto.FileDto
+import com.info.info_v2_backend.common.file.dto.response.FileResponse
 import com.info.info_v2_backend.common.file.dto.type.FileType
-import com.info.info_v2_backend.commonEntity.entity.TimeEntity
+import com.info.info_v2_backend.file.domain.time.TimeEntity
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import javax.persistence.*
@@ -49,6 +51,25 @@ abstract class File(
 
     fun changeOld(){
         this.isNew = false
+    }
+
+    fun toFileDto(): FileDto {
+        return FileDto(
+            this.fileUrl,
+            this.fileContentType,
+            this.extension,
+            this.fileName
+        )
+    }
+
+    fun toFileResponse(): FileResponse {
+        return FileResponse(
+            this.id,
+            this.fileUrl,
+            this.fileContentType,
+            this.extension,
+            this.fileName
+        )
     }
 
 }

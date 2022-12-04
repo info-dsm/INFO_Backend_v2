@@ -8,4 +8,5 @@ import org.springframework.data.repository.query.Param
 import java.util.Optional
 
 interface AppliesRepository: JpaRepository<Applies, String> {
+
 }

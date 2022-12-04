@@ -19,7 +19,8 @@ class AppliesMapper: RowMapper<Applies> {
                     rs.getInt("applicant_entrance_year")
                 ),
                 AppliesNotice(
-                    rs.getString("applies_notice_id")
+                    rs.getString("applies_notice_id"),
+                    rs.getString("applies_company_number")
                 ),
                 rs.getDate("created_at").toLocalDate(),
                 rs.getDate("updated_at").toLocalDate(),

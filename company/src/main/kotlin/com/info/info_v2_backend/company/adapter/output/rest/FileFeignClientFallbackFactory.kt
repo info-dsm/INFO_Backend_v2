@@ -20,14 +20,6 @@ class FileFeignClientFallbackFactory: FallbackFactory<FileFeignClient> {
                 throw BusinessException("File Upload 중 오류가 발생했습니다.", ErrorCode.BAD_GATEWAY_ERROR)
             }
 
-            override fun change(
-                fileId: String,
-                companyId: String,
-                classification: CompanyFileClassificationType,
-                file: MultipartFile
-            ) {
-                TODO("Not yet implemented")
-            }
 
             override fun remove(companyNumber: String, fileId: String, classificationType: CompanyFileClassificationType) {
                 throw BusinessException(cause.message, ErrorCode.BAD_GATEWAY_ERROR)

@@ -6,14 +6,25 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.CreateNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.classification.AddClassificationRequest
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.certificate.CertificateResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.ClassificationResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.interview.InterviewProcessResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.technology.TechnologyResponse
 import com.info.info_v2_backend.notice.application.port.input.*
-import com.info.info_v2_backend.notice.application.port.input.change.ChangeAttachmentUsecase
-import com.info.info_v2_backend.notice.application.port.input.change.ChangeCertificateUsecase
-import com.info.info_v2_backend.notice.application.port.input.change.ChangeInterviewProcessUsecase
-import com.info.info_v2_backend.notice.application.port.input.change.ChangeTechnologyUsecase
-import com.info.info_v2_backend.notice.domain.interview.InterviewProcess
+import com.info.info_v2_backend.notice.application.port.input.certificate.LoadCertificateUsecase
+import com.info.info_v2_backend.notice.application.port.input.change.*
+import com.info.info_v2_backend.notice.application.port.input.classification.AddClassificationUsecase
+import com.info.info_v2_backend.notice.application.port.input.classification.LoadClassificationUsecase
+import com.info.info_v2_backend.notice.application.port.input.interview.LoadInterviewProcessUsecase
+import com.info.info_v2_backend.notice.application.port.input.language.AddLanguageUsecase
+import com.info.info_v2_backend.notice.application.port.input.language.LoadLanguageUsecase
+import com.info.info_v2_backend.notice.application.port.input.technology.AddTechnologyUsecase
+import com.info.info_v2_backend.notice.application.port.input.technology.LoadTechnologyUsecase
+import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -21,6 +32,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
@@ -38,73 +50,112 @@ class NoticeController(
     private val approveNoticeUsecase: ApproveNoticeUsecase,
     private val loadWaitingNoticeUsecase: LoadWaitingNoticeUsecase,
     private val changeAttachmentUsecase: ChangeAttachmentUsecase,
-    private val changeInterviewProcessUsecase: ChangeInterviewProcessUsecase,
-    private val changeCertificateUsage: ChangeCertificateUsecase,
-    private val changeTechnologyUsecase: ChangeTechnologyUsecase
+    private val loadClassificationUsecase: LoadClassificationUsecase,
+    private val addClassificationUsecase: AddClassificationUsecase,
+    private val loadTechnologyUsecase: LoadTechnologyUsecase,
+    private val addTechnologyUsecase: AddTechnologyUsecase,
+    private val loadLanguageUsecase: LoadLanguageUsecase,
+    private val addLanguageUsecase: AddLanguageUsecase,
+    private val loadInterviewProcessUsecase: LoadInterviewProcessUsecase,
+    private val loadCertificateUsecase: LoadCertificateUsecase
 ){
 
+
+    @GetMapping("/classification")
+    fun getClassification(): List<ClassificationResponse> {
+        return loadClassificationUsecase.load()
+    }
+
+    @PutMapping("/classification")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun addClassification(
+        @RequestBody request: AddClassificationRequest
+    ) {
+        if(Auth.checkIsTeacher()) return addClassificationUsecase.addClassification(request)
+        else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
+    }
+
+    @GetMapping("/technology")
+    fun getTechnology(): List<TechnologyResponse> {
+        return loadTechnologyUsecase.loadAll()
+    }
+
+    @PutMapping("/technology")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun addTechnology(
+        @RequestParam name: String
+    ) {
+        if(Auth.checkIsTeacher()) return addTechnologyUsecase.add(name)
+        else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
+    }
+
+    @GetMapping("/language")
+    fun getLanguage(): List<LanguageResponse> {
+        return loadLanguageUsecase.loadAll()
+    }
+
+    @PutMapping("/language")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun addLanguage(
+        @RequestParam name: String
+    ) {
+        if(Auth.checkIsTeacher()) return addLanguageUsecase.add(name)
+        else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
+    }
+
+    @GetMapping("/interview")
+    fun getInterviewProcessList(): List<InterviewProcessResponse> {
+        return loadInterviewProcessUsecase.loadAll().map {
+            return@map InterviewProcessResponse(
+                it.name,
+                it.meaning
+            )
+        }
+    }
+
+    @GetMapping("/certificate")
+    fun getCertificate(): List<CertificateResponse> {
+        return loadCertificateUsecase.loadAll()
+    }
+
+
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     fun createNotice(
-        @RequestBody request: CreateNoticeRequest,
+        @RequestPart request: CreateNoticeRequest,
         @RequestParam companyNumber: String,
         @RequestPart attachment: List<MultipartFile>
     ){
+        if (Auth.checkIsTeacher()) return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request, attachment)
         return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request, attachment)
     }
 
     @PatchMapping("/{companyNumber}/{noticeId}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     fun editNotice(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String,
         @RequestBody request: EditNoticeRequest,
     ) {
-        return editNoticeUsecase.edit(noticeId, request, Auth.checkCompanyNumber(companyNumber))
+        if (Auth.checkIsTeacher()) editNoticeUsecase.edit(noticeId, request, companyNumber)
+        else editNoticeUsecase.edit(noticeId, request, Auth.checkCompanyNumber(companyNumber))
     }
 
     @PatchMapping("/{companyNumber}/{noticeId}/attachment")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     fun changeAttachment(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String,
         @RequestPart file: List<MultipartFile>
     ) {
-        return changeAttachmentUsecase.change(Auth.checkCompanyNumber(companyNumber), noticeId, file)
+        if (Auth.checkIsTeacher()) changeAttachmentUsecase.change(companyNumber, noticeId, file)
+        else changeAttachmentUsecase.change(Auth.checkCompanyNumber(companyNumber), noticeId, file)
     }
-
-    @PatchMapping("/{companyNumber}/{noticeId}/interview")
-    fun changeInterview(
-        @PathVariable companyNumber: String,
-        @PathVariable noticeId: String,
-        @RequestBody interviewProcessMap: Map<Int, InterviewProcess>
-    ) {
-        Auth.checkCompanyNumber(companyNumber)
-        changeInterviewProcessUsecase.change(noticeId, interviewProcessMap)
-    }
-
-    @PatchMapping("/{companyNumber}/{noticeId}/certificate")
-    fun changeCertificate(
-        @PathVariable companyNumber: String,
-        @PathVariable noticeId: String,
-        @RequestBody certificateList: List<String>
-    ) {
-        Auth.checkCompanyNumber(companyNumber)
-        changeCertificateUsage.change(noticeId, certificateList)
-    }
-
-    @PatchMapping("/{companyNumber}/{noticeId}/technology")
-    fun changeTechnology(
-        @PathVariable companyNumber: String,
-        @PathVariable noticeId: String,
-        @RequestBody technologyList: MutableList<String>
-    ) {
-        Auth.checkCompanyNumber(companyNumber)
-        changeTechnologyUsecase.change(noticeId, technologyList)
-    }
-
 
     @GetMapping("/waiting-list")
     fun getWaitingNoticeList(
-        @RequestParam idx: Int,
-        @RequestParam size: Int
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int
     ): Page<MinimumNoticeResponse> {
         return loadWaitingNoticeUsecase.load(idx, size)
     }
@@ -121,14 +172,17 @@ class NoticeController(
     }
 
     @DeleteMapping("/{companyNumber}/{noticeId}/conclude")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun concludeNotice(@PathVariable companyNumber: String, @PathVariable noticeId: String) {
         if (!Auth.checkIsTeacher()) throw BusinessException("이 작업은 반드시 선생님만 진행할 수 있습니다.", ErrorCode.NO_AUTHORIZATION_ERROR)
         return concludeNoticeUsecase.conclude(noticeId)
     }
 
     @DeleteMapping("/{companyNumber}/{noticeId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun removeNotice(@PathVariable companyNumber: String, @PathVariable noticeId: String) {
-        return removeNoticeUsecase.remove(noticeId, companyNumber)
+        if (Auth.checkIsTeacher()) removeNoticeUsecase.remove(noticeId, companyNumber)
+        else removeNoticeUsecase.remove(noticeId, Auth.checkCompanyNumber(companyNumber))
     }
 
     @GetMapping("/{noticeId}")
@@ -137,10 +191,30 @@ class NoticeController(
     }
 
 
-    @GetMapping("/list")
-    fun getMinimumNoticeList(@RequestParam idx: Int, @RequestParam size: Int): Page<MinimumNoticeResponse> {
-        return loadNoticeUsecase.loadMinimumNoticeList(idx, size)
+    @GetMapping("/list/on")
+    fun getNotEndedMinimumNoticeList(
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+    ): Page<MinimumNoticeResponse> {
+        return loadNoticeUsecase.loadNotEndedMinimumNoticeList(idx, size)
     }
+
+    @GetMapping("/list/end")
+    fun getEndedMinimumNoticeList(
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam status: NoticeWaitingStatus
+    ): Page<MinimumNoticeResponse> {
+        return loadNoticeUsecase.loadEndedMinimumNoticeList(idx, size)
+    }
+
+    @GetMapping("/list/{companyNumber}")
+    fun getCompanyNoticeList(
+        @PathVariable companyNumber: String
+    ): List<MinimumNoticeResponse> {
+        return loadNoticeUsecase.loadCompanyMiniumumNoticeList(companyNumber)
+    }
+
 
     @GetMapping("/available")
     fun loadAvailableNotice(@RequestParam noticeId: String): NoticeDto? {

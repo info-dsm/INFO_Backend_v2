@@ -5,4 +5,5 @@ import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSma
 interface LoadSmallClassificationPort {
 
     fun loadSmallClassification(smallClassification: String): RecruitmentSmallClassification?
+    fun loadAll(): List<RecruitmentSmallClassification>
 }

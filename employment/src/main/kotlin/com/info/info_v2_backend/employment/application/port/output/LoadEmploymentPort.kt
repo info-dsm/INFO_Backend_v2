@@ -6,4 +6,5 @@ interface LoadEmploymentPort {
 
     fun loadEmploymentByCompanyAndStudent(companyNumber: String, studentEmail: String): Employment?
     fun loadEmploymentByCompany(companyNumber: String): List<Employment>
+    fun loadConfirmedEmploymentByCompany(companyNumber: String): List<Employment>
 }

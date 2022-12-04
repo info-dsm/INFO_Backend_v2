@@ -12,10 +12,12 @@ import com.info.info_v2_backend.notice.application.port.output.bigClassification
 import com.info.info_v2_backend.notice.application.port.output.file.FilePort
 import com.info.info_v2_backend.notice.application.port.output.smallClassification.LoadSmallClassificationPort
 import com.info.info_v2_backend.notice.application.port.output.smallClassification.SaveSmallClassificationPort
+import com.info.info_v2_backend.notice.application.port.output.smallClassification.SaveSmallClassificationUsagePort
 import com.info.info_v2_backend.notice.domain.Notice
 import com.info.info_v2_backend.notice.domain.company.NoticeCompany
 import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentBigClassification
 import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassification
+import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassificationUsage
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.util.UUID
@@ -24,12 +26,10 @@ import java.util.UUID
 class CreateNotice(
     private val saveNoticePort: SaveNoticePort,
     private val loadCompanyPort: LoadCompanyPort,
-    private val loadBigClassificationPort: LoadBigClassificationPort,
-    private val saveBigClassificationPort: SaveBigClassificationPort,
     private val loadSmallClassificationPort: LoadSmallClassificationPort,
-    private val saveSmallClassificationPort: SaveSmallClassificationPort,
     private val updateCompanyPort: UpdateCompanyPort,
-    private val filePort: FilePort
+    private val filePort: FilePort,
+    private val saveSmallClassificationUsagePort: SaveSmallClassificationUsagePort
 ): CreateNoticeUsecase {
 
     override fun create(companyNumber: String, request: CreateNoticeRequest, attachment: List<MultipartFile>) {
@@ -37,24 +37,14 @@ class CreateNotice(
             ?: throw BusinessException("회사를 조회하지 못했습니다. -> $companyNumber",
             ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
 
-        val bigClassification = loadBigClassificationPort.loadBigClassification(
-            request.bigClassification
-        )?: saveBigClassificationPort.saveBigClassification(
-            RecruitmentBigClassification(request.bigClassification)
-        )
+        val smallClassification = request.smallClassificationList.map {
+            return@map loadSmallClassificationPort.loadSmallClassification(it)
+                ?: throw BusinessException("Small Classification를 처리하던 중 오류가 발생했습니다. -> $it", ErrorCode.INVALID_INPUT_DATA_ERROR)
+        }
 
         val notice = Notice(
             UUID.randomUUID().toString(),
-            NoticeCompany(companyDto.companyNumber),
-                bigClassification,
-            loadSmallClassificationPort.loadSmallClassification(
-                request.smallClassification
-            )?: saveSmallClassificationPort.saveSmallClassification(
-                RecruitmentSmallClassification(
-                    request.smallClassification,
-                    bigClassification
-                )
-            ),
+            NoticeCompany(companyDto.companyNumber, companyDto.companyName),
             request.detailBusinessDescription,
             request.numberOfEmployee,
             request.gradeCutLine,
@@ -66,12 +56,24 @@ class CreateNotice(
             request.needDocuments,
             request.otherFeatures,
             request.workPlace.toWorkPlace(),
-            request.isPersonalContact
+            request.isPersonalContact,
+            request.interviewProcessMap.toMutableMap()
         )
         updateCompanyPort.updateLastNoticedYear(companyNumber)
 
         filePort.saveFile(notice.id, attachment)
+        saveNoticePort.saveNotice(
+            notice
+        )
 
+        smallClassification.map {
+            saveSmallClassificationUsagePort.save(
+                RecruitmentSmallClassificationUsage(
+                    notice,
+                    it
+                )
+            )
+        }
 
         saveNoticePort.saveNotice(
             notice

@@ -1,5 +1,7 @@
 package com.info.info_v2_backend.notice.adapter.input.rest.dto.request.worktime
 
 data class EditWorkTimeRequest(
-    val untilCommuteStartTime: Int?,
+    val commuteStartTime: Int?,
+    val commuteEndTime: Int?,
+
 )

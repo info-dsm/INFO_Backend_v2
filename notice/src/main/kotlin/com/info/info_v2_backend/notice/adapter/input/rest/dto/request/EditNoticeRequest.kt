@@ -6,6 +6,7 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.support.Ed
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.welfare.EditWelfareRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.workPlace.EditWorkPlaceRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.worktime.EditWorkTimeRequest
+import com.info.info_v2_backend.notice.domain.interview.InterviewProcess
 
 data class EditNoticeRequest(
     val detailBusinessDescription: String?,
@@ -19,6 +20,10 @@ data class EditNoticeRequest(
     val needDocuments: String?,
     val otherFeatures: String?,
     val workPlace: EditWorkPlaceRequest?,
-    val isPersonalContact: Boolean?
+    val isPersonalContact: Boolean?,
+    val interviewProcessMap: MutableMap<Int, InterviewProcess>?,
+    val certificateList: MutableList<String>?,
+    val languageList: MutableList<String>?,
+    val technologyList: MutableList<String>?
 
 )

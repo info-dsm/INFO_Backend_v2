@@ -21,6 +21,7 @@ import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
 import com.info.info_v2_backend.company.domain.businessArea.BusinessAreaTagged
 import com.info.info_v2_backend.company.domain.introduction.CompanyIntroduction
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveContactorDto
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
@@ -30,11 +31,14 @@ class RegisterCompany(
     private val saveCompanyPort: SaveCompanyPort,
     private val saveContactorPort: SaveContactorPort,
     private val checkEmailCodePort: CheckEmailCodePort,
-    private val saveBusinessAreaPort: SaveBusinessAreaPort,
     private val saveBusinessAreaTaggedPort: SaveBusinessAreaTaggedPort,
     private val loadBusinessAreaPort: LoadBusinessAreaPort,
     private val loadCompanyPort: LoadCompanyPort
 ): RegisterCompanyUsecase {
+
+    companion object {
+        val COMPANY_FILE_PATH = "/tmp/spring/company"
+    }
 
     override fun register(
         emailCheckCode: String,
@@ -99,29 +103,28 @@ class RegisterCompany(
 
             uploadFile(
                 FileConvert.fileToMultipartFileConvert(
-                    FileConvert.multipartFileToFileConvert(businessRegisteredCertificate, "company/src/main/resources/tmp/")
+                    FileConvert.multipartFileToFileConvert(businessRegisteredCertificate, "$COMPANY_FILE_PATH/")
                 ), CompanyFileClassificationType.BUSINESS_CERTIFICATE, request.companyNumber)
             uploadFile(
                 FileConvert.fileToMultipartFileConvert(
-                    FileConvert.multipartFileToFileConvert(companyLogo, "company/src/main/resources/tmp/")
+                    FileConvert.multipartFileToFileConvert(companyLogo, "$COMPANY_FILE_PATH/")
                 ), CompanyFileClassificationType.COMPANY_LOGO, request.companyNumber)
-            saveCompanyPort.save(company)
-            FileConvert.removeLocalFile("company/src/main/resources/tmp/${businessRegisteredCertificate.originalFilename}")
-            FileConvert.removeLocalFile("company/src/main/resources/tmp/${companyLogo.originalFilename}")
+            FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${businessRegisteredCertificate.originalFilename}")
+            FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${companyLogo.originalFilename}")
 
             companyPhotoList.map {
                 uploadFile(
                     FileConvert.fileToMultipartFileConvert(
-                        FileConvert.multipartFileToFileConvert(it, "company/src/main/resources/tmp/")
+                        FileConvert.multipartFileToFileConvert(it, "$COMPANY_FILE_PATH/")
                     ), CompanyFileClassificationType.COMPANY_PHOTO, request.companyNumber)
-                FileConvert.removeLocalFile("company/src/main/resources/tmp/${it.originalFilename}")
+                FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${it.originalFilename}")
             }
             companyIntroductionFile.map {
                 uploadFile(
                     FileConvert.fileToMultipartFileConvert(
-                        FileConvert.multipartFileToFileConvert(it, "company/src/main/resources/tmp/")
+                        FileConvert.multipartFileToFileConvert(it, "$COMPANY_FILE_PATH/")
                     ), CompanyFileClassificationType.COMPANY_INTRODUCTION, request.companyNumber)
-                FileConvert.removeLocalFile("company/src/main/resources/tmp/${it.originalFilename}")
+                FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${it.originalFilename}")
             }
 
 

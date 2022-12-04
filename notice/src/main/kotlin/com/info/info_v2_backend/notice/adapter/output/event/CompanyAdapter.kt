@@ -13,5 +13,4 @@ class CompanyAdapter(
         kafkaTemplate.send(KafkaTopics.UPDATE_LAST_NOTICED_COMPANY, companyNumber)
     }
 
-
 }

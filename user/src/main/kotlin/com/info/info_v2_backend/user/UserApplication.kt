@@ -7,11 +7,11 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.kafka.annotation.EnableKafka
 
-@SpringBootApplication
 @EnableDiscoveryClient
 @EnableKafka
 @ConfigurationPropertiesScan
 @EnableJpaAuditing
+@SpringBootApplication
 class UserApplication
 fun main(args: Array<String>) {
     runApplication<UserApplication>(*args)

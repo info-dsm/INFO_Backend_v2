@@ -1,34 +1,12 @@
 spring:
-  application:
-    name: auth-service
-  datasource:
-    url: ${dbDefaultUrl}
-    username: ${dbDefaultUsername}
-    password: ${dbDefaultPw}
-    driver-class-name: ${dbDefaultDriver}
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      group-id: info
-      auto-offset-reset: latest
-
-eureka:
-  instance:
-    # 표기되는 규칙 변경
-    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
-    prefer-ip-address: true
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:8761/eureka
-
-
-server:
-  port: 0
-
-kafka:
-  kafkaServerAddress: localhost:9092
-
-jwt:
-  secretKey: dafdsvdavads
-  accessExpiredAt: 86400
-  refreshExpiredAt: 604800
+  config:
+    import: ${SPRING_CONFIG_IMPORT}
+  cloud:
+    config:
+      name: auth
+      profile: default
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh

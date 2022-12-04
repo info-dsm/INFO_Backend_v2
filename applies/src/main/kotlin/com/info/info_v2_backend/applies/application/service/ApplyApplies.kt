@@ -1,10 +1,10 @@
 package com.info.info_v2_backend.applies.application.service
 
 import com.info.info_v2_backend.applies.application.port.input.ApplyAppliesUsecase
-import com.info.info_v2_backend.applies.application.port.output.save.SaveAppliesPort
-import com.info.info_v2_backend.applies.application.port.output.load.LoadNoticePort
-import com.info.info_v2_backend.applies.application.port.output.load.LoadStudentPort
-import com.info.info_v2_backend.applies.application.port.output.upload.UploadResumePort
+import com.info.info_v2_backend.applies.application.port.output.applies.SaveAppliesPort
+import com.info.info_v2_backend.applies.application.port.output.notice.LoadNoticePort
+import com.info.info_v2_backend.applies.application.port.output.student.LoadStudentPort
+import com.info.info_v2_backend.applies.application.port.output.resume.ResumePort
 import com.info.info_v2_backend.applies.domain.Applies
 import com.info.info_v2_backend.applies.domain.notice.AppliesNotice
 import com.info.info_v2_backend.applies.domain.user.Applicant
@@ -19,7 +19,7 @@ class ApplyApplies(
     private val loadNoticePort: LoadNoticePort,
     private val loadStudentPort: LoadStudentPort,
     private val applyAppliesPort: SaveAppliesPort,
-    private val uploadResumePort: UploadResumePort
+    private val resumePort: ResumePort
 ): ApplyAppliesUsecase {
     override fun apply(noticeId: String, resume: MultipartFile, studentEmail: String) {
         val student = loadStudentPort.loadStudent(
@@ -40,11 +40,12 @@ class ApplyApplies(
                     student.entranceYear
                 ),
                 AppliesNotice(
-                    notice.noticeId
+                    notice.noticeId,
+                    notice.companyNumber
                 )
             )
         )
-        uploadResumePort.uploadResume(applies.id, resume)
+        resumePort.uploadResume(noticeId, applies.id, resume)
     }
 
 

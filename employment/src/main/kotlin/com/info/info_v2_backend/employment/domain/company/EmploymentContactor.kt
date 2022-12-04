@@ -1,6 +1,6 @@
 package com.info.info_v2_backend.employment.domain.company
 
-import com.info.info_v2_backend.employment.adapter.input.rest.dto.request.EmploymentResponse
+import com.info.info_v2_backend.common.employment.EmploymentDto
 import javax.persistence.Column
 
 class EmploymentContactor(
@@ -9,8 +9,8 @@ class EmploymentContactor(
     @Column(name = "employment_contactor_email", nullable = false)
     val contactorEmail: String = contactorEmail
 
-    fun toEmploymentContactorResponse(): EmploymentResponse.EmploymentContactorResponse {
-        return EmploymentResponse.EmploymentContactorResponse(
+    fun toEmploymentContactorResponse(): EmploymentDto.EmploymentContactorResponse {
+        return EmploymentDto.EmploymentContactorResponse(
             this.contactorEmail
         )
     }

@@ -21,15 +21,8 @@ import org.springframework.web.multipart.MultipartFile
 interface FileFeignClient: CompanyFilePort {
 
     @PutMapping("/company", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    override fun upload(@RequestParam(name = "companyNumber") companyId: String, @RequestParam(name = "classification") classification: CompanyFileClassificationType, @RequestPart(value = "file") file: MultipartFile)
-    @PatchMapping("/company", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @Async
-    override fun change(
-        @RequestParam fileId: String,
-        @RequestParam companyId: String,
-        @RequestParam classification: CompanyFileClassificationType,
-        @RequestPart file: MultipartFile
-    )
+    override fun upload(@RequestParam(name = "companyNumber") companyId: String, @RequestParam(name = "classification") classification: CompanyFileClassificationType, @RequestPart(value = "file") file: MultipartFile)
 
     @GetMapping("/company/{companyNumber}")
     override fun loadCompanyFile(@PathVariable companyNumber: String): List<CompanyFileResponse>

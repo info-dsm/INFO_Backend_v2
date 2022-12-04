@@ -1,0 +1,155 @@
+version: '3.3'
+services:
+  infov2-apiGateway:
+    image: jinwoo794533/infov2-apigateway:latest
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://infov2-config-server:8888/
+    ports:
+      - 8000:8000
+    networks:
+      - info
+    logging:
+      driver: json-file
+  infov2-applies:
+    image: jinwoo794533/infov2-applies:latest
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://infov2-config-server:8888/
+    networks:
+      - info
+    logging:
+      driver: json-file
+  infov2-auth:
+    image: jinwoo794533/infov2-auth:latest
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://infov2-config-server:8888/
+    networks:
+      - info
+    logging:
+      driver: json-file
+  infov2-company:
+    image: jinwoo794533/infov2-company:latest
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://infov2-config-server:8888/
+    networks:
+      - info
+    logging:
+      driver: json-file
+  infov2-config-server:
+    image: jinwoo794533/infov2-config-server:latest
+    ports:
+      - 8888:8888
+    networks:
+      - info
+    logging:
+      driver: json-file
+  infov2-email:
+    image: jinwoo794533/infov2-email:latest
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://infov2-config-server:8888/
+    networks:
+      - info
+    logging:
+      driver: json-file
+  infov2-employment:
+    image: jinwoo794533/infov2-employment:latest
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://infov2-config-server:8888/
+    networks:
+      - info
+    logging:
+      driver: json-file
+  infov2-eureka:
+    image: jinwoo794533/infov2-eureka:0.00.02
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://infov2-config-server:8888/
+    ports:
+      - 8761:8761
+    networks:
+      info:
+        aliases:
+          - info_eureka
+
+    logging:
+      driver: json-file
+  infov2-file:
+    image: jinwoo794533/infov2-file:latest
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://infov2-config-server:8888/
+    networks:
+      - info
+    logging:
+      driver: json-file
+  infov2-notice:
+    image: jinwoo794533/infov2-notice:latest
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://infov2-config-server:8888/
+    networks:
+      - info
+    logging:
+      driver: json-file
+  infov2-user:
+    image: jinwoo794533/infov2-user:latest
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://infov2-config-server:8888/
+    networks:
+      - info
+    logging:
+      driver: json-file
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    environment:
+      JVM_OPTS: -Xms320M -Xmx640M -XX:-TieredCompilation -XX:+UseStringDeduplication
+        -noverify
+      KAFKA_BROKERCONNECT: PLAINTEXT://kafka:9333
+      MANAGEMENT_SERVER_PORT: '9000'
+      SERVER_PORT: '9000'
+    ports:
+      - 9000:9000
+    networks:
+      - kafka
+    logging:
+      driver: json-file
+  kafka:
+    image: bitnami/kafka:latest
+    environment:
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
+      KAFKA_BROKER_ID: '1'
+      KAFKA_CFG_ADVERTISED_LISTENERS: CLIENT://info-kafka:9333,EXTERNAL://info-kafka:9092
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: CLIENT
+      KAFKA_CFG_LISTENERS: CLIENT://:9333,EXTERNAL://:9092
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+    ports:
+      - 9092:9092
+    networks:
+      info:
+        aliases:
+          - info_kafka
+      kafka:
+    logging:
+      driver: json-file
+  redis:
+    image: redis:alpine
+    command:
+      - redis-server
+      - --port
+      - '6379'
+    networks:
+      info:
+        aliases:
+          - info_redis
+    logging:
+      driver: json-file
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: 'yes'
+    networks:
+      - kafka
+    logging:
+      driver: json-file
+networks:
+  info:
+    driver: overlay
+  kafka:
+    driver: overlay

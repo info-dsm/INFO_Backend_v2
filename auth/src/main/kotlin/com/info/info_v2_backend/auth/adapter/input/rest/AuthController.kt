@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.auth.adapter.input.rest
 
+import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginCompanyRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.TokenReissueRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenResponse
@@ -23,12 +24,20 @@ class AuthController(
     private val checkCodeUsecase: CheckCodeUsecase,
 ) {
 
-    @PostMapping("/login")
+    @PostMapping("/login/user")
     @ResponseStatus(HttpStatus.CREATED)
-    fun login(
+    fun userLogin(
         @RequestBody request: LoginRequest
     ): TokenResponse {
-        return loginUsecase.login(request)
+        return loginUsecase.loginUser(request)
+    }
+
+    @PostMapping("/login/company")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun companyLogin(
+        @RequestBody request: LoginCompanyRequest
+    ): TokenResponse {
+        return loginUsecase.loginCompany(request)
     }
 
     @PostMapping("/signup/student")
@@ -81,5 +90,10 @@ class AuthController(
     ) {
 
     }
+
+
+    //check Password Hint By
+    //
+
 
 }

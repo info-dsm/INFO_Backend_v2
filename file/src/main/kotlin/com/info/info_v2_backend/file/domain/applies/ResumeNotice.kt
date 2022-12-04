@@ -9,4 +9,9 @@ class ResumeNotice(
 ){
     @Column(name = "notice_id", nullable = false)
     val noticeId: String = noticeId
+
+    override fun equals(other: Any?): Boolean {
+        if (other is ResumeNotice) return other.noticeId == this.noticeId
+        return super.equals(other)
+    }
 }

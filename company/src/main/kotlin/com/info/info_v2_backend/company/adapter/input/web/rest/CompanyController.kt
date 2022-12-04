@@ -3,12 +3,13 @@ package com.info.info_v2_backend.company.adapter.input.web.rest
 import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.company.CompanyDto
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
-import com.info.info_v2_backend.common.file.dto.FileDto
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.edit.EditCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.register.RegisterCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
 import com.info.info_v2_backend.company.application.port.input.*
+import com.info.info_v2_backend.company.application.port.input.businessArea.AddBusinessAreaUsecase
+import com.info.info_v2_backend.company.application.port.input.businessArea.LoadBusinessAreaUsecase
 import com.info.info_v2_backend.company.application.port.input.file.AddCompanyFileUsecase
 import com.info.info_v2_backend.company.application.port.input.file.ChangeCompanyFileUsecase
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
@@ -28,8 +29,16 @@ class CompanyController(
     private val makeAssociatedUsecase: MakeAssociatedUsecase,
     private val loadCompanyUsecase: LoadCompanyUsecase,
     private val editCompanyUsecase: EditCompanyUsecase,
-    private val makeLeadingUsecase: MakeLeadingUsecase
+    private val makeLeadingUsecase: MakeLeadingUsecase,
+    private val addBusinessAreaUsecase: AddBusinessAreaUsecase,
 ) {
+
+    @GetMapping("/{companyNumber}/contactor")
+    fun getContactorEmail(
+        @PathVariable companyNumber: String
+    ): String? {
+        return loadCompanyUsecase.loadCompanyDto(companyNumber)?.contactorEmail
+    }
 
 
     @PostMapping("/signup")
@@ -60,6 +69,11 @@ class CompanyController(
     @GetMapping("/business-area")
     fun getBusinessAreaList(): List<BusinessArea> {
         return loadBusinessAreaUsecase.loadAll()
+    }
+
+    @PutMapping("/business-area")
+    fun addBusinessArea(@RequestParam name: String) {
+        return addBusinessAreaUsecase.add(name)
     }
 
     @PatchMapping("/{companyNumber}/certificate")

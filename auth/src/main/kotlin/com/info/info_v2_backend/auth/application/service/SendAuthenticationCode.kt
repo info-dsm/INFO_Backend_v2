@@ -1,7 +1,7 @@
 package com.info.info_v2_backend.auth.application.service
 
 import com.info.info_v2_backend.auth.application.port.input.SendAuthenticationCodeUsecase
-import com.info.info_v2_backend.auth.application.port.output.UserServicePort
+import com.info.info_v2_backend.auth.application.port.output.LoadUserDetailsPort
 import com.info.info_v2_backend.auth.application.port.output.SaveCodePort
 import com.info.info_v2_backend.auth.application.port.output.SendEmailPort
 import com.info.info_v2_backend.auth.domain.Code
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class SendAuthenticationCode(
-    private val loadUserByEmailPort: UserServicePort,
+    private val loadUserByEmailPort: LoadUserDetailsPort,
     private val saveAuthenticationCodePort: SaveCodePort,
     private val sendEmail: SendEmailPort
 ): SendAuthenticationCodeUsecase {
@@ -22,6 +22,7 @@ class SendAuthenticationCode(
     override fun send(targetEmail: String, type: AuthenticationCodeType) {
         try {
             loadUserByEmailPort.loadUserDetailsByUsername(targetEmail)?: throw BusinessException("", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+            throw BusinessException(errorCode = ErrorCode.ALREADY_EXISTS_ERROR)
         } catch (e: BusinessException) {
             if (e.errorCode == ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR) {
                 val code = RandomStringUtils.randomNumeric(type.length)
@@ -35,7 +36,7 @@ class SendAuthenticationCode(
                 )
 
                 val map = HashMap<String, String>()
-                map.put("code", code)
+                map["code"] = code
                 sendEmail.send(
                     SendEmailNotificationRequest(
                         targetEmail,

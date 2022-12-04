@@ -49,6 +49,7 @@ class LoadCompany(
     override fun loadMaximumCompany(companyNumber: String): MaximumCompanyResponse {
         val company = loadCompanyPort.loadCompany(companyNumber)?: throw BusinessException("회사를 조회하지 못했습니다.", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
         val contactor = loadContactorPort.loadContactor(companyNumber)
+            ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
         return company.toMaximumCompanyResponse(contactor, getCompanyIntroductionResponse(company))
     }
 

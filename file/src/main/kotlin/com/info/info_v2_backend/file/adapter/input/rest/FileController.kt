@@ -4,6 +4,8 @@ import com.info.info_v2_backend.common.file.FileConvert
 import com.info.info_v2_backend.common.file.dto.AttachmentResponse
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
+import com.info.info_v2_backend.common.file.dto.response.FileResponse
+import com.info.info_v2_backend.file.application.port.input.applies.LoadResumeUsecase
 import com.info.info_v2_backend.file.application.port.input.notice.UploadAttachmentUsecase
 import com.info.info_v2_backend.file.application.port.input.company.LoadCompanyFileUsecase
 import com.info.info_v2_backend.file.application.port.input.company.RemoveCompanyFileUsecase
@@ -13,6 +15,7 @@ import com.info.info_v2_backend.file.application.port.input.notice.LoadAttachmen
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -28,10 +31,12 @@ class FileController(
     private val loadCompanyFileUsecase: LoadCompanyFileUsecase,
     private val uploadResumeUsecase: UploadResumeUsecase,
     private val uploadAttachmentUsecase: UploadAttachmentUsecase,
-    private val loadAttachmentUsecase: LoadAttachmentUsecase
+    private val loadAttachmentUsecase: LoadAttachmentUsecase,
+    private val loadResumeUsecase: LoadResumeUsecase
 ) {
     companion object {
-        const val IMAGE_PATH = "file/src/main/resources/tmp/"
+//        const val IMAGE_PATH = "/tmp/spring/file"
+        const val IMAGE_PATH = "/Users/anjin-u/Documents/project/INFO_v2_Backend/file/src/main/resources/tmp"
     }
 
     @PutMapping("/company")
@@ -42,10 +47,11 @@ class FileController(
     ) {
         uploadCompanyFileUsecase.uploadCompanyFile(
             FileConvert.fileToMultipartFileConvert(
-                FileConvert.multipartFileToFileConvert(file, "file/src/main/resources/tmp/")
+                FileConvert.multipartFileToFileConvert(file, "$IMAGE_PATH/")
             ), classification, companyNumber)
-        FileConvert.removeLocalFile("$IMAGE_PATH${file.originalFilename}")
+        FileConvert.removeLocalFile("$IMAGE_PATH/${file.originalFilename}")
     }
+
 
     @GetMapping("/company/{companyNumber}")
     fun getCompanyFileList(@PathVariable companyNumber: String): List<CompanyFileResponse> {
@@ -73,14 +79,24 @@ class FileController(
         uploadResumeUsecase.uploadResume(
             FileConvert.fileToMultipartFileConvert(
                 FileConvert.multipartFileToFileConvert(resume,
-                "$IMAGE_PATH${resume.originalFilename}"
+                "$IMAGE_PATH/${resume.originalFilename}"
                 )
             ),
             noticeId,
             studentEmail
         )
-        FileConvert.removeLocalFile("$IMAGE_PATH${resume.originalFilename}")
+        FileConvert.removeLocalFile("$IMAGE_PATH/${resume.originalFilename}")
     }
+
+
+    @GetMapping("/applies/{noticeId}/{studentEmail}/resume")
+    fun getAppliesResume(
+        @PathVariable noticeId: String,
+        @PathVariable studentEmail: String
+    ): FileResponse {
+        return loadResumeUsecase.load(noticeId, studentEmail)
+    }
+
 
     @PutMapping("/notice/{noticeId}/attachment")
     fun uploadAttachment(
@@ -91,12 +107,12 @@ class FileController(
             uploadAttachmentUsecase.uploadAttachment(
                 FileConvert.fileToMultipartFileConvert(
                     FileConvert.multipartFileToFileConvert(it,
-                        "$IMAGE_PATH${it.originalFilename}"
+                        "$IMAGE_PATH/${it.originalFilename}"
                     )
                 ),
                 noticeId
             )
-            FileConvert.removeLocalFile("$IMAGE_PATH${it.originalFilename}")
+            FileConvert.removeLocalFile("$IMAGE_PATH/${it.originalFilename}")
         }
     }
 

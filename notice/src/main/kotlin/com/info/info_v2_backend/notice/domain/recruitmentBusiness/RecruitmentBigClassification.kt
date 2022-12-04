@@ -17,10 +17,6 @@ class RecruitmentBigClassification(
     val name: String = name
 
     @OneToMany(mappedBy = "bigClassification")
-    var  noticeList: MutableList<Notice> = ArrayList()
-        protected set
-
-    @OneToMany
     var smallClassificationList: MutableList<RecruitmentSmallClassification>  = ArrayList()
         protected set
 

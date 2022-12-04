@@ -5,8 +5,10 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.OneToMany
+import javax.persistence.Table
 
 @Entity
+@Table(name = "language")
 class Language(
     name: String
 ) {
@@ -16,7 +18,7 @@ class Language(
     val name: String = name
 
 
-    @OneToMany
+    @OneToMany(mappedBy = "language")
     var languageUsage: MutableList<LanguageUsage> = ArrayList()
         protected set
 

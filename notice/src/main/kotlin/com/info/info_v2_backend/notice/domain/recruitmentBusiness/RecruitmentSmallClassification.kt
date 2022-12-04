@@ -6,6 +6,7 @@ import com.info.info_v2_backend.notice.domain.Notice
 import javax.persistence.*
 
 @Entity
+@Table(name = "recruitment_small_classification")
 class RecruitmentSmallClassification(
     name: String,
     bigClassification: RecruitmentBigClassification
@@ -15,9 +16,9 @@ class RecruitmentSmallClassification(
     @Column(name = "notice_small_classification_name")
     val name: String = name
 
+
     @OneToMany(mappedBy = "smallClassification")
-    var noticeList: MutableList<Notice> = ArrayList()
-        protected set
+    val smallClassificationUsageList: MutableList<RecruitmentSmallClassificationUsage> = ArrayList()
 
     @ManyToOne
     @JoinColumn(name = "big_classifiction", nullable = false)

@@ -69,6 +69,8 @@ subprojects {
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.springframework.security:spring-security-test")
+        implementation("org.springframework.boot:spring-boot-starter-actuator")
+        implementation("io.micrometer:micrometer-registry-prometheus")
     }
 
 
@@ -99,16 +101,8 @@ project(":common") {
     }
 }
 
-project(":commonEntity") {
-    dependencies {
-        implementation(project(":common"))
-    }
-}
-
-
 project(":user") {
     dependencies {
-        implementation(project(":commonEntity"))
         implementation(project(":common"))
     }
 }
@@ -141,7 +135,6 @@ project(":notice") {
 
 project(":email") {
     dependencies {
-        implementation(project(":commonEntity"))
         implementation(project(":common"))
     }
 }
@@ -157,7 +150,6 @@ project(":company") {
     dependencies {
         implementation(project(":common"))
         implementation(project(":user"))
-        implementation(project(":commonEntity"))
     }
 }
 

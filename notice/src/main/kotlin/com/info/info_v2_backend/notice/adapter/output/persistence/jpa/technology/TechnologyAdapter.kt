@@ -13,4 +13,8 @@ class TechnologyAdapter(
     override fun load(technologyName: String): Technology? {
         return technologyRepository.findByIdOrNull(technologyName)
     }
+
+    override fun loadAll(): List<Technology> {
+        return technologyRepository.findAll()
+    }
 }

@@ -1,7 +1,7 @@
 package com.info.info_v2_backend.company.domain.businessArea
 
-import com.info.info_v2_backend.commonEntity.entity.TimeEntity
 import com.info.info_v2_backend.company.domain.Company
+import com.info.info_v2_backend.company.domain.time.TimeEntity
 import org.springframework.data.domain.Persistable
 import javax.persistence.*
 

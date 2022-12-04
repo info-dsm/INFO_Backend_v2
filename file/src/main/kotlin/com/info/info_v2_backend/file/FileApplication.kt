@@ -12,8 +12,8 @@ import org.springframework.kafka.annotation.EnableKafka
 @EnableFeignClients
 @EnableDiscoveryClient
 @EnableJpaAuditing
-@SpringBootApplication
 @EnableKafka
+@SpringBootApplication
 class FileApplication
 fun main(args: Array<String>) {
     runApplication<FileApplication>(*args)

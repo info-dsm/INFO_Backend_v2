@@ -5,4 +5,5 @@ import com.info.info_v2_backend.notice.domain.technology.Technology
 interface LoadTechnologyPort {
 
     fun load(technologyName: String): Technology?
+    fun loadAll(): List<Technology>
 }

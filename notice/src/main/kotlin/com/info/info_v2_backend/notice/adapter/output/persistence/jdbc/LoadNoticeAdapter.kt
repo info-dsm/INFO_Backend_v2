@@ -43,7 +43,6 @@ class LoadNoticeAdapter(
             ),
             JdbcNoticeVoMapper()
         )
-        println(noticeList)
         return PageImpl(noticeList.map {
             return@map it.toMinimumNoticeResponse(
                 loadSmallClassificationUsagePort.loadAllByNoticeId(it.id).map usage@ {
@@ -54,7 +53,7 @@ class LoadNoticeAdapter(
                     )
                 }.toMutableList()
             )
-        }, page, count())
+        }, page, count(NoticeQueryBlocks.selectNoticeByDateIsBeforeEndDateAndNoticeWaitingStatusOrderByCreatedAtDescendingPagingCount(date, status)))
     }
 
     override fun loadAfterEndDateAndStatusNoticeList(
@@ -80,7 +79,7 @@ class LoadNoticeAdapter(
                     )
                 }.toMutableList()
             )
-        }, page, count())
+        }, page, count(NoticeQueryBlocks.selectNoticeByDateIsAfterEndDateAndNoticeWaitingStatusOrderByCreatedAtDescendingPagingCount(date, status)))
     }
 
     private fun loadLanguageList(noticeId: String): MutableList<LanguageResponse> {
@@ -130,7 +129,10 @@ class LoadNoticeAdapter(
         return results
     }
 
-    fun count(): Long {
+    fun count(query: String?): Long {
+        query?.let {
+            return jdbcTemplate.queryForObject(query, Long::class.java)!!
+        }
         return jdbcTemplate.queryForObject("SELECT count(*) FROM notice", Long::class.java)!!
     }
 

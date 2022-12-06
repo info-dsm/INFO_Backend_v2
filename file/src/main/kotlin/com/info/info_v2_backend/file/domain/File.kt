@@ -10,7 +10,7 @@ import javax.persistence.*
 
 
 @Where(clause = "file_is_deleted = false")
-@SQLDelete(sql = "UPDATE `file` SET file_is_deleted = true where id = ?")
+@SQLDelete(sql = "UPDATE `file` SET file_is_deleted = true where file_id = ?")
 @Table(name = "file")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "file_type", length = 50)

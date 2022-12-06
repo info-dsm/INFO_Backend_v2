@@ -1,10 +1,10 @@
 package com.info.info_v2_backend.file.application.service
 
+import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
-import com.info.info_v2_backend.common.file.dto.RegisterCompanyFileDto
 import com.info.info_v2_backend.file.application.port.input.company.UploadCompanyFileUsecase
-import com.info.info_v2_backend.file.application.port.output.company.RegisterCompanyFilePort
 import com.info.info_v2_backend.file.application.port.output.UploadFilePort
+import com.info.info_v2_backend.file.application.port.output.company.ChangeCompanyStatusPort
 import com.info.info_v2_backend.file.application.port.output.company.RemoveCompanyFilePort
 import com.info.info_v2_backend.file.application.port.output.company.SaveCompanyFilePort
 import com.info.info_v2_backend.file.domain.company.CompanyFile
@@ -19,35 +19,34 @@ class UploadCompanyFile(
     private val uploadFilePort: UploadFilePort,
     private val saveCompanyFilePort: SaveCompanyFilePort,
     private val removeCompanyFilePort: RemoveCompanyFilePort,
-    private val registerCompanyFilePort: RegisterCompanyFilePort,
+    private val changeCompanyStatusPort: ChangeCompanyStatusPort
 ): UploadCompanyFileUsecase {
 
     @Async
     override fun uploadCompanyFile(file: MultipartFile, classification: CompanyFileClassificationType, companyNumber: String) {
-        val fileId = UUID.randomUUID().toString()
-        val dto = uploadFilePort.upload(file, "COMPANY/${companyNumber}", "${classification.name}/${fileId}")
-        val companyFile = CompanyFile(
-            fileId,
-            dto,
-            classification,
-            companyNumber
-        )
-        if (classification == CompanyFileClassificationType.COMPANY_LOGO
-            || classification == CompanyFileClassificationType.BUSINESS_CERTIFICATE
-        ) {
-            registerCompanyFilePort.register(
-                RegisterCompanyFileDto(
-                    fileId,
-                    companyNumber,
-                    classification
-                )
+        try {
+            val fileId = UUID.randomUUID().toString()
+            val dto = uploadFilePort.upload(file, "COMPANY/${companyNumber}", "${classification.name}/${fileId}")
+            val companyFile = CompanyFile(
+                fileId,
+                dto,
+                classification,
+                companyNumber
             )
-        }
+            if (classification == CompanyFileClassificationType.COMPANY_LOGO
+                || classification == CompanyFileClassificationType.BUSINESS_CERTIFICATE
+            ) {
+                removeCompanyFilePort.remove(classification, companyNumber)
+            }
 
-        removeCompanyFilePort.remove(classification, companyNumber)
-        saveCompanyFilePort.save(
-            companyFile
-        )
+            saveCompanyFilePort.save(
+                companyFile
+            )
+
+            changeCompanyStatusPort.change(companyNumber, 1)
+        } catch (e: BusinessException) {
+            changeCompanyStatusPort.change(companyNumber, 2)
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.company.application.service
 
+import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.auth.AuthenticationCodeDto
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.common.exception.BusinessException
@@ -25,6 +26,7 @@ import com.info.info_v2_backend.company.domain.introduction.CompanyIntroduction
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveContactorDto
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 
 @Service
@@ -40,8 +42,7 @@ class RegisterCompany(
 ): RegisterCompanyUsecase {
 
     companion object {
-//        val COMPANY_FILE_PATH = "/tmp/spring/company"
-        val COMPANY_FILE_PATH = "/Users/anjin-u/Documents/project/INFO_v2_Backend/company/src/main/resources/tmp"
+        val COMPANY_FILE_PATH = "/tmp/spring/company"
     }
 
     override fun register(
@@ -58,7 +59,7 @@ class RegisterCompany(
                     emailCheckCode,
                     AuthenticationCodeType.SIGNUP_EMAIL
                 )
-            )) {
+            ) || Auth.checkIsTeacher()) {
 
             loadCompanyPort.loadCompany(request.companyNumber)?.let {
                 throw BusinessException("이미 존재하는 사업자등록번호입니다.", ErrorCode.ALREADY_EXISTS_ERROR)
@@ -66,7 +67,7 @@ class RegisterCompany(
 
             saveContactorPort.save(
                 SaveContactorDto(
-                    request.companyContact.contactorName,
+                    request.companyContact.contactorName?:"",
                     request.companyContact.email,
                     request.companyContact.password,
                     request.companyContact.contactorRank,

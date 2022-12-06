@@ -12,6 +12,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.*
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.support.serializer.JsonSerializer
+import java.io.Serializable
 
 @Configuration
 class KafkaConfiguration(
@@ -39,6 +40,18 @@ class KafkaConfiguration(
     @Bean
     fun registerCompanyFileDtoKafkaTemplate(): KafkaTemplate<String, RegisterCompanyFileDto> {
         return KafkaTemplate(registerCompanyFileDtoProducerFactory())
+    }
+
+    fun stringProducerFactoryConfigs(): Map<String, Serializable> =
+        mapOf(
+            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to bootstrapServers,
+            ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java,
+            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to StringSerializer::class.java
+        )
+
+    @Bean
+    fun kafkaTemplate(): KafkaTemplate<String, String> {
+        return KafkaTemplate(DefaultKafkaProducerFactory<String, String>(stringProducerFactoryConfigs()))
     }
 
 

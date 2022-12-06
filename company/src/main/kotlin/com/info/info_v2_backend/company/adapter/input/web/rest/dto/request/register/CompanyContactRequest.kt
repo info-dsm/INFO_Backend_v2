@@ -7,7 +7,7 @@ import javax.validation.constraints.Pattern
 
 
 data class CompanyContactRequest(
-    val contactorName: String,
+    val contactorName: String?,
     val contactorRank: String,
     @field:Pattern(
         regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}\$",

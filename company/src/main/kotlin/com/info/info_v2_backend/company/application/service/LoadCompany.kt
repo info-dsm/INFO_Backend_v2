@@ -3,7 +3,10 @@ package com.info.info_v2_backend.company.application.service
 import com.info.info_v2_backend.common.company.CompanyDto
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.common.file.FileProperty
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
+import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
+import com.info.info_v2_backend.common.file.dto.type.FileType
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.CompanyIntroductionResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
@@ -80,16 +83,19 @@ class LoadCompany(
 
     private fun getCompanyIntroductionResponse(company: Company): CompanyIntroductionResponse {
         val companyFileList = companyFilePort.loadCompanyFile(company.companyNumber)
-        val introductionResponse = CompanyIntroductionResponse(company.companyIntroduction.introduction)
-        companyFileList.map {
-            when (it.companyFileClassificationType) {
-                CompanyFileClassificationType.BUSINESS_CERTIFICATE -> introductionResponse.changeBusinessCertificate(it)
-                CompanyFileClassificationType.COMPANY_INTRODUCTION -> introductionResponse.addCompanyIntroductionFile(it)
-                CompanyFileClassificationType.COMPANY_LOGO -> introductionResponse.changeCompanyLogo(it)
-                CompanyFileClassificationType.COMPANY_PHOTO -> introductionResponse.addCompanyPhoto(it)
-            }
+        val introductionResponse = CompanyIntroductionResponse(
+            company.companyIntroduction.introduction,
+            CompanyFileResponse(company.companyNumber, CompanyFileClassificationType.BUSINESS_CERTIFICATE),
+            ArrayList(),
+            CompanyFileResponse(company.companyNumber, CompanyFileClassificationType.COMPANY_LOGO),
+            ArrayList()
+        )
 
+        companyFileList.map {
+            introductionResponse.addFile(it)
+            println("${it.companyNumber}, ${it.fileName}, ${it.companyFileClassificationType}")
         }
+        println("${company.companyNumber}, ${companyFileList.map { it.fileName }}")
 
         return introductionResponse
     }

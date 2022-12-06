@@ -5,6 +5,7 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNotice
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.certificate.CertificateResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.BigClassificationResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.ClassificationResponse
@@ -62,6 +63,7 @@ class Notice(
     @Column(name = "id", nullable = false)
     val id: String = id
 
+    @Embedded
     var company: NoticeCompany = company
 
     @OneToMany(mappedBy = "notice")
@@ -227,6 +229,13 @@ class Notice(
         this.approveStatus = NoticeWaitingStatus.APPROVE
     }
 
+    fun toMinimumNoticeWithApproveStatusResponse(): MinimumNoticeWithApproveStatusResponse {
+        return MinimumNoticeWithApproveStatusResponse(
+            this.toMinimumNoticeResponse(),
+            this.approveStatus
+        )
+    }
+
     fun toMinimumNoticeResponse(): MinimumNoticeResponse {
         return MinimumNoticeResponse(
             this.id,
@@ -244,7 +253,8 @@ class Notice(
             this.numberOfEmployee,
             this.gradeCutLine,
             this.applicantCount,
-            this.isPersonalContact
+            this.isPersonalContact,
+            this.noticeOpenPeriod
         )
 
     }

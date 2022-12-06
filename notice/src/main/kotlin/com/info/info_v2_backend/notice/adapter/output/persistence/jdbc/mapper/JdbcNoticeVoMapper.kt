@@ -34,6 +34,8 @@ class JdbcNoticeVoMapper(
                 WorkTime(
                     rs.getInt("commute_start_time"),
                     rs.getInt("commute_end_time"),
+                    rs.getInt("work_time_per_day"),
+                    rs.getInt("work_time_per_week"),
                     rs.getBoolean("is_flexible")
                 ),
                 Pay(

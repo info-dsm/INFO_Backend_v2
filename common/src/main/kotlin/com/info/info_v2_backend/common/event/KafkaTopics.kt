@@ -9,5 +9,6 @@ class KafkaTopics {
         const val REGISTER_COMPANY_FILE = "register-company-file"
         const val UPDATE_LAST_NOTICED_COMPANY = "update-last-noticed-company-year"
         const val UPDATE_NOTICE_APPLIES_COUNT = "add-notice-applies-count"
+        const val CHANGE_COMPANY_STATUS = "change-company-status"
     }
 }

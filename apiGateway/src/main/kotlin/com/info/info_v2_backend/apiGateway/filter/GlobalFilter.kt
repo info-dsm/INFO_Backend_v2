@@ -50,9 +50,7 @@ class GlobalFilter(
                 body?: let {
                     throw BusinessException("Invalid token -> $jwt", ErrorCode.INVALID_TOKEN_ERROR)
                 }
-
                 request.mutate().header(HeaderProperty.USER_EMAIL, body.subject)
-
                 body[HeaderProperty.COMPANY_NUMBER]?. let {
                     log.info("Company Number: $it")
                     request.mutate().header(HeaderProperty.COMPANY_NUMBER, it as String)

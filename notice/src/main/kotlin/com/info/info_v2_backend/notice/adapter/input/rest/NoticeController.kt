@@ -10,6 +10,7 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.classifica
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.certificate.CertificateResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.ClassificationResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.interview.InterviewProcessResponse
@@ -126,8 +127,12 @@ class NoticeController(
         @RequestParam companyNumber: String,
         @RequestPart attachment: List<MultipartFile>
     ){
-        if (Auth.checkIsTeacher()) return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request, attachment)
-        return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request, attachment)
+        if (Auth.checkIsTeacher()) return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request, attachment.takeIf {
+            it.isNotEmpty()
+        }?: throw BusinessException(null, ErrorCode.INPUT_DATA_NOT_FOUND_ERROR))
+        return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request, attachment.takeIf {
+            it.isNotEmpty()
+        }?: throw BusinessException(null, ErrorCode.INPUT_DATA_NOT_FOUND_ERROR))
     }
 
     @PatchMapping("/{companyNumber}/{noticeId}")
@@ -213,6 +218,16 @@ class NoticeController(
         @PathVariable companyNumber: String
     ): List<MinimumNoticeResponse> {
         return loadNoticeUsecase.loadCompanyMiniumumNoticeList(companyNumber)
+    }
+
+    @GetMapping("/list/every/{companyNumber}")
+    fun getCompanyNoticeWithApproveStatusList(
+        @PathVariable companyNumber: String
+    ): List<MinimumNoticeWithApproveStatusResponse> {
+        if (Auth.checkIsTeacher()) return loadNoticeUsecase.loadCompanyMiniumumNoticeWithApproveStatusList(companyNumber)
+        return loadNoticeUsecase.loadCompanyMiniumumNoticeWithApproveStatusList(
+            Auth.checkCompanyNumber(companyNumber)
+        )
     }
 
 

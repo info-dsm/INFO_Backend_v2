@@ -29,10 +29,7 @@ class NoticeAdapter(
 
     override fun loadNoticeByCompany(companyNumber: String): List<Notice> {
         return noticeRepository.findByCompany(
-            NoticeCompany(
-                companyNumber,
-                companyNumber
-            )
+            companyNumber
         )
     }
 

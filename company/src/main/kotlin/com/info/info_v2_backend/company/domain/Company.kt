@@ -14,6 +14,7 @@ import com.info.info_v2_backend.company.domain.time.TimeEntity
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.ContactorResponse
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
+import org.springframework.data.domain.Persistable
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -28,7 +29,7 @@ class Company(
     companyInformation: CompanyInformation,
     contactor: ContactorId,
     companyIntroduction: CompanyIntroduction
-): TimeEntity() {
+): TimeEntity(), Persistable<String> {
     @Id
     @Column(name = "company_number", nullable = false)
     val companyNumber: String = companyNumber
@@ -156,5 +157,18 @@ class Company(
             this.isNoticeRegisteredYearList.maxOrNull(),
             companyIntroductionResponse
         )
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Company) return other.companyNumber == this.companyNumber
+        return super.equals(other)
+    }
+
+    override fun getId(): String? {
+        return this.companyNumber
+    }
+
+    override fun isNew(): Boolean {
+        return this.createdAt == null
     }
 }

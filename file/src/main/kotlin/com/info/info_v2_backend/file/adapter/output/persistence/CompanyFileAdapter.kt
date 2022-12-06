@@ -1,7 +1,7 @@
 package com.info.info_v2_backend.file.adapter.output.persistence
 
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
-import com.info.info_v2_backend.file.adapter.output.persistence.repository.CompanyFileRepostiory
+import com.info.info_v2_backend.file.adapter.output.persistence.repository.CompanyFileRepository
 import com.info.info_v2_backend.file.application.port.output.company.LoadCompanyFilePort
 import com.info.info_v2_backend.file.application.port.output.company.RemoveCompanyFilePort
 import com.info.info_v2_backend.file.application.port.output.company.SaveCompanyFilePort
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class CompanyFileAdapter(
-    private val companyFileRepository: CompanyFileRepostiory
+    private val companyFileRepository: CompanyFileRepository
 ): LoadCompanyFilePort, SaveCompanyFilePort, RemoveCompanyFilePort {
     override fun load(fileId: String): CompanyFile? {
         return companyFileRepository.findById(fileId).orElse(null)

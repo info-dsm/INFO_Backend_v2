@@ -4,21 +4,21 @@ import com.info.info_v2_backend.company.application.port.input.ChangeCompanyStat
 import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SaveCompanyPort
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 
 @Service
 class ChangeCompanyStatus(
     private val loadCompanyPort: LoadCompanyPort,
-    private val saveCompanyPort: SaveCompanyPort
 ): ChangeCompanyStatusUsecase {
 
+    @Transactional
     override fun change(companyNumber: String, sequence: Int) {
         val company = loadCompanyPort.loadCompany(companyNumber)
             ?: return
         if (sequence == 1) {
             company.makeComplete()
         } else company.makeFailed()
-        saveCompanyPort.save(company)
     }
 
 

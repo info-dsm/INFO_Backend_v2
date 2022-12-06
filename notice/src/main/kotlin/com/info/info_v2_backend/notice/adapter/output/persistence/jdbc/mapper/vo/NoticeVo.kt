@@ -101,7 +101,8 @@ class NoticeVo(
             this.numberOfEmployee,
             this.gradeCutLine,
             this.applicantCount,
-            this.isPersonalContact
+            this.isPersonalContact,
+            this.noticeOpenPeriod
         )
 
     }

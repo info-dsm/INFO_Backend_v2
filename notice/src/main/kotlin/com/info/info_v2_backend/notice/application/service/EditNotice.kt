@@ -16,6 +16,7 @@ import com.info.info_v2_backend.notice.domain.certificate.CertificateUsage
 import com.info.info_v2_backend.notice.domain.language.LanguageUsage
 import com.info.info_v2_backend.notice.domain.technology.TechnologyUsage
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class EditNotice(
@@ -29,6 +30,7 @@ class EditNotice(
     private val saveTechnologyUsagePort: SaveTechnologyUsagePort,
 ): EditNoticeUsecase {
 
+    @Transactional
     override fun edit(noticeId: String, request: EditNoticeRequest, companyNumber: String) {
         val notice = loadNoticePort.loadNotice(noticeId)
             .takeIf {
@@ -86,9 +88,6 @@ class EditNotice(
             }
 
         }
-
-
-        saveNoticePort.saveNotice(notice)
 
     }
 }

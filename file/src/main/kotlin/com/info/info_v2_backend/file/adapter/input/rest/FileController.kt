@@ -35,8 +35,7 @@ class FileController(
     private val loadResumeUsecase: LoadResumeUsecase
 ) {
     companion object {
-//        const val IMAGE_PATH = "/tmp/spring/file"
-        const val IMAGE_PATH = "/Users/anjin-u/Documents/project/INFO_v2_Backend/file/src/main/resources/tmp"
+        const val IMAGE_PATH = "/tmp/spring/file"
     }
 
     @PutMapping("/company")

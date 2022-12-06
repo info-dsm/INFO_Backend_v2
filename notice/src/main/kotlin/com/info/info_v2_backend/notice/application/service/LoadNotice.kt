@@ -5,6 +5,7 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
 import com.info.info_v2_backend.notice.application.port.input.LoadNoticeUsecase
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
 import com.info.info_v2_backend.notice.application.port.output.LoadWithConditionPort
@@ -40,8 +41,16 @@ class LoadNotice(
     }
 
     override fun loadCompanyMiniumumNoticeList(companyNumber: String): List<MinimumNoticeResponse> {
-        return loadNoticePort.loadNoticeByCompany(companyNumber).map {
+        return loadNoticePort.loadNoticeByCompany(companyNumber).filter {
+            it.approveStatus == NoticeWaitingStatus.APPROVE
+        }.map {
             it.toMinimumNoticeResponse()
+        }
+    }
+
+    override fun loadCompanyMiniumumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse> {
+        return loadNoticePort.loadNoticeByCompany(companyNumber).map {
+            it.toMinimumNoticeWithApproveStatusResponse()
         }
     }
 

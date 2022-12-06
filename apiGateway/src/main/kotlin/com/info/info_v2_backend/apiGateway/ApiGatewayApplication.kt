@@ -12,9 +12,9 @@ import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 
-@SpringBootApplication
 @EnableDiscoveryClient
 @ConfigurationPropertiesScan
+@SpringBootApplication
 class ApiGatewayApplication
 fun main(args: Array<String>)  {
     runApplication<ApiGatewayApplication>(*args)

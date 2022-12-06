@@ -20,5 +20,4 @@ dependencies {
     implementation("commons-fileupload:commons-fileupload:1.4")
     implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
     implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
-
 }

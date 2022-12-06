@@ -35,6 +35,7 @@ class Login(
             loadContactorPort.load(request.companyNumber)
                 ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
         )
+        println(userDetails.getCompanyNumber())
         return login(request.password, userDetails)
     }
 

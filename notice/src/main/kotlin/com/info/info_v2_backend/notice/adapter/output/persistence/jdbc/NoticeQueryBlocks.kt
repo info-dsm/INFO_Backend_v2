@@ -17,6 +17,13 @@ object NoticeQueryBlocks {
                 "order by ${order.property} ${order.direction.name} limit ${page.offset}, ${page.pageSize}"
     }
 
+    fun selectNoticeByDateIsBeforeEndDateAndNoticeWaitingStatusOrderByCreatedAtDescendingPagingCount(date: LocalDate, status: NoticeWaitingStatus): String {
+        return "select count(*) from notice " +
+                "where notice_is_delete = false " +
+                "and \"${date.year}-${StringUtils.leftPad(date.month.value.toString(), 2)}-${date.dayOfMonth}\" <= end_date " +
+                "and notice_is_approve = \"${status.name}\""
+    }
+
     fun selectNoticeByDateIsAfterEndDateAndNoticeWaitingStatusOrderByCreatedAtDescendingPaging(date: LocalDate, status: NoticeWaitingStatus, page: Pageable): String {
         val order: Sort.Order = page.sort.toList()[0]
         return "select * from notice as A " +
@@ -26,5 +33,11 @@ object NoticeQueryBlocks {
                 "order by ${order.property} ${order.direction.name} limit ${page.offset}, ${page.pageSize}"
     }
 
+    fun selectNoticeByDateIsAfterEndDateAndNoticeWaitingStatusOrderByCreatedAtDescendingPagingCount(date: LocalDate, status: NoticeWaitingStatus): String {
+        return "select count(*) from notice as A " +
+                "where A.notice_is_delete = false " +
+                "and \"${date.year}-${StringUtils.leftPad(date.month.value.toString(), 2)}-${date.dayOfMonth}\" > A.end_date " +
+                "and A.notice_is_approve = \"${status.name}\" "
+    }
 
 }

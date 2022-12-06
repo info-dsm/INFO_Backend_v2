@@ -14,8 +14,7 @@ import java.util.*
 
 @Component
 class TokenProvider(
-    private val jwtProperty: JwtProperty,
-    private val customAuthDetailsService: AuthDetailsService
+    private val jwtProperty: JwtProperty
 ){
     fun encode(subject: String, companyNumber: String?, authLevel: String): TokenResponse {
         return TokenResponse(

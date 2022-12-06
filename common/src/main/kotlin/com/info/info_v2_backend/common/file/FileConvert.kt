@@ -39,17 +39,14 @@ object FileConvert {
         )
         localFile.createNewFile()
         file.transferTo(localFile)
-        println("CONVERT: ${localFile.absolutePath}")
         return localFile
     }
 
     fun removeLocalFile(path: String) {
-
         val localFile: File = File(
             Paths.get(path).toAbsolutePath().toString()
         )
-        println("REMOVE : ${localFile.absolutePath} / STATUS: ${localFile.delete()}")
-
+        localFile.delete()
     }
 
 }

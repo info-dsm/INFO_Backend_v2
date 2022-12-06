@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
+import java.sql.SQLException
 
 @Service
 class CompanyAdapter(
@@ -23,12 +24,16 @@ class CompanyAdapter(
     override fun save(company: Company) {
         try {
             companyRepository.save(company)
-        } catch (e: JDBCException) {
+        } catch (e: java.lang.RuntimeException) {
             throw BusinessException(
                 "DB작업 중 오류가 발생했습니다. ${e.message}",
                 ErrorCode.BAD_GATEWAY_ERROR
             )
         }
+    }
+
+    override fun update(company: Company) {
+        companyRepository.save(company)
     }
 
     override fun loadCompany(companyId: String): Company?{

@@ -9,6 +9,8 @@ import javax.persistence.Embeddable
 class WorkTime(
     commuteStartTime: Int?,
     commuteEndTime: Int?,
+    workTimePerDay: Int,
+    workTimePerWeek: Int,
     isFlexible: Boolean
 ) {
 
@@ -20,6 +22,14 @@ class WorkTime(
     var commuteEndTime: Int? = commuteEndTime
         protected set
 
+    @Column(name = "work_time_per_day")
+    var workTimePerDay: Int = workTimePerDay
+        protected set
+
+    @Column(name = "work_time_per_week")
+    var workTimePerWeek: Int = workTimePerWeek
+        protected set
+
     @Column(name = "is_flexible", nullable = false)
     var isFlexible: Boolean = isFlexible
         protected set
@@ -29,6 +39,8 @@ class WorkTime(
         return WorkTimeRequest(
             this.commuteStartTime,
             this.commuteEndTime,
+            this.workTimePerDay,
+            this.workTimePerWeek,
             this.isFlexible
         )
     }
@@ -39,6 +51,15 @@ class WorkTime(
         }
         r.commuteEndTime?.let {
             this.commuteEndTime = r.commuteEndTime
+        }
+        r.workTimePerDay?.let {
+            this.workTimePerDay = it
+        }
+        r.workTimePerWeek?.let {
+            this.workTimePerWeek = it
+        }
+        r.isFlexible?.let {
+            this.isFlexible = it
         }
     }
 }

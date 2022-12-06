@@ -11,6 +11,8 @@ data class WorkTimeRequest(
     @field:Min(0, message ="CommuteTime은 0~24까지입니다.")
     @field:Max(24, message = "CommuteTime은 0~24까지입니다.")
     val commuteEndTime: Int?,
+    val workTimePerDay: Int,
+    val workTimePerWeek: Int,
     val isFlexible: Boolean
 
 ) {
@@ -19,6 +21,8 @@ data class WorkTimeRequest(
         return WorkTime(
             this.commuteStartTime,
             this.commuteEndTime,
+            this.workTimePerDay,
+            this.workTimePerWeek,
             this.isFlexible
         )
     }

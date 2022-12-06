@@ -14,5 +14,6 @@ import java.time.LocalDate
 @Repository
 interface NoticeRepository: JpaRepository<Notice, String> {
 
-    fun findByCompany(company: NoticeCompany): List<Notice>
+    @Query(value = "select * from notice where notice_is_delete = false and company_number = :companyNumber", nativeQuery = true)
+    fun findByCompany(@Param(value = "companyNumber") companyNumber: String): List<Notice>
 }

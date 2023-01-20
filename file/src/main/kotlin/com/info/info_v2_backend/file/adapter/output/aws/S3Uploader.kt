@@ -1,6 +1,11 @@
 package com.info.info_v2_backend.file.adapter.output.aws
 
+import com.amazonaws.HttpMethod
+import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3Client
+import com.amazonaws.services.s3.Headers
+import com.amazonaws.services.s3.model.CannedAccessControlList
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import com.amazonaws.util.IOUtils
@@ -15,55 +20,73 @@ import com.info.info_v2_backend.file.application.port.output.UploadFilePort
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
+import java.util.*
 
 @Component
 class S3Uploader (
     private val s3Property: S3Property,
-    private val s3: AmazonS3Client
+    private val s3: AmazonS3
 ): UploadFilePort {
 
-    override fun upload(file: MultipartFile, rootPathName: String, middlePathName: String): FileDto {
-        val objectMetadata = ObjectMetadata()
-        val bytes: ByteArray = IOUtils.toByteArray(file.inputStream)
+    override fun getPresignedUrl(originalFileName: String, contentType: String, rootPathName: String, middlePathName: String): FileDto {
+        val fileName = getFileName(rootPathName, middlePathName, originalFileName)
+        val ext = getExt(originalFileName)
 
-        objectMetadata.contentLength = bytes.size.toLong()
-        val ext = (file.originalFilename?: file.name).substring((file.originalFilename?:file.name).lastIndexOf(".") + 1)
+        val generatePresignedUrlRequest = getGeneratePreSignedUrlRequest("info-dsm", fileName)
+        val url = s3.generatePresignedUrl(generatePresignedUrlRequest)
+        return FileDto(
+            url.toString(),
+            getFileType(contentType, ext),
+            ext,
+            originalFileName
+        )
+    }
 
+    private fun getExt(originalFileName: String): String {
+        return originalFileName.substring(originalFileName.lastIndexOf(".") + 1)
+    }
+
+    private fun getFileType(type: String, ext: String): FileType {
+        var contentType = type
         var fileType: FileType = FileType.IMAGE
         ImageExt.values().filter { it.extension ==  ext }.map {
-            objectMetadata.contentType = it.contentType
+            contentType = it.contentType
         }.ifEmpty {
             DocsExt.values().filter { it.extension == ext }.map {
-                objectMetadata.contentType = it.contentType
+                contentType = it.contentType
                 fileType = FileType.DOCS
             }
         }.ifEmpty {
             fileType = FileType.UNKNOWN
         }
+        return fileType
+    }
 
-
-        val byteArrayInputStream = ByteArrayInputStream(bytes)
-
-        val fileName = "${s3Property.bucketName}/${rootPathName}/${middlePathName}/${file.originalFilename}"
-
-        try {
-            s3.putObject(PutObjectRequest(s3Property.bucketName, fileName, byteArrayInputStream, objectMetadata))
-        } catch (err: Exception) {
-            throw BusinessException(err.message, ErrorCode.BAD_GATEWAY_ERROR)
-        }
-        return FileDto(
-            getFileUrl(fileName),
-            fileType,
-            ext,
-            file.originalFilename.toString()
+    private fun getGeneratePreSignedUrlRequest(bucket: String, fileName: String): GeneratePresignedUrlRequest {
+        val generatePresignedUrlRequest = GeneratePresignedUrlRequest(bucket, fileName)
+            .withMethod(HttpMethod.PUT)
+            .withExpiration(getPreSignedUrlExpiration())
+        generatePresignedUrlRequest.addRequestParameter(
+            Headers.S3_CANNED_ACL,
+            CannedAccessControlList.PublicRead.toString()
         )
+        return generatePresignedUrlRequest
+    }
+
+    private fun getPreSignedUrlExpiration(): Date {
+        val expiration = Date()
+        var expTimeMillis = expiration.time
+        expTimeMillis += (1000 * 60 * 2).toLong()
+        expiration.time = expTimeMillis
+        return expiration
     }
 
 
 
-    fun getFileUrl(fileName: String): String {
-        return s3.getResourceUrl(s3Property.bucketName, fileName)
+    private fun getFileName(rootPathName: String, middlePathName: String, originalFileName: String): String {
+        return "${s3Property.bucketName}/${rootPathName}/${middlePathName}/${originalFileName}"
     }
+
 
 
 

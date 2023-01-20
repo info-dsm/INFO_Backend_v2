@@ -3,6 +3,8 @@ package com.info.info_v2_backend.notice.adapter.input.rest
 import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.CreateNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
@@ -123,16 +125,11 @@ class NoticeController(
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createNotice(
-        @RequestPart request: CreateNoticeRequest,
+        @RequestBody request: CreateNoticeRequest,
         @RequestParam companyNumber: String,
-        @RequestPart attachment: List<MultipartFile>
-    ){
-        if (Auth.checkIsTeacher()) return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request, attachment.takeIf {
-            it.isNotEmpty()
-        }?: throw BusinessException(null, ErrorCode.INPUT_DATA_NOT_FOUND_ERROR))
-        return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request, attachment.takeIf {
-            it.isNotEmpty()
-        }?: throw BusinessException(null, ErrorCode.INPUT_DATA_NOT_FOUND_ERROR))
+    ): PresignedUrlListResponse {
+        if (Auth.checkIsTeacher()) return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request)
+        return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request)
     }
 
     @PatchMapping("/{companyNumber}/{noticeId}")
@@ -151,10 +148,10 @@ class NoticeController(
     fun changeAttachment(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String,
-        @RequestPart file: List<MultipartFile>
-    ) {
-        if (Auth.checkIsTeacher()) changeAttachmentUsecase.change(companyNumber, noticeId, file)
-        else changeAttachmentUsecase.change(Auth.checkCompanyNumber(companyNumber), noticeId, file)
+        @RequestBody request: GenerateFileListRequest
+    ): PresignedUrlListResponse {
+        if (Auth.checkIsTeacher()) return changeAttachmentUsecase.change(companyNumber, noticeId, request)
+        else return changeAttachmentUsecase.change(Auth.checkCompanyNumber(companyNumber), noticeId, request)
     }
 
     @GetMapping("/waiting-list")
@@ -217,15 +214,15 @@ class NoticeController(
     fun getCompanyNoticeList(
         @PathVariable companyNumber: String
     ): List<MinimumNoticeResponse> {
-        return loadNoticeUsecase.loadCompanyMiniumumNoticeList(companyNumber)
+        return loadNoticeUsecase.loadCompanyMinimumNoticeList(companyNumber)
     }
 
     @GetMapping("/list/every/{companyNumber}")
     fun getCompanyNoticeWithApproveStatusList(
         @PathVariable companyNumber: String
     ): List<MinimumNoticeWithApproveStatusResponse> {
-        if (Auth.checkIsTeacher()) return loadNoticeUsecase.loadCompanyMiniumumNoticeWithApproveStatusList(companyNumber)
-        return loadNoticeUsecase.loadCompanyMiniumumNoticeWithApproveStatusList(
+        if (Auth.checkIsTeacher()) return loadNoticeUsecase.loadCompanyMinimumNoticeWithApproveStatusList(companyNumber)
+        return loadNoticeUsecase.loadCompanyMinimumNoticeWithApproveStatusList(
             Auth.checkCompanyNumber(companyNumber)
         )
     }

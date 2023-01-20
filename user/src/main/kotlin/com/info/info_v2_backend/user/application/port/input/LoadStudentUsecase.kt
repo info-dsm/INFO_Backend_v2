@@ -5,5 +5,7 @@ import com.info.info_v2_backend.common.user.StudentDto
 
 interface LoadStudentUsecase {
 
-    fun loadStudent(studentEmail: String): StudentDto?
+    fun loadStudent(studentEmail: String): StudentDto
+    fun loadStudentListByGeneration(generation: Int): List<StudentDto>
+
 }

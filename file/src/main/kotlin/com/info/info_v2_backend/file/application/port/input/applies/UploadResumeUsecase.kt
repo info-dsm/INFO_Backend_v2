@@ -1,8 +1,9 @@
 package com.info.info_v2_backend.file.application.port.input.applies
 
-import org.springframework.web.multipart.MultipartFile
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 
 interface UploadResumeUsecase {
 
-    fun uploadResume(resume: MultipartFile, noticeId: String, studentEmail: String)
+    fun uploadResume(request: GenerateFileRequest, noticeId: String, studentEmail: String): PresignedUrlResponse
 }

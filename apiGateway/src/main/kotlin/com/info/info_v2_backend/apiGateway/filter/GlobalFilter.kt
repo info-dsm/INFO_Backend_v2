@@ -72,7 +72,7 @@ class GlobalFilter(
             claims = Jwts.parser().setSigningKey(jwtProperty.secretKey)
                 .parseClaimsJws(jwt).body
             val now = Date()
-            if (now.after(Date(claims.expiration.time))) return null
+            if (now.after(Date(claims.expiration.time))) throw BusinessException(null, ErrorCode.EXPIRED_TOKEN_ERROR)
             return claims
         } catch (e: Exception) {
             return null

@@ -1,5 +1,7 @@
 package com.info.info_v2_backend.file.application.service
 
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.file.application.port.input.applies.UploadResumeUsecase
 import com.info.info_v2_backend.file.application.port.output.RemoveFilePort
 import com.info.info_v2_backend.file.application.port.output.UploadFilePort
@@ -10,7 +12,6 @@ import com.info.info_v2_backend.file.domain.applies.ResumeNotice
 import com.info.info_v2_backend.file.domain.applies.ResumeStudent
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @Service
@@ -22,9 +23,13 @@ class UploadResume(
 ): UploadResumeUsecase {
 
     @Async
-    override fun uploadResume(resume: MultipartFile, noticeId: String, studentEmail: String) {
+    override fun uploadResume(
+        request: GenerateFileRequest,
+        noticeId: String,
+        studentEmail: String
+    ): PresignedUrlResponse {
         val fileId = UUID.randomUUID().toString()
-        val dto = uploadFilePort.upload(resume, "NOTICE/${noticeId}", "RESUME/${fileId}")
+        val dto = uploadFilePort.getPresignedUrl(request.fileName, request.contentType, "NOTICE/${noticeId}", "RESUME/${fileId}")
         val resume = Resume(
             fileId,
             dto,
@@ -40,5 +45,9 @@ class UploadResume(
         }
 
         saveResumeFilePort.save(resume)
+        return PresignedUrlResponse(
+            dto.fileUrl,
+            dto.fileName
+        )
     }
 }

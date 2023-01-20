@@ -1,6 +1,8 @@
 package com.info.info_v2_backend.notice.adapter.output.rest
 
 import com.info.info_v2_backend.common.file.dto.AttachmentResponse
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.notice.application.port.output.file.FilePort
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.http.MediaType
@@ -14,8 +16,8 @@ interface FileFeignClient: FilePort {
     @PutMapping("/notice/{noticeId}/attachment", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     override fun saveFile(
         @PathVariable noticeId: String,
-        @RequestPart attachment: List<MultipartFile>
-    )
+        @RequestBody request: GenerateFileListRequest
+    ): PresignedUrlListResponse
 
     @GetMapping("/notice/{noticeId}/attachment")
     override fun loadAttachmentList(

@@ -114,12 +114,6 @@ project(":auth") {
     }
 }
 
-project(":board") {
-    dependencies {
-        implementation(project(":common"))
-    }
-}
-
 project(":employment") {
     dependencies {
         implementation(project(":common"))
@@ -175,3 +169,7 @@ project(":eureka") {
     }
 }
 
+project(":statistics"){
+    dependencies {
+    }
+}

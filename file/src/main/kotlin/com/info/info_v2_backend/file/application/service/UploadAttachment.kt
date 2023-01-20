@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.file.application.service
 
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.file.application.port.input.notice.UploadAttachmentUsecase
 import com.info.info_v2_backend.file.application.port.output.UploadFilePort
 import com.info.info_v2_backend.file.application.port.output.notice.RemoveAttachmentPort
@@ -8,7 +9,6 @@ import com.info.info_v2_backend.file.domain.notice.Attachment
 import com.info.info_v2_backend.file.domain.notice.AttachmentNotice
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 @Service
@@ -18,10 +18,11 @@ class UploadAttachment(
     private val removeAttachmentPort: RemoveAttachmentPort
 ): UploadAttachmentUsecase {
 
-    @Async
-    override fun uploadAttachment(attachment: MultipartFile, noticeId: String) {
+    override fun uploadAttachment(request: GenerateFileRequest, noticeId: String): String {
         val fileId = UUID.randomUUID().toString()
-        val dto = uploadFilePort.upload(attachment, "NOTICE/${noticeId}", "ATTACHMENT/${fileId}")
+        
+        val dto = uploadFilePort.getPresignedUrl(request.fileName, request.contentType, "NOTICE/${noticeId}", "ATTACHMENT/${fileId}")
+
         val attachment = Attachment(
             fileId,
             dto,
@@ -33,6 +34,7 @@ class UploadAttachment(
         removeAttachmentPort.remove(noticeId)
         saveAttachmentPort.save(attachment)
 
+        return dto.fileUrl
     }
 
 

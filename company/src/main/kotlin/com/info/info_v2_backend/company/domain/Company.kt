@@ -118,7 +118,8 @@ class Company(
             this.companyInformation.companyPhone,
             this.companyContact.contactorEmail,
             this.companyIntroduction.introduction,
-            this.isLeading
+            this.isLeading,
+            this.companyIntroduction.logo.url
         )
     }
     fun toMinimumCompanyResponse(

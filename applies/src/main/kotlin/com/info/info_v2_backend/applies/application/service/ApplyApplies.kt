@@ -11,8 +11,9 @@ import com.info.info_v2_backend.applies.domain.user.Applicant
 import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import org.springframework.stereotype.Service
-import org.springframework.web.multipart.MultipartFile
 
 @Service
 class ApplyApplies(
@@ -21,7 +22,7 @@ class ApplyApplies(
     private val applyAppliesPort: SaveAppliesPort,
     private val resumePort: ResumePort
 ): ApplyAppliesUsecase {
-    override fun apply(noticeId: String, resume: MultipartFile, studentEmail: String) {
+    override fun apply(noticeId: String, request: GenerateFileRequest, studentEmail: String): PresignedUrlResponse {
         val student = loadStudentPort.loadStudent(
             studentEmail
         )?: throw BusinessException(
@@ -45,7 +46,7 @@ class ApplyApplies(
                 )
             )
         )
-        resumePort.uploadResume(noticeId, applies.id, resume)
+        return resumePort.uploadResume(noticeId, applies.id, request)
     }
 
 

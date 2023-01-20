@@ -3,6 +3,9 @@ package com.info.info_v2_backend.company.adapter.input.web.rest
 import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.company.CompanyDto
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.edit.EditCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.register.RegisterCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
@@ -45,14 +48,10 @@ class CompanyController(
     @ResponseStatus(HttpStatus.CREATED)
     fun registerCompany(
         @RequestParam emailCheckCode: String,
-        @RequestPart(required = true) request: RegisterCompanyRequest,
-        @RequestPart(required = true) businessRegisteredCertificate: MultipartFile,
-        @RequestPart(required = true) companyIntroductionFile: List<MultipartFile>,
-        @RequestPart(required = true) companyLogo: MultipartFile,
-        @RequestPart(required = true) companyPhotoList: List<MultipartFile>
-    ) {
-        registerCompanyUsecase.register(
-            emailCheckCode, request, businessRegisteredCertificate, companyIntroductionFile, companyLogo, companyPhotoList
+        @RequestBody(required = true) request: RegisterCompanyRequest
+    ): PresignedUrlListResponse {
+        return registerCompanyUsecase.register(
+            emailCheckCode, request
         )
     }
 
@@ -80,9 +79,9 @@ class CompanyController(
     @ResponseStatus(HttpStatus.ACCEPTED)
     fun changeBusinessCertificate(
         @PathVariable companyNumber: String,
-        @RequestPart businessCertificate: MultipartFile
-    ) {
-        return changeCompanyFileUsecase.change(businessCertificate, Auth.checkCompanyNumber(companyNumber), CompanyFileClassificationType.BUSINESS_CERTIFICATE)
+        @RequestBody request: GenerateFileRequest
+    ): PresignedUrlResponse {
+        return changeCompanyFileUsecase.change(request, Auth.checkCompanyNumber(companyNumber), CompanyFileClassificationType.BUSINESS_CERTIFICATE)
     }
 
 
@@ -90,9 +89,9 @@ class CompanyController(
     @ResponseStatus(HttpStatus.CREATED)
     fun addIntroductionFile(
         @PathVariable companyNumber: String,
-        @RequestPart file: MultipartFile
-    ) {
-        return addCompanyFileUsecase.add(file, Auth.checkCompanyNumber(companyNumber), CompanyFileClassificationType.COMPANY_INTRODUCTION)
+        @RequestBody request: GenerateFileRequest
+    ): PresignedUrlResponse {
+        return addCompanyFileUsecase.add(request, Auth.checkCompanyNumber(companyNumber), CompanyFileClassificationType.COMPANY_INTRODUCTION)
     }
 
     @DeleteMapping("/{companyNumber}/introduction/{fileId}")
@@ -108,14 +107,20 @@ class CompanyController(
 
     @PutMapping("/{companyNumber}/logo")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    fun changeCompanyLogo(@PathVariable companyNumber: String, @RequestPart file: MultipartFile){
-        return changeCompanyFileUsecase.change(file, Auth.checkCompanyNumber(companyNumber), CompanyFileClassificationType.COMPANY_LOGO)
+    fun changeCompanyLogo(
+        @PathVariable companyNumber: String,
+        @RequestBody request: GenerateFileRequest
+    ): PresignedUrlResponse{
+        return changeCompanyFileUsecase.change(request, Auth.checkCompanyNumber(companyNumber), CompanyFileClassificationType.COMPANY_LOGO)
     }
 
     @PutMapping("/{companyNumber}/photo")
     @ResponseStatus(HttpStatus.CREATED)
-    fun addCompanyPhoto(@PathVariable companyNumber: String, @RequestPart file: MultipartFile) {
-        return addCompanyFileUsecase.add(file, Auth.checkCompanyNumber(companyNumber), CompanyFileClassificationType.COMPANY_PHOTO)
+    fun addCompanyPhoto(
+        @PathVariable companyNumber: String,
+        @RequestBody request: GenerateFileRequest
+    ): PresignedUrlResponse {
+        return addCompanyFileUsecase.add(request, Auth.checkCompanyNumber(companyNumber), CompanyFileClassificationType.COMPANY_PHOTO)
     }
 
     @DeleteMapping("/{companyNumber}/photo/{fileId}")

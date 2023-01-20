@@ -95,7 +95,6 @@ class LoadCompany(
             introductionResponse.addFile(it)
             println("${it.companyNumber}, ${it.fileName}, ${it.companyFileClassificationType}")
         }
-        println("${company.companyNumber}, ${companyFileList.map { it.fileName }}")
 
         return introductionResponse
     }

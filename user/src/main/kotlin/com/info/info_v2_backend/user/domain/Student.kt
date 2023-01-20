@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.user.domain
 
+import com.info.info_v2_backend.common.user.Role
 import com.info.info_v2_backend.common.user.StudentDto
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction

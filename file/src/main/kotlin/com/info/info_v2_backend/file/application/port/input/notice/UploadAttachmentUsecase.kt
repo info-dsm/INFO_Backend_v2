@@ -1,8 +1,8 @@
 package com.info.info_v2_backend.file.application.port.input.notice
 
-import org.springframework.web.multipart.MultipartFile
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 
 interface UploadAttachmentUsecase {
 
-    fun uploadAttachment(attachment: MultipartFile, noticeId: String)
+    fun uploadAttachment(request: GenerateFileRequest, noticeId: String): String
 }

@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.user.domain
 
+import com.info.info_v2_backend.common.user.Role
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CommonUserDetails
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CustomGrantedAuthority
 import com.info.info_v2_backend.user.domain.time.TimeEntity
@@ -89,7 +90,7 @@ abstract class User(
     fun toCommonUserDetails(): CommonUserDetails {
         val authorityList: MutableList<CustomGrantedAuthority> = ArrayList()
         this.roleList.map {
-            authorityList.add(CustomGrantedAuthority(it.toString()))
+            authorityList.add(CustomGrantedAuthority(it.mean))
         }
         return CommonUserDetails(
             this.password,

@@ -40,7 +40,7 @@ class LoadNotice(
         return loadWithConditionPort.loadAfterEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
     }
 
-    override fun loadCompanyMiniumumNoticeList(companyNumber: String): List<MinimumNoticeResponse> {
+    override fun loadCompanyMinimumNoticeList(companyNumber: String): List<MinimumNoticeResponse> {
         return loadNoticePort.loadNoticeByCompany(companyNumber).filter {
             it.approveStatus == NoticeWaitingStatus.APPROVE
         }.map {
@@ -48,7 +48,7 @@ class LoadNotice(
         }
     }
 
-    override fun loadCompanyMiniumumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse> {
+    override fun loadCompanyMinimumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse> {
         return loadNoticePort.loadNoticeByCompany(companyNumber).map {
             it.toMinimumNoticeWithApproveStatusResponse()
         }

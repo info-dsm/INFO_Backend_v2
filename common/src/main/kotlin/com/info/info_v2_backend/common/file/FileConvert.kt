@@ -24,7 +24,6 @@ object FileConvert {
             localFile.length().toInt(),
             localFile.parentFile
         )
-
         try {
             IOUtils.copy(FileInputStream(localFile), fileItem.outputStream);
         } catch (ex: IOException) {

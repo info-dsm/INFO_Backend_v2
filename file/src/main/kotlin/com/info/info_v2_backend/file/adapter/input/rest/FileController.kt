@@ -1,10 +1,13 @@
 package com.info.info_v2_backend.file.adapter.input.rest
 
-import com.info.info_v2_backend.common.file.FileConvert
 import com.info.info_v2_backend.common.file.dto.AttachmentResponse
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
 import com.info.info_v2_backend.common.file.dto.response.FileResponse
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.file.application.port.input.applies.LoadResumeUsecase
 import com.info.info_v2_backend.file.application.port.input.notice.UploadAttachmentUsecase
 import com.info.info_v2_backend.file.application.port.input.company.LoadCompanyFileUsecase
@@ -15,14 +18,12 @@ import com.info.info_v2_backend.file.application.port.input.notice.LoadAttachmen
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
 
 @RestController
 class FileController(
@@ -38,17 +39,16 @@ class FileController(
         const val IMAGE_PATH = "/tmp/spring/file"
     }
 
+
     @PutMapping("/company")
     fun uploadCompanyFile(
         @RequestParam companyNumber: String,
         @RequestParam classification: CompanyFileClassificationType,
-        @RequestPart(value = "file") file: MultipartFile
-    ) {
-        uploadCompanyFileUsecase.uploadCompanyFile(
-            FileConvert.fileToMultipartFileConvert(
-                FileConvert.multipartFileToFileConvert(file, "$IMAGE_PATH/")
-            ), classification, companyNumber)
-        FileConvert.removeLocalFile("$IMAGE_PATH/${file.originalFilename}")
+        @RequestBody request: GenerateFileRequest
+    ): PresignedUrlResponse {
+        return uploadCompanyFileUsecase.uploadCompanyFile(
+            request, classification, companyNumber
+        )
     }
 
 
@@ -73,18 +73,13 @@ class FileController(
     fun uploadResume(
         @PathVariable noticeId: String,
         @PathVariable studentEmail: String,
-        @RequestPart(value = "resume") resume: MultipartFile
-    ) {
-        uploadResumeUsecase.uploadResume(
-            FileConvert.fileToMultipartFileConvert(
-                FileConvert.multipartFileToFileConvert(resume,
-                "$IMAGE_PATH/${resume.originalFilename}"
-                )
-            ),
+        @RequestBody request: GenerateFileRequest
+    ): PresignedUrlResponse {
+        return uploadResumeUsecase.uploadResume(
+            request,
             noticeId,
             studentEmail
         )
-        FileConvert.removeLocalFile("$IMAGE_PATH/${resume.originalFilename}")
     }
 
 
@@ -97,22 +92,25 @@ class FileController(
     }
 
 
+
+
     @PutMapping("/notice/{noticeId}/attachment")
     fun uploadAttachment(
         @PathVariable noticeId: String,
-        @RequestPart attachment: List<MultipartFile>
-    ) {
-        attachment.map {
-            uploadAttachmentUsecase.uploadAttachment(
-                FileConvert.fileToMultipartFileConvert(
-                    FileConvert.multipartFileToFileConvert(it,
-                        "$IMAGE_PATH/${it.originalFilename}"
-                    )
-                ),
-                noticeId
-            )
-            FileConvert.removeLocalFile("$IMAGE_PATH/${it.originalFilename}")
-        }
+        @RequestBody request: GenerateFileListRequest
+    ): PresignedUrlListResponse {
+        return PresignedUrlListResponse(
+            request.request.map {
+                geneFileRequest: GenerateFileRequest ->
+                return@map PresignedUrlResponse(
+                        uploadAttachmentUsecase.uploadAttachment(
+                            geneFileRequest,
+                            noticeId
+                        ),
+                    geneFileRequest.fileName
+                )
+            }.toMutableList()
+        )
     }
 
     @GetMapping("/notice/{noticeId}/attachment")

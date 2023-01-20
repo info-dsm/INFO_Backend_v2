@@ -2,6 +2,7 @@ package com.info.info_v2_backend.user.adapter.output.persistence
 
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.common.user.StudentDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveContactorDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
@@ -17,6 +18,7 @@ import com.info.info_v2_backend.user.domain.Contactor
 import com.info.info_v2_backend.user.domain.Student
 import com.info.info_v2_backend.user.domain.User
 import org.springframework.stereotype.Service
+import java.time.Year
 
 @Service
 class UserPersistenceAdapter(
@@ -55,6 +57,12 @@ class UserPersistenceAdapter(
 
     override fun loadStudent(studentEmail: String): Student? {
         return studentRepository.findByEmail(studentEmail).orElse(null)
+    }
+
+    override fun loadStudentListByGeneration(generation: Int): List<StudentDto> {
+        return studentRepository.findByEntranceYear(2014 + generation).map {
+            it.toStudentDto()
+        }
     }
 
 

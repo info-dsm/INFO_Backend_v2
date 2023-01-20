@@ -7,4 +7,5 @@ import java.util.Optional
 interface StudentRepository: JpaRepository<Student, String> {
 
     fun findByEmail(email: String): Optional<Student>
+    fun findByEntranceYear(entranceYear: Int): List<Student>
 }

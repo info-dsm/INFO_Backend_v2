@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.user.domain
 
+import com.info.info_v2_backend.common.user.Role
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.ContactorResponse
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction

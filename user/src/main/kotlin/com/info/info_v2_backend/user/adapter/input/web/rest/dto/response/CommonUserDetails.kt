@@ -1,8 +1,5 @@
 package com.info.info_v2_backend.user.adapter.input.web.rest.dto.response
 
-import com.info.info_v2_backend.user.domain.Role
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 class CommonUserDetails(

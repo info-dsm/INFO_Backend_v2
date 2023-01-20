@@ -1,5 +1,7 @@
 package com.info.info_v2_backend.notice.adapter.input.rest.dto.request
 
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.pay.PayRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.support.MealSupportRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.support.WelfareRequest
@@ -29,5 +31,6 @@ data class CreateNoticeRequest (
     val otherFeatures: String?,
     val workPlace: WorkPlaceRequest,
     val isPersonalContact: Boolean,
+    val generateFileListRequest: List<GenerateFileRequest>
 
 )

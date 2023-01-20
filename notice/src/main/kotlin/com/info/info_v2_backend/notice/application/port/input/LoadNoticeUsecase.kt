@@ -11,8 +11,8 @@ interface LoadNoticeUsecase {
     fun loadMaximumNotice(noticeId: String): MaximumNoticeResponse
     fun loadNotEndedMinimumNoticeList(idx: Int, size: Int): Page<MinimumNoticeResponse>
     fun loadEndedMinimumNoticeList(idx: Int, size: Int): Page<MinimumNoticeResponse>
-    fun loadCompanyMiniumumNoticeList(companyNumber: String): List<MinimumNoticeResponse>
-    fun loadCompanyMiniumumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse>
+    fun loadCompanyMinimumNoticeList(companyNumber: String): List<MinimumNoticeResponse>
+    fun loadCompanyMinimumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse>
     fun loadAvailableNotice(noticeId: String): NoticeDto?
     fun loadNoticeDto(noticeId: String): NoticeDto?
 

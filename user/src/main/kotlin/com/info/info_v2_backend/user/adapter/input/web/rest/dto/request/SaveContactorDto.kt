@@ -1,7 +1,7 @@
 package com.info.info_v2_backend.user.adapter.input.web.rest.dto.request
 
 import com.info.info_v2_backend.user.domain.Contactor
-import com.info.info_v2_backend.user.domain.Role
+import com.info.info_v2_backend.common.user.Role
 
 class SaveContactorDto(
     name: String,

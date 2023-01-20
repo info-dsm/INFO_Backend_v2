@@ -5,13 +5,14 @@ import com.info.info_v2_backend.common.auth.AuthenticationCodeDto
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.common.file.FileConvert
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.register.RegisterCompanyRequest
 import com.info.info_v2_backend.company.application.port.input.RegisterCompanyUsecase
 import com.info.info_v2_backend.company.application.port.output.*
 import com.info.info_v2_backend.company.application.port.output.businessArea.LoadBusinessAreaPort
-import com.info.info_v2_backend.company.application.port.output.businessArea.SaveBusinessAreaPort
 import com.info.info_v2_backend.company.application.port.output.businessArea.SaveBusinessAreaTaggedPort
 import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SaveCompanyPort
@@ -19,15 +20,11 @@ import com.info.info_v2_backend.company.application.port.output.company.SaveCont
 import com.info.info_v2_backend.company.application.port.output.document.SaveCompanyDocumentPort
 import com.info.info_v2_backend.company.application.port.output.file.CompanyFilePort
 import com.info.info_v2_backend.company.domain.Company
-import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
 import com.info.info_v2_backend.company.domain.businessArea.BusinessAreaTagged
 import com.info.info_v2_backend.company.domain.document.CompanyDocument
 import com.info.info_v2_backend.company.domain.introduction.CompanyIntroduction
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveContactorDto
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.multipart.MultipartFile
 
 @Service
 class RegisterCompany(
@@ -47,12 +44,8 @@ class RegisterCompany(
 
     override fun register(
         emailCheckCode: String,
-        request: RegisterCompanyRequest,
-        businessRegisteredCertificate: MultipartFile,
-        companyIntroductionFile: List<MultipartFile>,
-        companyLogo: MultipartFile,
-        companyPhotoList: List<MultipartFile>
-    ) {
+        request: RegisterCompanyRequest
+    ): PresignedUrlListResponse {
         if (checkEmailCodePort.check(
                 AuthenticationCodeDto(
                     request.companyContact.email,
@@ -77,13 +70,47 @@ class RegisterCompany(
                 )
             )
 
+            val list: MutableList<PresignedUrlResponse> = ArrayList()
+            val businessCertificateFile = request.businessRegisteredCertificate.let {
+                uploadFile(
+                    CompanyFileClassificationType.BUSINESS_CERTIFICATE,
+                    request.companyNumber,
+                    it
+                )
+            }
+
+            val logoFile = request.companyLogo.let {
+                uploadFile(
+                    CompanyFileClassificationType.COMPANY_LOGO,
+                    request.companyNumber,
+                    it
+                )
+            }
+
+            val companyIntroductionFileList = request.companyIntroductionFile.request.map {
+                uploadFile(
+                    CompanyFileClassificationType.COMPANY_INTRODUCTION,
+                    request.companyNumber,
+                    it
+                )
+            }
+
+            val companyPhotoFileList = request.companyPhotoList.request.map {
+                uploadFile(
+                    CompanyFileClassificationType.COMPANY_PHOTO,
+                    request.companyNumber,
+                    it
+                )
+            }
+
             val company = Company(
                 request.companyNumber,
                 request.companyNameRequest.toCompanyName(),
                 request.companyInformation.toCompanyInformation(),
                 request.companyContact.toContactorId(),
                 CompanyIntroduction(
-                    request.introduction
+                    request.introduction,
+                    logoFile
                 )
             )
             saveCompanyPort.save(company)
@@ -103,57 +130,39 @@ class RegisterCompany(
             }
 
             saveCompanyPort.save(company)
-
-            try {
-                uploadFile(
-                    FileConvert.fileToMultipartFileConvert(
-                        FileConvert.multipartFileToFileConvert(businessRegisteredCertificate, "$COMPANY_FILE_PATH/")
-                    ), CompanyFileClassificationType.BUSINESS_CERTIFICATE, request.companyNumber
-                )
-                uploadFile(
-                    FileConvert.fileToMultipartFileConvert(
-                        FileConvert.multipartFileToFileConvert(companyLogo, "$COMPANY_FILE_PATH/")
-                    ), CompanyFileClassificationType.COMPANY_LOGO, request.companyNumber
-                )
-                FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${businessRegisteredCertificate.originalFilename}")
-                FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${companyLogo.originalFilename}")
-
-                companyPhotoList.map {
-                    uploadFile(
-                        FileConvert.fileToMultipartFileConvert(
-                            FileConvert.multipartFileToFileConvert(it, "$COMPANY_FILE_PATH/")
-                        ), CompanyFileClassificationType.COMPANY_PHOTO, request.companyNumber
-                    )
-                    FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${it.originalFilename}")
-                }
-                companyIntroductionFile.map {
-                    uploadFile(
-                        FileConvert.fileToMultipartFileConvert(
-                            FileConvert.multipartFileToFileConvert(it, "$COMPANY_FILE_PATH/")
-                        ), CompanyFileClassificationType.COMPANY_INTRODUCTION, request.companyNumber
-                    )
-                    FileConvert.removeLocalFile("$COMPANY_FILE_PATH/${it.originalFilename}")
-                }
-            } catch (e: java.lang.RuntimeException) {
-                company.makeFailed()
-                saveCompanyPort.save(company)
-                throw BusinessException("파일을 처리하던 중 오류가 발생했습니다.", ErrorCode.BAD_GATEWAY_ERROR)
-            }
-
             saveCompanyDocumentPort.save(
                 CompanyDocument(
                     company.companyName.companyName,
                     company.companyNumber
                 )
             )
+            list.add(
+                businessCertificateFile
+            )
+            list.add(
+                logoFile
+            )
+            list.addAll(
+                companyIntroductionFileList
+            )
+            list.addAll(
+                companyPhotoFileList
+            )
+            return PresignedUrlListResponse(
+                list
+            )
         } else throw BusinessException("인증번호가 올바르지 않습니다. -> ${emailCheckCode}", ErrorCode.INVALID_INPUT_DATA_ERROR)
     }
 
-    private fun uploadFile(file: MultipartFile, classificationType: CompanyFileClassificationType, companyId: String) {
+    private fun uploadFile(
+        classificationType: CompanyFileClassificationType,
+        companyId: String,
+        geneFileRequest: GenerateFileRequest
+    ): PresignedUrlResponse {
         return companyFilePort.upload(
             companyId,
             classificationType,
-            file
+            geneFileRequest
         )
     }
 }

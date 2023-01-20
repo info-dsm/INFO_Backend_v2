@@ -10,7 +10,7 @@ object Auth {
         return (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?)?.request?.getHeader(
             HeaderProperty.COMPANY_NUMBER)
     }
-    fun authLevel(): String? {
+    private fun authLevel(): String? {
         return (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?)?.request?.getHeader(
             HeaderProperty.AUTH_LEVEL)
     }
@@ -19,6 +19,9 @@ object Auth {
     }
     fun checkIsTeacher(): Boolean {
         return authLevel() == "TEACHER"
+    }
+    fun checkIsSystem(): Boolean {
+        return authLevel() == "SYSTEM"
     }
     fun getUserEmail(): String? {
         return (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request.getHeader(

@@ -6,6 +6,7 @@ data class CompanyDto (
     val companyPhone: String,
     val contactorEmail: String,
     val companyIntroduction: String,
-    val isLeading: Boolean
+    val isLeading: Boolean,
+    val companyLogo: String
 
 )

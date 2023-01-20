@@ -5,15 +5,17 @@ import com.info.info_v2_backend.applies.application.port.input.*
 import com.info.info_v2_backend.common.applies.AppliesDto
 import com.info.info_v2_backend.common.applies.AppliesStatus
 import com.info.info_v2_backend.common.auth.Auth
-import com.info.info_v2_backend.common.auth.HeaderProperty
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseStatus
@@ -34,9 +36,9 @@ class AppliesController(
     @ResponseStatus(HttpStatus.CREATED)
     fun apply(
         @PathVariable noticeId: String,
-        @RequestPart resume: MultipartFile
-    ) {
-        applyUsecase.apply(noticeId, resume, Auth.getUserEmail()?: throw BusinessException(null, ErrorCode.TOKEN_NEED_ERROR))
+        @RequestBody request: GenerateFileRequest
+    ): PresignedUrlResponse {
+        return applyUsecase.apply(noticeId, request, Auth.getUserEmail()?: throw BusinessException(null, ErrorCode.TOKEN_NEED_ERROR))
     }
 
     @DeleteMapping("/{noticeId}")
@@ -59,7 +61,7 @@ class AppliesController(
                 noticeId,
                 status
             )
-            else if (status == AppliesStatus.APPROVE && Auth.authLevel() == "2") return loadAppliesUsecase.loadAppliesListByStatus(
+            else if (status == AppliesStatus.APPROVE && Auth.checkIsTeacher()) return loadAppliesUsecase.loadAppliesListByStatus(
                 Auth.checkCompanyNumber(
                     companyNumber
                 ), noticeId, status

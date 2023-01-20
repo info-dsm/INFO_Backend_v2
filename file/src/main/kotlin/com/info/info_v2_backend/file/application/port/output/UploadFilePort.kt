@@ -5,5 +5,5 @@ import org.springframework.web.multipart.MultipartFile
 
 interface UploadFilePort {
 
-    fun upload(file: MultipartFile, rootPathName: String, middlePathName: String): FileDto
+    fun getPresignedUrl(originalFileName: String, contentType: String, rootPathName: String, middlePathName: String): FileDto
 }

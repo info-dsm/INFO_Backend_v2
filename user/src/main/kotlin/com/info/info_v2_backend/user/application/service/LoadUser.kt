@@ -21,11 +21,15 @@ class LoadUser(
             .toContactorResponse()
     }
 
-    override fun loadStudent(studentEmail: String): StudentDto? {
+    override fun loadStudent(studentEmail: String): StudentDto {
         return (loadStudentPort.loadStudent(studentEmail)
             ?: throw BusinessException("Student를 조회하지 못했습니다. -> $studentEmail", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR))
             .toStudentDto()
 
+    }
+
+    override fun loadStudentListByGeneration(generation: Int): List<StudentDto> {
+        return loadStudentPort.loadStudentListByGeneration(generation)
     }
 
 

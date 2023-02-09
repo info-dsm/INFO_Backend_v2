@@ -12,8 +12,8 @@ import org.springframework.scheduling.annotation.EnableAsync
 
 @EnableFeignClients
 @EnableJpaAuditing
-@EnableDiscoveryClient
 @EnableAsync
+@EnableDiscoveryClient
 @ConfigurationPropertiesScan
 @SpringBootApplication
 class AppliesApplication

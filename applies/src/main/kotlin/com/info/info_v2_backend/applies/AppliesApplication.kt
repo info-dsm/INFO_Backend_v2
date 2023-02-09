@@ -10,7 +10,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.scheduling.annotation.EnableAsync
 
 
-//@SpringBootApplication Annotation should be lowest
 @EnableJpaAuditing
 @EnableFeignClients
 @EnableDiscoveryClient

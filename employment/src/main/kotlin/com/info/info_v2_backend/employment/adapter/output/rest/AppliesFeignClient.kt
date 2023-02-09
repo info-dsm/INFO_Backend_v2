@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam
 @FeignClient(name = "APPLIES-SERVICE", fallbackFactory = AppliesFeignClientFallback::class)
 interface AppliesFeignClient: LoadAppliesStudentPort {
 
-    @GetMapping("/{noticeId}/{studentEmail}")
+    @GetMapping("/{noticeId}")
     override fun loadAppliesStudent(
         @PathVariable noticeId: String,
-        @PathVariable studentEmail: String
+        @RequestParam studentEmail: String
     ): AppliesDto?
 
 }

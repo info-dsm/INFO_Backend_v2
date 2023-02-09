@@ -1,39 +1,30 @@
 package com.info.info_v2_backend.statistics.persistance.entity
 
 import java.time.LocalDate
+import javax.persistence.ElementCollection
+import javax.persistence.Embeddable
+import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.Id
 
 
 @Entity
 class StatInformation (
-    @Id
-    val year: Int = LocalDate.now().year,
-    val total: StatTotalInformationResponse,
-    val studentList: List<StatStudentInformationResponse>,
-    val hiredTimeGraph: List<StatHiredTimeGraph>
+    total: StatTotalInformationResponse,
 ) {
+    @Id
+    val year: Int = LocalDate.now().year
 
-    data class StatTotalInformationResponse(
-        val count: Int,
-        val generation: Int,
-        val newCount: Int
-    )
+    @Embedded
+    var total: StatTotalInformationResponse = total
+        protected set
 
-    data class StatStudentInformationResponse(
-        val classNum: String,
-        val company: StatCompanyInformationResponse
-    )
+    @ElementCollection
+    var studentList: MutableList<StatStudentInformationResponse> = ArrayList()
+        protected set
 
-    data class StatCompanyInformationResponse(
-        val logo: String,
-        val name: String
-    )
-
-    data class StatHiredTimeGraph(
-        val month: Int,
-        val date: Int,
-        val count: Int
-    )
+    @ElementCollection
+    var hiredTimeGraph: MutableList<StatHiredTimeGraph> = ArrayList()
+        protected set
 
 }

@@ -6,7 +6,7 @@ import com.info.info_v2_backend.notice.domain.openPeriod.NoticeOpenPeriod
 
 data class MinimumNoticeResponse(
     val noticeId: String,
-    val company: NoticeCompany,
+    val company: MinimumNoticeCompany,
     val classificationResponse: List<ClassificationResponse>,
     val detailBusinessDescription: String?,
     val numberOfEmployee: Int,
@@ -16,5 +16,11 @@ data class MinimumNoticeResponse(
     val noticeOpenPeriod: NoticeOpenPeriod
 
 ) {
+
+    data class MinimumNoticeCompany(
+        val companyNumber: String,
+        val companyName: String,
+        val imageList: MutableList<String>
+    )
 
 }

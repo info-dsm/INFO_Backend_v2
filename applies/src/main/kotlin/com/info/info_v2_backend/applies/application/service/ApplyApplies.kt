@@ -13,6 +13,7 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,6 +23,9 @@ class ApplyApplies(
     private val applyAppliesPort: SaveAppliesPort,
     private val resumePort: ResumePort
 ): ApplyAppliesUsecase {
+
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
     override fun apply(noticeId: String, request: GenerateFileRequest, studentEmail: String): PresignedUrlResponse {
         val student = loadStudentPort.loadStudent(
             studentEmail
@@ -29,6 +33,7 @@ class ApplyApplies(
             "사용자를 찾지 못했습니다. -> ${Auth.getUserEmail()}",
             ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR
         )
+
         val notice = loadNoticePort.loadAvailableNotice(
             noticeId
         )?: throw BusinessException("채용공고를 조회히자 못했습니다. -> $noticeId", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)

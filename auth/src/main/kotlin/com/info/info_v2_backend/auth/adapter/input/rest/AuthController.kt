@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.auth.adapter.input.rest
 
+import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.CheckTokenExpiredTimeRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginCompanyRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.TokenReissueRequest
@@ -22,6 +23,7 @@ class AuthController(
     private val reissuePort: ReissueUsecase,
     private val sendCodeUsecase: SendAuthenticationCodeUsecase,
     private val checkCodeUsecase: CheckCodeUsecase,
+    private val checkTokenExpiredTimeUsecase: CheckTokenExpiredTimeUsecase
 ) {
 
     @PostMapping("/login/user")
@@ -89,6 +91,13 @@ class AuthController(
 
     ) {
 
+    }
+
+    @GetMapping("/token")
+    fun getTokenExpiredTime(
+        @RequestBody request: CheckTokenExpiredTimeRequest
+    ): Int {
+        return checkTokenExpiredTimeUsecase.checkTokenExpiredTime(request)
     }
 
 

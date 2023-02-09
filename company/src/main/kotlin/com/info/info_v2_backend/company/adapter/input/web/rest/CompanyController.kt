@@ -165,12 +165,6 @@ class CompanyController(
         return loadCompanyUsecase.loadMinimumCompanyListByYear(idx, size, year)
     }
 
-    @GetMapping("/dto/{companyNumber}")
-    fun getCompanyDto(@PathVariable companyNumber: String): CompanyDto? {
-        return loadCompanyUsecase.loadCompanyDto(companyNumber)
-    }
-
-
     @GetMapping("/search")
     fun searchCompany(
         @RequestParam(defaultValue = "0") idx: Int,
@@ -180,6 +174,7 @@ class CompanyController(
         return loadCompanyUsecase.searchCompany(idx, size, name)
     }
 
+
     //회시 담당자 수정
 
     @PostMapping("/leading/{companyNumber}")
@@ -188,6 +183,20 @@ class CompanyController(
         return makeLeadingUsecase.makeLeading(companyNumber)
     }
 
+
+
+    //Internal API
+    @GetMapping("/dto/{companyNumber}")
+    fun getCompanyDto(@PathVariable companyNumber: String): CompanyDto? {
+        return loadCompanyUsecase.loadCompanyDto(companyNumber)
+    }
+
+    @GetMapping("/thumbnail/{companyNumber}")
+    fun getCompanyThumbnailList(
+        @PathVariable companyNumber: String
+    ): MutableList<String> {
+        return loadCompanyUsecase.loadCompanyThumbnailList(companyNumber)
+    }
 
 
 }

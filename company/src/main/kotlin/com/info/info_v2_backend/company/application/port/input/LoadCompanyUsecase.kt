@@ -12,4 +12,5 @@ interface LoadCompanyUsecase {
     fun loadMaximumCompany(companyNumber: String): MaximumCompanyResponse
     fun loadCompanyDto(companyNumber: String): CompanyDto?
     fun searchCompany(idx: Int, size: Int, query: String): Page<MinimumCompanyResponse>
+    fun loadCompanyThumbnailList(companyNumber: String): MutableList<String>
 }

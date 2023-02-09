@@ -6,7 +6,7 @@ import javax.persistence.Embeddable
 @Embeddable
 class NoticeCompany(
     companyNumber: String,
-    companyName: String
+    companyName: String,
 ) {
     @Column(name = "company_number")
     val companyNumber = companyNumber

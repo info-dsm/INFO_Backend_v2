@@ -10,10 +10,10 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE")
     //Validation
     implementation("org.springframework.boot:spring-boot-starter-validation:2.7.4")
-    //batch
-    implementation("org.springframework.boot:spring-boot-starter-batch")
     //Mysql
     runtimeOnly("mysql:mysql-connector-java")
     //data jpa
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
+    implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
 }

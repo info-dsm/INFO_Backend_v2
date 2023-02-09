@@ -13,5 +13,7 @@ interface CompanyFeignClient: LoadCompanyPort {
     @GetMapping("/dto/{companyNumber}")
     override fun loadCompany(@PathVariable companyNumber: String): CompanyDto?
 
+    @GetMapping("/thumbnail/{companyNumber}")
+    override fun loadCompanyThumbnailList(@PathVariable companyNumber: String): MutableList<String>
 
 }

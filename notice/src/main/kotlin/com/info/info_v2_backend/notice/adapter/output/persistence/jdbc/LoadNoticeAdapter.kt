@@ -7,6 +7,7 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classific
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.technology.TechnologyResponse
 import com.info.info_v2_backend.notice.adapter.output.persistence.jdbc.mapper.*
 import com.info.info_v2_backend.notice.adapter.output.persistence.jdbc.mapper.vo.NoticeVo
+import com.info.info_v2_backend.notice.application.port.output.LoadCompanyPort
 import com.info.info_v2_backend.notice.application.port.output.LoadWithConditionPort
 import com.info.info_v2_backend.notice.application.port.output.smallClassification.LoadSmallClassificationPort
 import com.info.info_v2_backend.notice.application.port.output.smallClassification.LoadSmallClassificationUsagePort
@@ -27,7 +28,8 @@ import java.time.LocalDate
 class LoadNoticeAdapter(
     private val jdbcTemplate: JdbcTemplate,
     private val loadSmallClassificationUsagePort: LoadSmallClassificationUsagePort,
-    private val loadSmallClassificationPort: LoadSmallClassificationPort
+    private val loadSmallClassificationPort: LoadSmallClassificationPort,
+    private val loadCompanyPort: LoadCompanyPort
 ): LoadWithConditionPort {
 
     override fun loadBeforeEndDateAndStatusNoticeList(
@@ -51,7 +53,8 @@ class LoadNoticeAdapter(
                         usage.smallClassification.bigClassification.toBigClassificationResponse(),
                         usage.smallClassification.name
                     )
-                }.toMutableList()
+                }.toMutableList(),
+                loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
             )
         }, page, count(NoticeQueryBlocks.selectNoticeByDateIsBeforeEndDateAndNoticeWaitingStatusOrderByCreatedAtDescendingPagingCount(date, status)))
     }
@@ -77,7 +80,8 @@ class LoadNoticeAdapter(
                         usage.smallClassification.bigClassification.toBigClassificationResponse(),
                         usage.smallClassification.name
                     )
-                }.toMutableList()
+                }.toMutableList(),
+                loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
             )
         }, page, count(NoticeQueryBlocks.selectNoticeByDateIsAfterEndDateAndNoticeWaitingStatusOrderByCreatedAtDescendingPagingCount(date, status)))
     }

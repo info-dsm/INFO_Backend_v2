@@ -7,6 +7,7 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNo
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
 import com.info.info_v2_backend.notice.application.port.input.LoadNoticeUsecase
+import com.info.info_v2_backend.notice.application.port.output.LoadCompanyPort
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
 import com.info.info_v2_backend.notice.application.port.output.LoadWithConditionPort
 import com.info.info_v2_backend.notice.application.port.output.file.FilePort
@@ -19,7 +20,8 @@ import java.time.LocalDate
 class LoadNotice(
     private val loadNoticePort: LoadNoticePort,
     private val loadWithConditionPort: LoadWithConditionPort,
-    private val filePort: FilePort
+    private val filePort: FilePort,
+    private val loadCompanyPort: LoadCompanyPort
 ): LoadNoticeUsecase {
 
     override fun loadMaximumNotice(noticeId: String): MaximumNoticeResponse {
@@ -44,13 +46,17 @@ class LoadNotice(
         return loadNoticePort.loadNoticeByCompany(companyNumber).filter {
             it.approveStatus == NoticeWaitingStatus.APPROVE
         }.map {
-            it.toMinimumNoticeResponse()
+            it.toMinimumNoticeResponse(
+                loadCompanyPort.loadCompanyThumbnailList(companyNumber)
+            )
         }
     }
 
     override fun loadCompanyMinimumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse> {
         return loadNoticePort.loadNoticeByCompany(companyNumber).map {
-            it.toMinimumNoticeWithApproveStatusResponse()
+            it.toMinimumNoticeWithApproveStatusResponse(
+                loadCompanyPort.loadCompanyThumbnailList(companyNumber)
+            )
         }
     }
 

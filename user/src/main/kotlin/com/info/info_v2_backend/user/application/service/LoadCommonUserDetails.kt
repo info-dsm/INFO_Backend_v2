@@ -10,7 +10,11 @@ import org.springframework.stereotype.Service
 class LoadCommonUserDetails(
     private val loadUserPort: LoadUserPort
 ): LoadCommonUserDetailsUsecase {
-    override fun load(userEmail: String): CommonUserDetails {
-        return loadUserPort.loadUser(userEmail).toCommonUserDetails()
+    override fun load(userEmail: String): CommonUserDetails? {
+        try {
+            return loadUserPort.loadUser(userEmail).toCommonUserDetails()
+        } catch (e: BusinessException) {
+            return null
+        }
     }
 }

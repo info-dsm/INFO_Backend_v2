@@ -4,5 +4,5 @@ import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CommonU
 
 interface LoadCommonUserDetailsUsecase {
 
-    fun load(userEmail: String): CommonUserDetails
+    fun load(userEmail: String): CommonUserDetails?
 }

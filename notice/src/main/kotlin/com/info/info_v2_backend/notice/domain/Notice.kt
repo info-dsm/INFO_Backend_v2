@@ -229,17 +229,21 @@ class Notice(
         this.approveStatus = NoticeWaitingStatus.APPROVE
     }
 
-    fun toMinimumNoticeWithApproveStatusResponse(): MinimumNoticeWithApproveStatusResponse {
+    fun toMinimumNoticeWithApproveStatusResponse(imageList: MutableList<String>): MinimumNoticeWithApproveStatusResponse {
         return MinimumNoticeWithApproveStatusResponse(
-            this.toMinimumNoticeResponse(),
+            this.toMinimumNoticeResponse(imageList),
             this.approveStatus
         )
     }
 
-    fun toMinimumNoticeResponse(): MinimumNoticeResponse {
+    fun toMinimumNoticeResponse(thumbnail: MutableList<String>): MinimumNoticeResponse {
         return MinimumNoticeResponse(
             this.id,
-            this.company,
+            MinimumNoticeResponse.MinimumNoticeCompany(
+                this.company.companyNumber,
+                this.company.companyName,
+                thumbnail
+            ),
             this.smallClassificationUsageList.map {
                 smallClassification: RecruitmentSmallClassificationUsage ->
                 ClassificationResponse(

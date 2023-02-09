@@ -30,13 +30,20 @@ class UserController(
     }
 
     @GetMapping("/exist")
-    fun existsUserByEmail(@RequestParam userEmail: String): String? {
-        return loadCommonUserDetailsUsecase.load(userEmail)?.username
+    fun existsUserByEmail(@RequestParam userEmail: String): String {
+        return loadCommonUserDetailsUsecase.load(userEmail)!!.username
     }
 
     @GetMapping("/password/hint")
     fun getPasswordHint(@RequestParam email: String): String? {
-        return loadPasswordHintUsecase.load(email)
+        email.takeIf {
+            (Auth.checkIsTeacher() || Auth.checkIsSystem())
+        }?.let {
+            return loadPasswordHintUsecase.load(it)
+        }?:Auth.getUserEmail().takeIf { it == email }?.let {
+            return loadPasswordHintUsecase.load(it)
+        }
+        throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
     @GetMapping("/contactor")

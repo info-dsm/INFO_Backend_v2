@@ -81,6 +81,13 @@ class LoadCompany(
         }
     }
 
+    override fun loadCompanyThumbnailList(companyNumber: String): MutableList<String> {
+        val thumbnailList: MutableList<String> = companyFilePort.loadCompanyFile(companyNumber).map {
+            it.fileUrl
+        }.toMutableList()
+        return thumbnailList
+    }
+
     private fun getCompanyIntroductionResponse(company: Company): CompanyIntroductionResponse {
         val companyFileList = companyFilePort.loadCompanyFile(company.companyNumber)
         val introductionResponse = CompanyIntroductionResponse(

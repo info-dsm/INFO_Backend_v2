@@ -1,0 +1,20 @@
+apiGateway:
+  - any: ["apiGateway/**/*", "common/**/*"]
+applies:
+  - any: ["common/**/*", "applies/**/*"]
+auth:
+  - any: ["common/**/*", "auth/**/*"]
+company:
+  - any: ["common/**/*", "company/**/*"]
+email:
+  - any: ["common/**/*", "email/**/*"]
+employment:
+  - any: ["common/**/*", "employment/**/*"]
+file:
+  - any: ["common/**/*", "file/**/*"]
+notice:
+  - any: ["common/**/*", "notice/**/*"]
+statistics:
+  - any: ["common/**/*", "statistics/**/*"]
+user:
+  - any: ["common/**/*", "user/**/*"]

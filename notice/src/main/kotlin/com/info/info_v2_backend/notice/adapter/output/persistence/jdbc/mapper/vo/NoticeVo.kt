@@ -92,10 +92,15 @@ class NoticeVo(
 
     fun toMinimumNoticeResponse(
         classificationResponseList: MutableList<ClassificationResponse>,
+        thumbnailList: MutableList<String>
     ): MinimumNoticeResponse {
         return MinimumNoticeResponse(
             this.id,
-            this.company,
+            MinimumNoticeResponse.MinimumNoticeCompany(
+                this.company.companyNumber,
+                this.company.companyName,
+                thumbnailList
+            ),
             classificationResponseList,
             this.detailBusinessDescription,
             this.numberOfEmployee,

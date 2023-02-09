@@ -61,5 +61,10 @@ class TokenProvider(
         return false
     }
 
+    fun getLeastExpiredTime(token: String): Int {
+        val body = decodeBody(token)
+        return body.expiration.time.minus(Date().time).toInt()
+    }
+
 
 }

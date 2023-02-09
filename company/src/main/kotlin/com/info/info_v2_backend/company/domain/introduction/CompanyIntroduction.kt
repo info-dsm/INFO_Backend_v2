@@ -6,6 +6,7 @@ import com.info.info_v2_backend.common.file.dto.UploadCompanyFileDto
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import javax.persistence.Column
 import javax.persistence.Embeddable
+import javax.persistence.Embedded
 
 @Embeddable
 class CompanyIntroduction(
@@ -17,7 +18,7 @@ class CompanyIntroduction(
     var introduction: String = introduction
         protected set
 
-    @Column(nullable = false)
+    @Embedded
     var logo: PresignedUrlResponse = logo
         protected set
 

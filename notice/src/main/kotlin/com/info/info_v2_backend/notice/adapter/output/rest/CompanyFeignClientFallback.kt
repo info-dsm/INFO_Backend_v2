@@ -13,6 +13,10 @@ class CompanyFeignClientFallback: FallbackFactory<CompanyFeignClient> {
                 return null
             }
 
+            override fun loadCompanyThumbnailList(companyNumber: String): MutableList<String> {
+                return ArrayList()
+            }
+
         }
     }
 }

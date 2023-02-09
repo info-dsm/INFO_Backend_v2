@@ -28,6 +28,7 @@ import com.info.info_v2_backend.notice.application.port.input.language.LoadLangu
 import com.info.info_v2_backend.notice.application.port.input.technology.AddTechnologyUsecase
 import com.info.info_v2_backend.notice.application.port.input.technology.LoadTechnologyUsecase
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -227,10 +228,13 @@ class NoticeController(
         )
     }
 
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     @GetMapping("/available")
     fun loadAvailableNotice(@RequestParam noticeId: String): NoticeDto? {
-        return loadNoticeUsecase.loadAvailableNotice(noticeId)
+        val notice = loadNoticeUsecase.loadAvailableNotice(noticeId)
+        log.info("notice: ${notice?.noticeId}")
+        return notice
     }
 
 }

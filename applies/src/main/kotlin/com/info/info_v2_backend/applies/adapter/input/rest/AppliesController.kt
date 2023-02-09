@@ -56,7 +56,7 @@ class AppliesController(
         @RequestParam(required = false) status: AppliesStatus?
     ): List<AppliesResponse> {
         status?.let {
-            if (!(status == AppliesStatus.APPROVE) && Auth.checkIsTeacher()) return loadAppliesUsecase.loadAppliesListByStatus(
+            if (status != AppliesStatus.APPROVE && Auth.checkIsTeacher()) return loadAppliesUsecase.loadAppliesListByStatus(
                 companyNumber,
                 noticeId,
                 status
@@ -122,10 +122,10 @@ class AppliesController(
         return rejectAppliesUsecase.reject(noticeId, studentEmail)
     }
 
-    @GetMapping("/{noticeId}/{studentEmail}")
+    @GetMapping("/{noticeId}")
     fun getApplies(
         @PathVariable noticeId: String,
-        @PathVariable studentEmail: String
+        @RequestParam studentEmail: String
     ): AppliesDto? {
         return loadAppliesUsecase.loadApplies(noticeId, studentEmail)
     }

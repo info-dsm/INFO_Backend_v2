@@ -21,10 +21,11 @@ class Applies(
     @Column(name = "id", nullable = false)
     val id: String = UUID.randomUUID().toString()
 
+    @Embedded
     var applicant: Applicant = applicant
         protected set
 
-    @Column(name = "applies_notice_id", nullable = false)
+    @Embedded
     var notice: AppliesNotice = notice
         protected set
 

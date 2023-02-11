@@ -34,18 +34,6 @@ class Applies(
     var status: AppliesStatus = AppliesStatus.WAITING
         protected set
 
-    constructor(
-        id: String,
-        applicant: Applicant,
-        notice: AppliesNotice,
-        createdAt: LocalDate,
-        updatedAt: LocalDate,
-        status: AppliesStatus): this(applicant, notice) {
-            var id: String = id
-            var createdAt: LocalDate = createdAt
-            var updatedat: LocalDate = updatedAt
-            var status: AppliesStatus = status
-        }
 
     fun approve() {
         this.status = AppliesStatus.APPROVE

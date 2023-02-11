@@ -18,8 +18,8 @@ class FileFeignClientFallback: FallbackFactory<FileFeignClient> {
                 throw BusinessException(null, ErrorCode.BAD_GATEWAY_ERROR)
             }
 
-            override fun loadAppliesResume(noticeId: String, studentEmail: String): FileResponse {
-                throw BusinessException(null, ErrorCode.BAD_GATEWAY_ERROR)
+            override fun loadAppliesResume(noticeId: String, studentEmail: String): FileResponse? {
+                return null
             }
 
         }

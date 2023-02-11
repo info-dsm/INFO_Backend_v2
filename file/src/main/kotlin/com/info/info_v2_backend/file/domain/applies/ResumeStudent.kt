@@ -11,9 +11,5 @@ class ResumeStudent(
     @Column(name = "resume_student_email", nullable = false)
     val studentEmail: String = studentEmail
 
-    override fun equals(other: Any?): Boolean {
-        if (other is ResumeStudent) return other.studentEmail == this.studentEmail
-        return super.equals(other)
-    }
 
 }

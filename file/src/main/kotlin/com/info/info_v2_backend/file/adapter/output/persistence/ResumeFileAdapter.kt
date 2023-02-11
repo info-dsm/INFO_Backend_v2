@@ -16,18 +16,14 @@ class ResumeFileAdapter(
     override fun save(resume: Resume) {
         resumeRepository.save(resume)
     }
-    override fun remove(notice: ResumeNotice, student: ResumeStudent) {
-        resumeRepository.deleteByNoticeAndStudent(notice, student)
+    override fun remove(noticeId: String, studentEmail: String) {
+        resumeRepository.deleteByNoticeAndStudent(noticeId, studentEmail)
     }
 
     override fun load(noticeId: String, studentEmail: String): Resume? {
         return resumeRepository.findByNoticeAndStudent(
-            ResumeNotice(
-                noticeId
-            ),
-            ResumeStudent(
-                studentEmail
-            )
+            noticeId,
+            studentEmail
         ).orElse(null)
     }
 }

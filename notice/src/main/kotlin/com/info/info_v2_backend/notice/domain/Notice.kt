@@ -2,6 +2,7 @@ package com.info.info_v2_backend.notice.domain
 
 import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.workPlace.WorkPlaceRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
@@ -258,7 +259,11 @@ class Notice(
             this.gradeCutLine,
             this.applicantCount,
             this.isPersonalContact,
-            this.noticeOpenPeriod
+            this.noticeOpenPeriod,
+            WorkPlaceRequest(
+                this.workPlace.isSameWithCompanyAddress,
+                this.otherFeatures
+            )
         )
 
     }

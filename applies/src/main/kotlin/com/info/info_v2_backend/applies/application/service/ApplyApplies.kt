@@ -51,7 +51,7 @@ class ApplyApplies(
                 )
             )
         )
-        return resumePort.uploadResume(noticeId, applies.id, request)
+        return resumePort.uploadResume(noticeId, applies.applicant.email, request)
     }
 
 

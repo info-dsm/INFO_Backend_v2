@@ -1,20 +1,30 @@
 apiGateway:
-  - any: ["apiGateway/**/*", "common/**/*"]
+  - "apiGateway/**/*"
+  - "common/**/*"
 applies:
-  - any: ["common/**/*", "applies/**/*"]
+  - "common/**/*"
+  - "applies/**/*"
 auth:
-  - any: ["common/**/*", "auth/**/*"]
+  - "common/**/*"
+  - "auth/**/*"
 company:
-  - any: ["common/**/*", "company/**/*"]
+  - "common/**/*"
+  - "company/**/*"
 email:
-  - any: ["common/**/*", "email/**/*"]
+  - "common/**/*"
+  - "email/**/*"
 employment:
-  - any: ["common/**/*", "employment/**/*"]
+  - "common/**/*"
+  - "employment/**/*"
 file:
-  - any: ["common/**/*", "file/**/*"]
+  - "common/**/*"
+  - "file/**/*"
 notice:
-  - any: ["common/**/*", "notice/**/*"]
+  - "common/**/*"
+  - "notice/**/*"
 statistics:
-  - any: ["common/**/*", "statistics/**/*"]
+  - "common/**/*"
+  - "statistics/**/*"
 user:
-  - any: ["common/**/*", "user/**/*"]
+  - "common/**/*"
+  - "user/**/*"

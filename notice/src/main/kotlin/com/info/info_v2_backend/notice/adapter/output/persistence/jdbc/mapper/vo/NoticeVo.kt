@@ -1,6 +1,7 @@
 package com.info.info_v2_backend.notice.adapter.output.persistence.jdbc.mapper.vo
 
 import com.info.info_v2_backend.common.file.dto.AttachmentResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.workPlace.WorkPlaceRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
@@ -107,7 +108,11 @@ class NoticeVo(
             this.gradeCutLine,
             this.applicantCount,
             this.isPersonalContact,
-            this.noticeOpenPeriod
+            this.noticeOpenPeriod,
+            WorkPlaceRequest(
+                this.workPlace.isSameWithCompanyAddress,
+                this.otherFeatures
+            )
         )
 
     }

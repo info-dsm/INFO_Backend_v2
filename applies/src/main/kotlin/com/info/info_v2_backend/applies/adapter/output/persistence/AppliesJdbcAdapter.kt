@@ -1,6 +1,6 @@
 package com.info.info_v2_backend.applies.adapter.output.persistence
 
-import com.info.info_v2_backend.applies.adapter.output.persistence.jdbc.AppliesMapper
+import com.info.info_v2_backend.applies.adapter.output.persistence.repository.AppliesRepository
 import com.info.info_v2_backend.applies.application.port.output.applies.CancelApplyPort
 import com.info.info_v2_backend.applies.application.port.output.applies.LoadAppliesPort
 import com.info.info_v2_backend.applies.domain.Applies
@@ -10,61 +10,33 @@ import org.springframework.stereotype.Service
 
 @Service
 class AppliesJdbcAdapter(
-    private val jdbcTemplate: JdbcTemplate
+    private val appliesRepository: AppliesRepository
 ): LoadAppliesPort, CancelApplyPort {
 
     override fun loadAppliesList(noticeId: String, status: AppliesStatus?): List<Applies> {
-        var query: String = ""
         status?.let {
-            query = "select * from applies where applies_notice_id = \"$noticeId\" and applies_status = \"${status.name}\""
-        }?: let {
-            query = "select * from applies where applies_notice_id = \"$noticeId\""
-        }
-        val result = jdbcTemplate.query(
-            query,
-            AppliesMapper()
-        )
-        return result
+            return appliesRepository.findByNoticeAndStatus(noticeId, status)
+        }?: return appliesRepository.findByNotice(noticeId)
     }
 
     override fun loadApplies(appliesId: String): Applies? {
-        val query = "select * from applies where id = \"$appliesId\" limit 1;"
-        val result = jdbcTemplate.query(
-            query,
-            AppliesMapper()
-        )
-        return result[0]
+        return appliesRepository.findById(appliesId).orElse(null)
     }
 
     override fun loadAppliesByNoticeAndStudentEmail(noticeId: String, studentEmail: String): Applies? {
-        val query = "select * from applies where applies_notice_id = \"$noticeId\" and applicant_email = \"$studentEmail\" limit 1;"
-        val result = jdbcTemplate.query(
-            query,
-            AppliesMapper()
-        )
-        return result[0]
+        return appliesRepository.findByNoticeAndApplicant(noticeId, studentEmail).orElse(null)
     }
 
+
     override fun cancelApply(noticeId: String, studentEmail: String) {
-        val query = "delete from applies where applies_notice_id = \"$noticeId\" and applicant_email = \"$studentEmail\";"
-        jdbcTemplate.execute(query)
+        appliesRepository.deleteByIdAndAndApplicant(noticeId, studentEmail)
     }
 
     override fun loadEveryAppliesByStatus(status: AppliesStatus): List<Applies> {
-        val query = "select * from applies where applies_status = \"$status\""
-        val result = jdbcTemplate.query(
-            query,
-            AppliesMapper()
-        )
-        return result
+        return appliesRepository.findByStatus(status)
     }
 
     override fun loadAppliesByStudentEmail(studentEmail: String): List<Applies> {
-        val query = "select * from applies where applicant_email = \"$studentEmail\" "
-        val result = jdbcTemplate.query(
-            query,
-            AppliesMapper()
-        )
-        return result
+        return appliesRepository.findByApplicant(studentEmail)
     }
 }

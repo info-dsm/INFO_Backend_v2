@@ -14,6 +14,7 @@ class NoticeCompany(
     @Column(name = "company_name")
     val companyName = companyName
 
+
     override fun equals(other: Any?): Boolean {
         if (other is NoticeCompany) return this.companyNumber == other.companyNumber
         return super.equals(other)

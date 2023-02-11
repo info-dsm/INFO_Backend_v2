@@ -20,6 +20,6 @@ interface FileFeignClient: ResumePort {
     override fun uploadResume(@PathVariable noticeId: String, @PathVariable studentEmail: String, @RequestBody request: GenerateFileRequest): PresignedUrlResponse
 
     @GetMapping("/applies/{noticeId}/{studentEmail}/resume")
-    override fun loadAppliesResume(@PathVariable noticeId: String, @PathVariable studentEmail: String): FileResponse
+    override fun loadAppliesResume(@PathVariable noticeId: String, @PathVariable studentEmail: String): FileResponse?
 
 }

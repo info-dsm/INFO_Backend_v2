@@ -4,10 +4,12 @@ import com.info.info_v2_backend.applies.adapter.input.rest.dto.respnose.AppliesR
 import com.info.info_v2_backend.applies.application.port.input.LoadAppliesUsecase
 import com.info.info_v2_backend.applies.application.port.output.applies.LoadAppliesPort
 import com.info.info_v2_backend.applies.application.port.output.resume.ResumePort
+import com.info.info_v2_backend.applies.domain.Applies
 import com.info.info_v2_backend.common.applies.AppliesDto
 import com.info.info_v2_backend.common.applies.AppliesStatus
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.common.file.dto.response.FileResponse
 import org.springframework.stereotype.Service
 
 @Service
@@ -18,10 +20,12 @@ class LoadApplies(
 
     override fun loadAppliesListByStatus(companyNumber: String, noticeId: String, status: AppliesStatus?): List<AppliesResponse> {
         return loadAppliesPort.loadAppliesList(noticeId, status).map {
-            if (!(it.notice.companyNumber == companyNumber)) throw BusinessException(null, ErrorCode.INVALID_INPUT_DATA_ERROR)
-            it.toAppliesResponse(
-                resumePort.loadAppliesResume(it.notice.noticeId, it.applicant.email)
-            )
+            applies: Applies ->
+            if (!(applies.notice.companyNumber == companyNumber)) throw BusinessException(null, ErrorCode.INVALID_INPUT_DATA_ERROR)
+            resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email)?.let {
+                resume: FileResponse ->
+                return@let applies.toAppliesResponse(resume)
+            }?: throw BusinessException(null, ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
         }
     }
 
@@ -32,17 +36,21 @@ class LoadApplies(
 
     override fun loadEveryAppliesListByStatus(status: AppliesStatus): List<AppliesResponse> {
         return loadAppliesPort.loadEveryAppliesByStatus(status).map {
-            it.toAppliesResponse(
-                resumePort.loadAppliesResume(it.notice.noticeId, it.applicant.email)
-            )
+            applies: Applies ->
+            resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email)?.let {
+                    resume: FileResponse ->
+                return@let applies.toAppliesResponse(resume)
+            }?: throw BusinessException(null, ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
         }
     }
 
     override fun loadAppliesListByStudentEmail(studentEmail: String): List<AppliesResponse> {
         return loadAppliesPort.loadAppliesByStudentEmail(studentEmail).map {
-            it.toAppliesResponse(
-                resumePort.loadAppliesResume(it.notice.noticeId, it.applicant.email)
-            )
+                applies: Applies ->
+            resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email)?.let {
+                    resume: FileResponse ->
+                return@let applies.toAppliesResponse(resume)
+            }?: throw BusinessException(null, ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
         }
     }
 

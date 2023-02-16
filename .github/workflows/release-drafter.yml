@@ -7,8 +7,53 @@ on:
 jobs:
   apigateway-draft-release:
     runs-on: ubuntu-18.04
+    env:
+      MODULE: apigateway
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-apigateway
     if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
     steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew :MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+
+      - name: Docker build & push to prod
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
+          docker push $DOCKER_REPOSITORY
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.INFO_HOST }}
+          username: ec2-user
+          key: ${{ secrets.PRIVATE_KEY }}
+          envs: GITHUB_SHA
+          script: |
+            cd info
+            docker system prune -f
+            docker pull $DOCKER_REPOSITORY
+            docker-compose up -d
+            docker image prune -f
+
+      - nmae:
       - name: Release drafter
         uses: release-drafter/release-drafter@v5
         with:

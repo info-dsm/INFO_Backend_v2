@@ -373,7 +373,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ${{ env.MODULE }}
+        working-directory: ./${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master

@@ -6,7 +6,7 @@ on:
 
 jobs:
   apigateway-draft-release:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     env:
       MODULE: apiGateway
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-apigateway

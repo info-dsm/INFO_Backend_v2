@@ -1,4 +1,4 @@
-apiGateway:
+apigateway:
   - "apiGateway/**/*"
   - "common/**/*"
 applies:

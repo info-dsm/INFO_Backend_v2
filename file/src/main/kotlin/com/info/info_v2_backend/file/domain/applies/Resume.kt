@@ -4,6 +4,7 @@ import com.info.info_v2_backend.common.file.dto.FileDto
 import com.info.info_v2_backend.file.domain.File
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import javax.persistence.Column
 import javax.persistence.DiscriminatorValue
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -14,8 +15,8 @@ import javax.persistence.Entity
 class Resume(
     id: String,
     dto: FileDto,
-    notice: ResumeNotice,
-    uploader: ResumeStudent
+    noticeId: String,
+    studentEmail: String
 ): File(
     id,
     dto.fileUrl,
@@ -24,12 +25,10 @@ class Resume(
     dto.fileName
 ) {
 
-    @Embedded
-    var notice: ResumeNotice = notice
-        protected set
+    @Column(name = "notice_id", nullable = false)
+    val noticeId: String = noticeId
 
-    @Embedded
-    var student: ResumeStudent = uploader
-        protected set
+    @Column(name = "resume_student_email", nullable = false)
+    val studentEmail: String = studentEmail
 
 }

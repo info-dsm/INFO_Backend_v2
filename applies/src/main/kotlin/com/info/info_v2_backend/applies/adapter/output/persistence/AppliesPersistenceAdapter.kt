@@ -3,15 +3,19 @@ package com.info.info_v2_backend.applies.adapter.output.persistence
 import com.info.info_v2_backend.applies.adapter.output.persistence.repository.AppliesRepository
 import com.info.info_v2_backend.applies.application.port.output.applies.CancelApplyPort
 import com.info.info_v2_backend.applies.application.port.output.applies.LoadAppliesPort
+import com.info.info_v2_backend.applies.application.port.output.applies.SaveAppliesPort
 import com.info.info_v2_backend.applies.domain.Applies
 import com.info.info_v2_backend.common.applies.AppliesStatus
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 
 @Service
-class AppliesJdbcAdapter(
+class AppliesPersistenceAdapter(
     private val appliesRepository: AppliesRepository
-): LoadAppliesPort, CancelApplyPort {
+): LoadAppliesPort, CancelApplyPort, SaveAppliesPort {
+
+    override fun save(applies: Applies): Applies {
+        return appliesRepository.save(applies)
+    }
 
     override fun loadAppliesList(noticeId: String, status: AppliesStatus?): List<Applies> {
         status?.let {

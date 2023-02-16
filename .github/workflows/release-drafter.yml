@@ -1,0 +1,117 @@
+name: Release Drafter
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  apigateway-draft-release:
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    steps:
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-apigateway.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  applies-draft-release:
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'applies')
+    steps:
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-applies.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  auth-draft-release:
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'auth')
+    steps:
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-auth.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  company-draft-release:
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'company')
+    steps:
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-company.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  email-draft-release:
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'email')
+    steps:
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-email.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  employment-draft-release:
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'employment')
+    steps:
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-employment.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  file-draft-release:
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'file')
+    steps:
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-file.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notice-draft-release:
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'notice')
+    steps:
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-notice.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  statistics-draft-release:
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'statistics')
+    steps:
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-statistics.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  user-draft-release:
+    runs-on: ubuntu-18.04
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'user')
+    steps:
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-uesr.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

@@ -45,10 +45,11 @@ class FileController(
         @RequestParam classification: CompanyFileClassificationType,
         @RequestBody request: GenerateFileRequest
     ): PresignedUrlResponse {
-        log.info("companyNumber: $companyNumber, classification: $classification, fileName: ${request.fileName}")
-        return uploadCompanyFileUsecase.uploadCompanyFile(
+        val response = uploadCompanyFileUsecase.uploadCompanyFile(
             request, classification, companyNumber
         )
+        log.info("companyNumber: $companyNumber, classification: $classification, fileName: ${request.fileName}, fileUrl: ${response.url}")
+        return response
     }
 
 

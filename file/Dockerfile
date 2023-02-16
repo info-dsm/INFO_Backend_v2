@@ -3,4 +3,5 @@ ARG JAR_FILE=build/libs/*.jar
 
 COPY ${JAR_FILE} ./
 
-ENTRYPOINT ["java","-jar","/*.jar"]
+CMD ["ls", "-al"]
+ENTRYPOINT ["java","-jar","*.jar"]

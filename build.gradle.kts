@@ -96,6 +96,7 @@ subprojects {
 val bootJar: BootJar by tasks
 bootJar.enabled = false
 
+
 project(":common") {
     dependencies {
     }

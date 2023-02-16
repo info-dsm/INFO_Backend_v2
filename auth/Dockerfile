@@ -1,10 +1,6 @@
-FROM eclipse-temurin:11-jdk as builder
-ARG JAR_FILE=build/libs/*.jar
-COPY ${JAR_FILE} /
-
 FROM eclipse-temurin:17-jdk-ubi9-minimal
+ARG JAR_FILE=build/libs/*SNAPSHOT.jar
 
+COPY ${JAR_FILE} app.jar
 
-COPY --from=builder /*.jar /
-
-ENTRYPOINT ["java","-jar","/*.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]

@@ -8,7 +8,7 @@ jobs:
   apigateway-draft-release:
     runs-on: ubuntu-18.04
     env:
-      MODULE: apigateway
+      MODULE: apiGateway
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-apigateway
     if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
     steps:
@@ -30,7 +30,10 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+
+      - name: Move into module
+        run: cd $MODULE
 
       - name: Docker build & push to prod
         run: |

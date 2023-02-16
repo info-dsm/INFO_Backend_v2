@@ -30,14 +30,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build
+        run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ./$MODULE
+        working-directory: ${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -86,14 +86,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build
+        run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ./$MODULE
+        working-directory: ${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -142,14 +142,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build
+        run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ./$MODULE
+        working-directory: ${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -198,14 +198,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build
+        run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ./$MODULE
+        working-directory: ${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -254,14 +254,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build
+        run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ./$MODULE
+        working-directory: ${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -310,14 +310,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build
+        run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ./$MODULE
+        working-directory: ${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -366,14 +366,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build
+        run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ./$MODULE
+        working-directory: ${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -422,14 +422,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build
+        run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ./$MODULE
+        working-directory: ${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -478,14 +478,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build
+        run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ./$MODULE
+        working-directory: ${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -534,14 +534,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build
+        run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ./$MODULE
+        working-directory: ${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master

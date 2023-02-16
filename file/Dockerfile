@@ -1,7 +1,6 @@
 FROM eclipse-temurin:17-jdk-ubi9-minimal
 ARG JAR_FILE=build/libs/*.jar
 
-COPY ${JAR_FILE} ./
+COPY ${JAR_FILE} ./app.jar
 
-CMD ["ls", "-al"]
-ENTRYPOINT ["java","-jar","*.jar"]
+ENTRYPOINT ["java","-jar","메ㅔ.jar"]

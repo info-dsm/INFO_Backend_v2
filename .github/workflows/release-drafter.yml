@@ -30,7 +30,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build
 
       - name: Move into module
         run: cd $MODULE
@@ -88,7 +88,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build
 
       - name: Move into module
         run: cd $MODULE
@@ -146,7 +146,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build
 
       - name: Move into module
         run: cd $MODULE
@@ -204,7 +204,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build
 
       - name: Move into module
         run: cd $MODULE
@@ -262,7 +262,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build
 
       - name: Move into module
         run: cd $MODULE
@@ -320,7 +320,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build
 
       - name: Move into module
         run: cd $MODULE
@@ -378,7 +378,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build
 
       - name: Move into module
         run: cd $MODULE
@@ -436,7 +436,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build
 
       - name: Move into module
         run: cd $MODULE
@@ -494,7 +494,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build
 
       - name: Move into module
         run: cd $MODULE
@@ -552,7 +552,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew :$MODULE:build -x test -x ktlintCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x ktlintKotlinScriptCheck
+        run: ./gradlew :$MODULE:build
 
       - name: Move into module
         run: cd $MODULE

@@ -8,8 +8,6 @@ import com.info.info_v2_backend.file.application.port.output.UploadFilePort
 import com.info.info_v2_backend.file.application.port.output.applies.LoadResumePort
 import com.info.info_v2_backend.file.application.port.output.applies.SaveResumeFilePort
 import com.info.info_v2_backend.file.domain.applies.Resume
-import com.info.info_v2_backend.file.domain.applies.ResumeNotice
-import com.info.info_v2_backend.file.domain.applies.ResumeStudent
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.util.*
@@ -33,12 +31,8 @@ class UploadResume(
         val resume = Resume(
             fileId,
             dto,
-            ResumeNotice(
-                noticeId
-            ),
-            ResumeStudent(
-                studentEmail
-            )
+            noticeId,
+            studentEmail
         )
         loadResumePort.load(noticeId, studentEmail)?.let {
             removeFilePort.remove(it.id)

@@ -35,6 +35,7 @@ abstract class File(
     val fileName: String = fileName
 
     @Column(name = "file_content_type", nullable = false)
+    @Enumerated
     var fileContentType: FileType = fileType
         protected set
 

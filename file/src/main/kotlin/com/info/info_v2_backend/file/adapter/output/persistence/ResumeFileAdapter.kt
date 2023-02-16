@@ -5,8 +5,6 @@ import com.info.info_v2_backend.file.application.port.output.applies.LoadResumeP
 import com.info.info_v2_backend.file.application.port.output.applies.RemoveResumePort
 import com.info.info_v2_backend.file.application.port.output.applies.SaveResumeFilePort
 import com.info.info_v2_backend.file.domain.applies.Resume
-import com.info.info_v2_backend.file.domain.applies.ResumeNotice
-import com.info.info_v2_backend.file.domain.applies.ResumeStudent
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,7 +19,7 @@ class ResumeFileAdapter(
     }
 
     override fun load(noticeId: String, studentEmail: String): Resume? {
-        return resumeRepository.findByNoticeAndStudent(
+        return resumeRepository.findByNoticeIdAndStudentEmail(
             noticeId,
             studentEmail
         ).orElse(null)

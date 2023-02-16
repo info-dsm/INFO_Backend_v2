@@ -13,8 +13,7 @@ class LoadResume(
     private val loadResumePort: LoadResumePort
 ): LoadResumeUsecase {
     override fun load(noticeId: String, studentEmail: String): FileResponse {
-        return (loadResumePort.load(noticeId, studentEmail)
-            ?: throw BusinessException(null, ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+        return (loadResumePort.load(noticeId, studentEmail)?: throw BusinessException(null, ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
         ).toFileResponse()
     }
 

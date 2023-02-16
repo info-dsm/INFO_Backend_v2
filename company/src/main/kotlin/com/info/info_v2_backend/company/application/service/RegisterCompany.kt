@@ -38,9 +38,6 @@ class RegisterCompany(
     private val saveCompanyDocumentPort: SaveCompanyDocumentPort
 ): RegisterCompanyUsecase {
 
-    companion object {
-        val COMPANY_FILE_PATH = "/tmp/spring/company"
-    }
 
     override fun register(
         emailCheckCode: String,

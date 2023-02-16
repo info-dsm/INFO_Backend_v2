@@ -11,16 +11,12 @@ import javax.persistence.Embedded
 @Embeddable
 class CompanyIntroduction(
     introduction: String,
-    logo: PresignedUrlResponse
 ) {
 
     @Column(length = 1000)
     var introduction: String = introduction
         protected set
 
-    @Embedded
-    var logo: PresignedUrlResponse = logo
-        protected set
 
     fun changeIntroduction(introduction: String) {
         this.introduction = introduction

@@ -111,7 +111,7 @@ class Company(
         this.isLeading = true
     }
 
-    fun toCompanyDto(): CompanyDto {
+    fun toCompanyDto(logoUrl: String): CompanyDto {
         return CompanyDto(
             this.companyNumber,
             this.companyName.companyName,
@@ -119,7 +119,7 @@ class Company(
             this.companyContact.contactorEmail,
             this.companyIntroduction.introduction,
             this.isLeading,
-            this.companyIntroduction.logo.url
+            logoUrl 
         )
     }
     fun toMinimumCompanyResponse(

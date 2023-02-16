@@ -20,7 +20,6 @@ class UploadResume(
     private val loadResumePort: LoadResumePort
 ): UploadResumeUsecase {
 
-    @Async
     override fun uploadResume(
         request: GenerateFileRequest,
         noticeId: String,

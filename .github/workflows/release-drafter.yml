@@ -56,7 +56,6 @@ jobs:
             docker-compose up -d
             docker image prune -f
 
-      - nmae:
       - name: Release drafter
         uses: release-drafter/release-drafter@v5
         with:

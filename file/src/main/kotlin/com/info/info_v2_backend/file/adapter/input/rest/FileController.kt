@@ -15,6 +15,7 @@ import com.info.info_v2_backend.file.application.port.input.company.RemoveCompan
 import com.info.info_v2_backend.file.application.port.input.company.UploadCompanyFileUsecase
 import com.info.info_v2_backend.file.application.port.input.applies.UploadResumeUsecase
 import com.info.info_v2_backend.file.application.port.input.notice.LoadAttachmentUsecase
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -35,9 +36,7 @@ class FileController(
     private val loadAttachmentUsecase: LoadAttachmentUsecase,
     private val loadResumeUsecase: LoadResumeUsecase
 ) {
-    companion object {
-        const val IMAGE_PATH = "/tmp/spring/file"
-    }
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
 
     @PutMapping("/company")
@@ -46,6 +45,7 @@ class FileController(
         @RequestParam classification: CompanyFileClassificationType,
         @RequestBody request: GenerateFileRequest
     ): PresignedUrlResponse {
+        log.info("companyNumber: $companyNumber, classification: $classification, fileName: ${request.fileName}")
         return uploadCompanyFileUsecase.uploadCompanyFile(
             request, classification, companyNumber
         )

@@ -11,6 +11,7 @@ import com.info.info_v2_backend.file.application.port.output.company.ChangeCompa
 import com.info.info_v2_backend.file.application.port.output.company.RemoveCompanyFilePort
 import com.info.info_v2_backend.file.application.port.output.company.SaveCompanyFilePort
 import com.info.info_v2_backend.file.domain.company.CompanyFile
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.util.*
@@ -23,6 +24,7 @@ class UploadCompanyFile(
     private val removeCompanyFilePort: RemoveCompanyFilePort,
     private val changeCompanyStatusPort: ChangeCompanyStatusPort
 ): UploadCompanyFileUsecase {
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     @Async
     override fun uploadCompanyFile(
@@ -56,6 +58,7 @@ class UploadCompanyFile(
             )
         } catch (e: BusinessException) {
             changeCompanyStatusPort.change(companyNumber, 2)
+            log.warn(e.message)
             throw BusinessException(errorCode = ErrorCode.UNDEFINED_ERROR)
         }
     }

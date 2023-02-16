@@ -32,14 +32,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :$MODULE:build
 
-      - name: Move into module
-        run: cd $MODULE
-
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
+        working-directory: ./$MODULE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -90,14 +88,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :$MODULE:build
 
-      - name: Move into module
-        run: cd $MODULE
-
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
+        working-directory: ./$MODULE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -148,14 +144,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :$MODULE:build
 
-      - name: Move into module
-        run: cd $MODULE
-
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
+        working-directory: ./$MODULE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -206,14 +200,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :$MODULE:build
 
-      - name: Move into module
-        run: cd $MODULE
-
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
+        working-directory: ./$MODULE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -264,14 +256,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :$MODULE:build
 
-      - name: Move into module
-        run: cd $MODULE
-
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
+        working-directory: ./$MODULE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -322,14 +312,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :$MODULE:build
 
-      - name: Move into module
-        run: cd $MODULE
-
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
+        working-directory: ./$MODULE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -380,14 +368,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :$MODULE:build
 
-      - name: Move into module
-        run: cd $MODULE
-
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
+        working-directory: ./$MODULE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -438,14 +424,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :$MODULE:build
 
-      - name: Move into module
-        run: cd $MODULE
-
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
+        working-directory: ./$MODULE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -496,14 +480,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :$MODULE:build
 
-      - name: Move into module
-        run: cd $MODULE
-
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
+        working-directory: ./$MODULE
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -554,14 +536,12 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew :$MODULE:build
 
-      - name: Move into module
-        run: cd $MODULE
-
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -f Dockerfile-prod -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
+        working-directory: ./$MODULE
 
       - name: Deploy
         uses: appleboy/ssh-action@master

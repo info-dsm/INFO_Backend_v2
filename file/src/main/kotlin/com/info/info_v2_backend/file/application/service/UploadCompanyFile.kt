@@ -26,7 +26,6 @@ class UploadCompanyFile(
 ): UploadCompanyFileUsecase {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    @Async
     override fun uploadCompanyFile(
         request: GenerateFileRequest,
         classification: CompanyFileClassificationType,

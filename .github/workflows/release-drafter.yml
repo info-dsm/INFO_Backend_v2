@@ -68,7 +68,7 @@ jobs:
     env:
       MODULE: applies
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-applies
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'applies')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -126,7 +126,7 @@ jobs:
     env:
       MODULE: auth
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-auth
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'auth')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -184,7 +184,7 @@ jobs:
     env:
       MODULE: company
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-company
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'company')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -242,7 +242,7 @@ jobs:
     env:
       MODULE: email
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-email
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'email')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -300,7 +300,7 @@ jobs:
     env:
       MODULE: employment
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-employment
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'employment')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -358,7 +358,7 @@ jobs:
     env:
       MODULE: file
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-file
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'file')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -416,7 +416,7 @@ jobs:
     env:
       MODULE: notice
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-notice
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'notice')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -474,7 +474,7 @@ jobs:
     env:
       MODULE: statistics
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-statistics
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'statistics')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -532,7 +532,7 @@ jobs:
     env:
       MODULE: user
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-user
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'user')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17

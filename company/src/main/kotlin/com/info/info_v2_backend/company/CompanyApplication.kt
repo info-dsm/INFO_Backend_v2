@@ -14,8 +14,8 @@ import org.springframework.scheduling.annotation.EnableAsync
 
 @ConfigurationPropertiesScan
 @EnableFeignClients
-@EnableDiscoveryClient
 @EnableMongoRepositories
+@EnableDiscoveryClient
 @EnableJpaAuditing
 @EnableAsync
 @EnableKafka

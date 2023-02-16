@@ -17,6 +17,7 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.FileDto
 import com.info.info_v2_backend.file.adapter.output.aws.configuration.S3Property
 import com.info.info_v2_backend.file.application.port.output.UploadFilePort
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayInputStream
@@ -28,12 +29,16 @@ class S3Uploader (
     private val s3: AmazonS3
 ): UploadFilePort {
 
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
     override fun getPresignedUrl(originalFileName: String, contentType: String, rootPathName: String, middlePathName: String): FileDto {
         val fileName = getFileName(rootPathName, middlePathName, originalFileName)
         val ext = getExt(originalFileName)
 
         val generatePresignedUrlRequest = getGeneratePreSignedUrlRequest("info-dsm", fileName)
-        val url = s3.generatePresignedUrl(generatePresignedUrlRequest)
+        val url = s3.generatePresignedUrl(generatePresignedUrlRequest).toURI()
+        log.info("file: $originalFileName URL: $url")
+        
         return FileDto(
             url.toString(),
             getFileType(contentType, ext),

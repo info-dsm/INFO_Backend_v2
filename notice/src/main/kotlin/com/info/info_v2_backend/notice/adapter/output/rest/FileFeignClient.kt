@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile
 @FeignClient(name = "FILE-SERVICE", fallbackFactory = FileFeignClientFallback::class)
 interface FileFeignClient: FilePort {
 
-    @PutMapping("/notice/{noticeId}/attachment", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    @PutMapping("/notice/{noticeId}/attachment")
     override fun saveFile(
         @PathVariable noticeId: String,
         @RequestBody request: GenerateFileListRequest

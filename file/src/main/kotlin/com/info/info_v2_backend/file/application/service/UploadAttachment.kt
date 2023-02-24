@@ -9,6 +9,7 @@ import com.info.info_v2_backend.file.domain.notice.Attachment
 import com.info.info_v2_backend.file.domain.notice.AttachmentNotice
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service

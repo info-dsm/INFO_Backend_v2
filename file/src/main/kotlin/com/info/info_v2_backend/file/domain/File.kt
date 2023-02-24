@@ -27,7 +27,7 @@ abstract class File(
     @Column(name = "file_id", nullable = false)
     val id: String = id
 
-    @Column(name = "file_url", nullable = false, length = 500)
+    @Column(name = "file_url", nullable = false, length = 3000)
     var fileUrl: String = fileUrl
         protected set
 

@@ -99,6 +99,8 @@ subprojects {
 }
 val bootJar: BootJar by tasks
 bootJar.enabled = false
+val jar: Jar by tasks
+jar.enabled = false
 
 
 project(":common") {

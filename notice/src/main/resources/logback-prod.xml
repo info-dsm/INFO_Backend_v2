@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_NOTICE_PATH}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/tmp/access-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%d{HH:mm} %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
+        <smtpHost>${SMTP_HOST}</smtpHost>
+        <smtpPort>587</smtpPort>
+        <smtpProtocol>smtp</smtpProtocol>
+        <to>${LOG_RECEIVER_EMAIL_USERNAME}</to>
+        <from>${LOG_SENDER_EMAIL_USERNAME}</from>
+        <subject>ERROR: %logger{20} - %m</subject>
+        <username>${LOG_SENDER_EMAIL_USERNAME}</username>
+        <password>${LOG_SENDER_EMAIL_PASSWORD}</password>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </layout>
+        <cyclicBufferTracker class="ch.qos.logback.core.spi.CyclicBufferTracker">
+            <bufferSize>512</bufferSize>
+        </cyclicBufferTracker>
+    </appender>
+
+
+    <logger name="org.springframework" level="info"/>
+    <logger name="kr.or.connect" level="debug"/>
+
+    <root level="debug">
+        <appender-ref ref="EMAIL"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

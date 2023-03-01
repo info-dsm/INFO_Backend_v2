@@ -1,3 +1,5 @@
+val jar: Jar by tasks
+jar.enabled = false
 
 dependencies {
     //Gateway
@@ -10,5 +12,5 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     //Bind
     implementation("javax.xml.bind:jaxb-api:2.1")
-    
+
 }

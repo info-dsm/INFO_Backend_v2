@@ -1,4 +1,4 @@
-name: Release Drafter
+name: Develop-Deployer
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ jobs:
     env:
       MODULE: apiGateway
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-apigateway
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
+    if: github.event.pull_request.merged == true && github.base_ref == 'develop' && contains(github.event.pull_request.labels.*.name, 'apigateway')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -66,7 +66,7 @@ jobs:
     env:
       MODULE: applies
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-applies
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'applies')
+    if: github.event.pull_request.merged == true && github.base_ref == 'develop' && contains(github.event.pull_request.labels.*.name, 'applies')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -122,7 +122,7 @@ jobs:
     env:
       MODULE: auth
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-auth
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'auth')
+    if: github.event.pull_request.merged == true && github.base_ref == 'develop' && contains(github.event.pull_request.labels.*.name, 'auth')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -166,19 +166,13 @@ jobs:
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-auth.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   company-draft-release:
     runs-on: ubuntu-latest
     env:
       MODULE: company
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-company
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'company')
+    if: github.event.pull_request.merged == true && github.base_ref == 'develop' && contains(github.event.pull_request.labels.*.name, 'company')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -222,19 +216,13 @@ jobs:
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-company.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   email-draft-release:
     runs-on: ubuntu-latest
     env:
       MODULE: email
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-email
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'email')
+    if: github.event.pull_request.merged == true && github.base_ref == 'develop' && contains(github.event.pull_request.labels.*.name, 'email')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -278,19 +266,13 @@ jobs:
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-email.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   employment-draft-release:
     runs-on: ubuntu-latest
     env:
       MODULE: employment
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-employment
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'employment')
+    if: github.event.pull_request.merged == true && github.base_ref == 'develop' && contains(github.event.pull_request.labels.*.name, 'employment')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -334,19 +316,13 @@ jobs:
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-employment.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   file-draft-release:
     runs-on: ubuntu-latest
     env:
       MODULE: file
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-file
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'file')
+    if: github.event.pull_request.merged == true && github.base_ref == 'develop' && contains(github.event.pull_request.labels.*.name, 'file')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -390,19 +366,13 @@ jobs:
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-file.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   notice-draft-release:
     runs-on: ubuntu-latest
     env:
       MODULE: notice
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-notice
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'notice')
+    if: github.event.pull_request.merged == true && github.base_ref == 'develop' && contains(github.event.pull_request.labels.*.name, 'notice')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -446,19 +416,13 @@ jobs:
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-notice.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   statistics-draft-release:
     runs-on: ubuntu-latest
     env:
       MODULE: statistics
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-statistics
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'statistics')
+    if: github.event.pull_request.merged == true && github.base_ref == 'develop' && contains(github.event.pull_request.labels.*.name, 'statistics')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -502,19 +466,13 @@ jobs:
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-statistics.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   user-draft-release:
     runs-on: ubuntu-latest
     env:
       MODULE: user
       DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-user
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'user')
+    if: github.event.pull_request.merged == true && github.base_ref == 'develop' && contains(github.event.pull_request.labels.*.name, 'user')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17

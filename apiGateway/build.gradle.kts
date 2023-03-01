@@ -1,7 +1,5 @@
 val jar: Jar by tasks
 jar.enabled = false
-
-
 dependencies {
     //Gateway
     implementation("org.springframework.cloud:spring-cloud-starter-gateway:3.1.4")

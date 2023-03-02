@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <Pattern>%d{HH:mm} %-5level %logger{36} - %msg%n</Pattern>
-        </encoder>
-    </appender>
+    <RollingFile name="RollingFile" fileName="${LOG_PATH}" filePattern="${LOG_PATH}-%d{MM-dd-yyyy}.log.gz"
+                 ignoreExceptions="false">
+        <PatternLayout>
+            <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+        </PatternLayout>
+        <TimeBasedTriggeringPolicy />
+    </RollingFile>
 
     <appender name="EMAIL" class="ch.qos.logback.classic.net.SMTPAppender">
         <smtpHost>${SMTP_HOST}</smtpHost>

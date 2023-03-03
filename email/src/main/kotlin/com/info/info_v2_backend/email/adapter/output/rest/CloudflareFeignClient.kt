@@ -10,5 +10,4 @@ interface CloudflareFeignClient {
 
     @PostMapping
     fun send(@RequestBody request: CloudflareMailDto)
-
 }

@@ -23,7 +23,7 @@
     </Appenders>
     <Loggers>
         <Root level="info" additivity="false">
-            <appender-ref ref="fileLogger" />
+            <appender-ref ref="FILE" />
         </Root>
     </Loggers>
 </Configuration>

@@ -51,32 +51,32 @@ class SmtpSendAdapter(
         }
 
 
-        cloudflareFeignClient.send(
-            CloudflareMailDto(
-                arrayListOf<CloudflareMailDto.CloudflareTargetDto>(
-                    CloudflareMailDto.CloudflareTargetDto(
-                        arrayListOf<CloudflareMailDto.CloudflareUserDto>(
-                            CloudflareMailDto.CloudflareUserDto(
-                                to
-                            )
-                        )
-                    )
-                ),
-                CloudflareMailDto.CloudflareUserDto(
-                    "no-reply@info-dsm"
-                ),
-                title,
-                arrayListOf(
-                    CloudflareMailDto.CloudflareContentDto(
-                        "text/html",
-                        helper.mimeMessage.content.toString()
-                    )
-                )
-            )
-        )
+//        cloudflareFeignClient.send(
+//            CloudflareMailDto(
+//                arrayListOf<CloudflareMailDto.CloudflareTargetDto>(
+//                    CloudflareMailDto.CloudflareTargetDto(
+//                        arrayListOf<CloudflareMailDto.CloudflareUserDto>(
+//                            CloudflareMailDto.CloudflareUserDto(
+//                                to
+//                            )
+//                        )
+//                    )
+//                ),
+//                CloudflareMailDto.CloudflareUserDto(
+//                    "no-reply@info-dsm"
+//                ),
+//                title,
+//                arrayListOf(
+//                    CloudflareMailDto.CloudflareContentDto(
+//                        "text/html",
+//                        helper.mimeMessage.content.toString()
+//                    )
+//                )
+//            )
+//        )
 
 
-//        jms.send(message)
+        jms.send(message)
     }
 
 }

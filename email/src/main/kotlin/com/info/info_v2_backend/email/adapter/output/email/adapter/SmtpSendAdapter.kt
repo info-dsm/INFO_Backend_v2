@@ -3,6 +3,8 @@ package com.info.info_v2_backend.email.adapter.output.email.adapter
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.email.adapter.output.email.configuration.MailProperty
+import com.info.info_v2_backend.email.adapter.output.rest.CloudflareFeignClient
+import com.info.info_v2_backend.email.adapter.output.rest.dto.CloudflareMailDto
 import com.info.info_v2_backend.email.application.port.output.SmtpSendPort
 import org.springframework.mail.MailException
 import org.springframework.mail.MailParseException
@@ -17,10 +19,17 @@ import javax.mail.internet.MimeMessage
 class SmtpSendAdapter(
     private val jms: JavaMailSender,
     private val templateEngine: TemplateEngine,
-    private val mailProperty: MailProperty
+    private val mailProperty: MailProperty,
+    private val cloudflareFeignClient: CloudflareFeignClient
 ): SmtpSendPort{
 
-    override fun send(to: String, title: String, templatePath: String, models: Map<String, String>?, data: String?) {
+    override fun send(
+        to: String,
+        title: String,
+        templatePath: String,
+        models: Map<String, String>?,
+        data: String?
+    ) {
         val message: MimeMessage = jms.createMimeMessage()
 
         val context = Context()
@@ -41,7 +50,33 @@ class SmtpSendAdapter(
             }?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
         }
 
-        jms.send(message)
+
+        cloudflareFeignClient.send(
+            CloudflareMailDto(
+                arrayListOf<CloudflareMailDto.CloudflareTargetDto>(
+                    CloudflareMailDto.CloudflareTargetDto(
+                        arrayListOf<CloudflareMailDto.CloudflareUserDto>(
+                            CloudflareMailDto.CloudflareUserDto(
+                                to
+                            )
+                        )
+                    )
+                ),
+                CloudflareMailDto.CloudflareUserDto(
+                    "no-reply@info-dsm"
+                ),
+                title,
+                arrayListOf(
+                    CloudflareMailDto.CloudflareContentDto(
+                        "text/html",
+                        helper.mimeMessage.content.toString()
+                    )
+                )
+            )
+        )
+
+
+//        jms.send(message)
     }
 
 }

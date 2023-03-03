@@ -129,7 +129,6 @@ class NoticeController(
         @RequestBody request: CreateNoticeRequest,
         @RequestParam companyNumber: String,
     ): PresignedUrlListResponse {
-        
         if (Auth.checkIsTeacher()) return createNoticeUsecase.create(companyNumber, request)
         return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request)
     }

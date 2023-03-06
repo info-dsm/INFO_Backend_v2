@@ -3,6 +3,7 @@ package com.info.info_v2_backend.notice.application.service
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.notice.NoticeDto
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.AdminMaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
@@ -31,6 +32,16 @@ class LoadNotice(
                 "Notice를 조회하지 못했습니다.",
                 ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
                 ).toMaximumNoticeResponse()
+        maximumNoticeResponse.addAllAttachmentFileList(filePort.loadAttachmentList(noticeId).toMutableList())
+        return maximumNoticeResponse
+    }
+
+    override fun loadAdminMaximunNotice(noticeId: String): AdminMaximumNoticeResponse {
+        val maximumNoticeResponse = (loadNoticePort.loadNotice(noticeId)
+            ?: throw BusinessException(
+                "Notice를 조회하지 못했습니다.",
+                ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+                ).toAdminMaximumNoticeResponse()
         maximumNoticeResponse.addAllAttachmentFileList(filePort.loadAttachmentList(noticeId).toMutableList())
         return maximumNoticeResponse
     }

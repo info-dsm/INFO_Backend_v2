@@ -40,24 +40,4 @@ data class MaximumNoticeResponse(
         this.attachmentFileList = attachmentFileList
     }
 
-    fun addAllInterviewProcessMap(interviewProcessMap: MutableMap<Int, InterviewProcess>) {
-        val map: MutableMap<Int, String> = HashMap()
-        interviewProcessMap.map {
-            map.put(it.key, it.value.meaning)
-        }
-        this.interviewProcessList = map
-    }
-
-    fun addAllLanguageResponse(languageList: MutableList<LanguageResponse>) {
-        this.languageList = languageList
-    }
-
-    fun addAllTechnologyResponse(technologyList: MutableList<TechnologyResponse>) {
-        this.technologyList = technologyList
-    }
-
-    fun addAllCertificateResponse(certificateList: MutableList<CertificateResponse>) {
-        this.certificateList = certificateList
-    }
-
 }

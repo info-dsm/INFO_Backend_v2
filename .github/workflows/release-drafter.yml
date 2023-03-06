@@ -1,4 +1,4 @@
-name: Release Drafter
+name: main-Deployer
 
 on:
   pull_request:
@@ -35,8 +35,8 @@ jobs:
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t $DOCKER_REPOSITORY .
-          docker push $DOCKER_REPOSITORY
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
         working-directory: ${{ env.MODULE }}
 
       - name: Deploy
@@ -50,7 +50,7 @@ jobs:
           script: |
             cd info
             docker system prune -f
-            docker pull $DOCKER_REPOSITORY
+            docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
 
@@ -91,8 +91,8 @@ jobs:
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t $DOCKER_REPOSITORY .
-          docker push $DOCKER_REPOSITORY
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
         working-directory: ${{ env.MODULE }}
 
       - name: Deploy
@@ -106,7 +106,7 @@ jobs:
           script: |
             cd info
             docker system prune -f
-            docker pull $DOCKER_REPOSITORY
+            docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
 
@@ -147,8 +147,8 @@ jobs:
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t $DOCKER_REPOSITORY .
-          docker push $DOCKER_REPOSITORY
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
         working-directory: ${{ env.MODULE }}
 
       - name: Deploy
@@ -162,16 +162,10 @@ jobs:
           script: |
             cd info
             docker system prune -f
-            docker pull $DOCKER_REPOSITORY
+            docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-auth.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   company-draft-release:
     runs-on: ubuntu-latest
@@ -203,8 +197,8 @@ jobs:
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t $DOCKER_REPOSITORY .
-          docker push $DOCKER_REPOSITORY
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
         working-directory: ${{ env.MODULE }}
 
       - name: Deploy
@@ -218,16 +212,10 @@ jobs:
           script: |
             cd info
             docker system prune -f
-            docker pull $DOCKER_REPOSITORY
+            docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-company.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   email-draft-release:
     runs-on: ubuntu-latest
@@ -259,8 +247,8 @@ jobs:
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t $DOCKER_REPOSITORY .
-          docker push $DOCKER_REPOSITORY
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
         working-directory: ${{ env.MODULE }}
 
       - name: Deploy
@@ -274,16 +262,10 @@ jobs:
           script: |
             cd info
             docker system prune -f
-            docker pull $DOCKER_REPOSITORY
+            docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-email.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   employment-draft-release:
     runs-on: ubuntu-latest
@@ -315,8 +297,8 @@ jobs:
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t $DOCKER_REPOSITORY .
-          docker push $DOCKER_REPOSITORY
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
         working-directory: ${{ env.MODULE }}
 
       - name: Deploy
@@ -330,16 +312,10 @@ jobs:
           script: |
             cd info
             docker system prune -f
-            docker pull $DOCKER_REPOSITORY
+            docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-employment.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   file-draft-release:
     runs-on: ubuntu-latest
@@ -373,7 +349,7 @@ jobs:
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t $DOCKER_REPOSITORY .
           docker push $DOCKER_REPOSITORY
-        working-directory: ${{ env.MODULE }}
+        working-directory: ./${{ env.MODULE }}
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -386,16 +362,10 @@ jobs:
           script: |
             cd info
             docker system prune -f
-            docker pull $DOCKER_REPOSITORY
+            docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-file.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   notice-draft-release:
     runs-on: ubuntu-latest
@@ -427,8 +397,8 @@ jobs:
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t $DOCKER_REPOSITORY .
-          docker push $DOCKER_REPOSITORY
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
         working-directory: ${{ env.MODULE }}
 
       - name: Deploy
@@ -442,16 +412,10 @@ jobs:
           script: |
             cd info
             docker system prune -f
-            docker pull $DOCKER_REPOSITORY
+            docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-notice.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   statistics-draft-release:
     runs-on: ubuntu-latest
@@ -483,8 +447,8 @@ jobs:
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t $DOCKER_REPOSITORY .
-          docker push $DOCKER_REPOSITORY
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
         working-directory: ${{ env.MODULE }}
 
       - name: Deploy
@@ -498,16 +462,10 @@ jobs:
           script: |
             cd info
             docker system prune -f
-            docker pull $DOCKER_REPOSITORY
+            docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
 
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-statistics.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   user-draft-release:
     runs-on: ubuntu-latest
@@ -539,8 +497,8 @@ jobs:
       - name: Docker build & push to prod
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t $DOCKER_REPOSITORY .
-          docker push $DOCKER_REPOSITORY
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
         working-directory: ${{ env.MODULE }}
 
       - name: Deploy
@@ -554,7 +512,7 @@ jobs:
           script: |
             cd info
             docker system prune -f
-            docker pull $DOCKER_REPOSITORY
+            docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
 

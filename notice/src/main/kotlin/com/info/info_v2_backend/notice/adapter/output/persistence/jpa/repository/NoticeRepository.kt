@@ -16,4 +16,7 @@ interface NoticeRepository: JpaRepository<Notice, String> {
 
     @Query(value = "select * from notice where notice_is_delete = false and company_number = :companyNumber", nativeQuery = true)
     fun findByCompany(@Param(value = "companyNumber") companyNumber: String): List<Notice>
+
+    @Query(value = "select count(*) from notice where current_date between start_date and end_date and notice_is_approve = 'APPROVE' and notice_is_delete = 'false'", nativeQuery = true)
+    fun countOpenNotice(): Int
 }

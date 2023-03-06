@@ -9,10 +9,7 @@ import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.CreateNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.classification.AddClassificationRequest
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.*
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.certificate.CertificateResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.ClassificationResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.interview.InterviewProcessResponse
@@ -61,8 +58,15 @@ class NoticeController(
     private val loadLanguageUsecase: LoadLanguageUsecase,
     private val addLanguageUsecase: AddLanguageUsecase,
     private val loadInterviewProcessUsecase: LoadInterviewProcessUsecase,
-    private val loadCertificateUsecase: LoadCertificateUsecase
+    private val loadCertificateUsecase: LoadCertificateUsecase,
+    private val countOpenNoticeUsecase: CountOpenNoticeUsecase
 ){
+
+
+    @GetMapping("/count")
+    fun getOpenNoticeCount(): Int {
+        return countOpenNoticeUsecase.count()
+    }
 
 
     @GetMapping("/classification")
@@ -129,7 +133,7 @@ class NoticeController(
         @RequestBody request: CreateNoticeRequest,
         @RequestParam companyNumber: String,
     ): PresignedUrlListResponse {
-        if (Auth.checkIsTeacher()) return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request)
+        if (Auth.checkIsTeacher()) return createNoticeUsecase.create(companyNumber, request)
         return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request)
     }
 
@@ -191,6 +195,16 @@ class NoticeController(
     @GetMapping("/{noticeId}")
     fun getMaximumNotice(@PathVariable noticeId: String): MaximumNoticeResponse {
         return loadNoticeUsecase.loadMaximumNotice(noticeId)
+    }
+
+    @GetMapping("/admin/{companyNumber}/{noticeId}")
+    fun getAdminMaximumNotice(
+        @PathVariable companyNumber: String,
+        @PathVariable noticeId: String
+    ): AdminMaximumNoticeResponse {
+        if (Auth.checkIsTeacher()) { return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)}
+        else if (Auth.checkCompanyNumber(companyNumber).equals(companyNumber)) return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)
+        else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
 

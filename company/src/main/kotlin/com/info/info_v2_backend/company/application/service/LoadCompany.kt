@@ -62,7 +62,11 @@ class LoadCompany(
     }
 
     override fun loadCompanyDto(companyNumber: String): CompanyDto? {
-        return loadCompanyPort.loadCompany(companyNumber)?.toCompanyDto()
+        return loadCompanyPort.loadCompany(companyNumber)?.let {
+            company: Company ->
+            val information = getCompanyIntroductionResponse(company)
+            return@let company.toCompanyDto(information.companyLogo.fileUrl)
+        }
     }
 
     override fun searchCompany(idx: Int, size: Int, query: String): Page<MinimumCompanyResponse> {

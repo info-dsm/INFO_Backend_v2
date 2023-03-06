@@ -24,6 +24,7 @@ import com.info.info_v2_backend.company.domain.businessArea.BusinessAreaTagged
 import com.info.info_v2_backend.company.domain.document.CompanyDocument
 import com.info.info_v2_backend.company.domain.introduction.CompanyIntroduction
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveContactorDto
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
@@ -37,6 +38,7 @@ class RegisterCompany(
     private val loadCompanyPort: LoadCompanyPort,
     private val saveCompanyDocumentPort: SaveCompanyDocumentPort
 ): RegisterCompanyUsecase {
+
 
 
     override fun register(
@@ -106,8 +108,7 @@ class RegisterCompany(
                 request.companyInformation.toCompanyInformation(),
                 request.companyContact.toContactorId(),
                 CompanyIntroduction(
-                    request.introduction,
-                    logoFile
+                    request.introduction
                 )
             )
             saveCompanyPort.save(company)
@@ -153,13 +154,15 @@ class RegisterCompany(
 
     private fun uploadFile(
         classificationType: CompanyFileClassificationType,
-        companyId: String,
+        companyNumber: String,
         geneFileRequest: GenerateFileRequest
     ): PresignedUrlResponse {
-        return companyFilePort.upload(
-            companyId,
+        val presignedUrlResponse = companyFilePort.upload(
+            companyNumber,
             classificationType,
             geneFileRequest
         )
+        log.info("companyNumber: $companyNumber, fileName: ${presignedUrlResponse.fileName}, url: ${presignedUrlResponse.url}")
+        return presignedUrlResponse
     }
 }

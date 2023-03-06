@@ -33,5 +33,9 @@ class NoticeAdapter(
         )
     }
 
+    override fun countOpenNotice(): Int {
+        return noticeRepository.countOpenNotice()
+    }
+
 
 }

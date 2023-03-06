@@ -1,41 +1,34 @@
 package com.info.info_v2_backend.file.adapter.output.aws
 
-import com.amazonaws.HttpMethod
-import com.amazonaws.services.s3.AmazonS3
-import com.amazonaws.services.s3.AmazonS3Client
-import com.amazonaws.services.s3.Headers
-import com.amazonaws.services.s3.model.CannedAccessControlList
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest
-import com.amazonaws.services.s3.model.ObjectMetadata
-import com.amazonaws.services.s3.model.PutObjectRequest
-import com.amazonaws.util.IOUtils
 import com.info.info_v2_backend.common.file.dto.type.DocsExt
 import com.info.info_v2_backend.common.file.dto.type.FileType
 import com.info.info_v2_backend.common.file.dto.type.ImageExt
-import com.info.info_v2_backend.common.exception.BusinessException
-import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.FileDto
 import com.info.info_v2_backend.file.adapter.output.aws.configuration.S3Property
 import com.info.info_v2_backend.file.application.port.output.UploadFilePort
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import org.springframework.web.multipart.MultipartFile
-import java.io.ByteArrayInputStream
-import java.util.*
+import software.amazon.awssdk.services.s3.model.PutObjectRequest
+import software.amazon.awssdk.services.s3.presigner.S3Presigner
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest
+import java.time.Duration
 
 @Component
 class S3Uploader (
-    private val s3Property: S3Property,
-    private val s3: AmazonS3
+    private val presigner: S3Presigner,
+    private val s3Property: S3Property
 ): UploadFilePort {
+
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     override fun getPresignedUrl(originalFileName: String, contentType: String, rootPathName: String, middlePathName: String): FileDto {
         val fileName = getFileName(rootPathName, middlePathName, originalFileName)
         val ext = getExt(originalFileName)
 
-        val generatePresignedUrlRequest = getGeneratePreSignedUrlRequest("info-dsm", fileName)
-        val url = s3.generatePresignedUrl(generatePresignedUrlRequest)
+        val presignedURL = getGeneratePreSignedUrlRequest(fileName, contentType)
+
         return FileDto(
-            url.toString(),
+            presignedURL,
             getFileType(contentType, ext),
             ext,
             originalFileName
@@ -62,23 +55,23 @@ class S3Uploader (
         return fileType
     }
 
-    private fun getGeneratePreSignedUrlRequest(bucket: String, fileName: String): GeneratePresignedUrlRequest {
-        val generatePresignedUrlRequest = GeneratePresignedUrlRequest(bucket, fileName)
-            .withMethod(HttpMethod.PUT)
-            .withExpiration(getPreSignedUrlExpiration())
-        generatePresignedUrlRequest.addRequestParameter(
-            Headers.S3_CANNED_ACL,
-            CannedAccessControlList.PublicRead.toString()
-        )
-        return generatePresignedUrlRequest
-    }
+    private fun getGeneratePreSignedUrlRequest(fileName: String, contentType: String): String {
+        val objectRequest = PutObjectRequest.builder()
+            .bucket(s3Property.bucketName)
+            .key(fileName)
+            .contentType(contentType)
+            .build()
 
-    private fun getPreSignedUrlExpiration(): Date {
-        val expiration = Date()
-        var expTimeMillis = expiration.time
-        expTimeMillis += (1000 * 60 * 2).toLong()
-        expiration.time = expTimeMillis
-        return expiration
+        val presignRequest = PutObjectPresignRequest.builder()
+            .signatureDuration(Duration.ofMinutes(10))
+            .putObjectRequest(objectRequest)
+            .build()
+
+        val presignedRequest = presigner.presignPutObject(presignRequest)
+        val url = presignedRequest.url().toString()
+
+        log.info("url: $url, method: ${presignedRequest.httpRequest().method()}")
+        return url
     }
 
 

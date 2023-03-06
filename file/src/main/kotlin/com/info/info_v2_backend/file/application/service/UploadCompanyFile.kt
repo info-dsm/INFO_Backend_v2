@@ -11,6 +11,7 @@ import com.info.info_v2_backend.file.application.port.output.company.ChangeCompa
 import com.info.info_v2_backend.file.application.port.output.company.RemoveCompanyFilePort
 import com.info.info_v2_backend.file.application.port.output.company.SaveCompanyFilePort
 import com.info.info_v2_backend.file.domain.company.CompanyFile
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.util.*
@@ -23,8 +24,8 @@ class UploadCompanyFile(
     private val removeCompanyFilePort: RemoveCompanyFilePort,
     private val changeCompanyStatusPort: ChangeCompanyStatusPort
 ): UploadCompanyFileUsecase {
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
-    @Async
     override fun uploadCompanyFile(
         request: GenerateFileRequest,
         classification: CompanyFileClassificationType,
@@ -33,6 +34,8 @@ class UploadCompanyFile(
         try {
             val fileId = UUID.randomUUID().toString()
             val dto = uploadFilePort.getPresignedUrl(request.fileName, request.contentType, "COMPANY/${companyNumber}", "${classification.name}/${fileId}")
+            val authUrl = dto.fileUrl
+            dto.removeParameter()
             val companyFile = CompanyFile(
                 fileId,
                 dto,
@@ -51,11 +54,12 @@ class UploadCompanyFile(
 
             changeCompanyStatusPort.change(companyNumber, 1)
             return PresignedUrlResponse(
-                dto.fileUrl,
+                authUrl,
                 dto.fileName
             )
         } catch (e: BusinessException) {
             changeCompanyStatusPort.change(companyNumber, 2)
+            log.warn(e.message)
             throw BusinessException(errorCode = ErrorCode.UNDEFINED_ERROR)
         }
     }

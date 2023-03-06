@@ -1,3 +1,6 @@
+val jar: Jar by tasks
+jar.enabled = false
+
 dependencies {
     implementation(project(":common"))
     //Annotation Processor
@@ -12,12 +15,12 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.5")
     //Hystrix
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE")
-    //AWS
-    implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
     //Kafka
     implementation("org.springframework.kafka:spring-kafka")
-    //Multipartfile
-    implementation("commons-fileupload:commons-fileupload:1.4")
+    //actuator
     implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
     implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
+    //aws
+    implementation(platform("software.amazon.awssdk:bom:2.17.230"))
+    implementation("software.amazon.awssdk:s3")
 }

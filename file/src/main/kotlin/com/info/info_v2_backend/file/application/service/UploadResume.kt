@@ -20,7 +20,6 @@ class UploadResume(
     private val loadResumePort: LoadResumePort
 ): UploadResumeUsecase {
 
-    @Async
     override fun uploadResume(
         request: GenerateFileRequest,
         noticeId: String,
@@ -28,6 +27,8 @@ class UploadResume(
     ): PresignedUrlResponse {
         val fileId = UUID.randomUUID().toString()
         val dto = uploadFilePort.getPresignedUrl(request.fileName, request.contentType, "NOTICE/${noticeId}", "RESUME/${fileId}")
+        val authUrl = dto.fileUrl
+        dto.removeParameter()
         val resume = Resume(
             fileId,
             dto,
@@ -40,7 +41,7 @@ class UploadResume(
 
         saveResumeFilePort.save(resume)
         return PresignedUrlResponse(
-            dto.fileUrl,
+            authUrl,
             dto.fileName
         )
     }

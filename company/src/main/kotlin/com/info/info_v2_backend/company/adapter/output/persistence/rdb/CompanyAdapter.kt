@@ -49,7 +49,7 @@ class CompanyAdapter(
     }
 
     override fun count(): Int {
-        return companyRepository. .toInt()
+        return companyRepository.countAll()
     }
 
 }

@@ -61,8 +61,15 @@ class NoticeController(
     private val loadLanguageUsecase: LoadLanguageUsecase,
     private val addLanguageUsecase: AddLanguageUsecase,
     private val loadInterviewProcessUsecase: LoadInterviewProcessUsecase,
-    private val loadCertificateUsecase: LoadCertificateUsecase
+    private val loadCertificateUsecase: LoadCertificateUsecase,
+    private val countOpenNoticeUsecase: CountOpenNoticeUsecase
 ){
+
+
+    @GetMapping("/count")
+    fun getOpenNoticeCount(): Int {
+        return countOpenNoticeUsecase.count()
+    }
 
 
     @GetMapping("/classification")

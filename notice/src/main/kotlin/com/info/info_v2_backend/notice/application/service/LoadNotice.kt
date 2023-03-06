@@ -6,6 +6,7 @@ import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
+import com.info.info_v2_backend.notice.application.port.input.CountOpenNoticeUsecase
 import com.info.info_v2_backend.notice.application.port.input.LoadNoticeUsecase
 import com.info.info_v2_backend.notice.application.port.output.LoadCompanyPort
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
@@ -22,7 +23,7 @@ class LoadNotice(
     private val loadWithConditionPort: LoadWithConditionPort,
     private val filePort: FilePort,
     private val loadCompanyPort: LoadCompanyPort
-): LoadNoticeUsecase {
+): LoadNoticeUsecase, CountOpenNoticeUsecase {
 
     override fun loadMaximumNotice(noticeId: String): MaximumNoticeResponse {
         val maximumNoticeResponse = (loadNoticePort.loadNotice(noticeId)
@@ -73,6 +74,10 @@ class LoadNotice(
 
     override fun loadNoticeDto(noticeId: String): NoticeDto? {
         return loadNoticePort.loadNotice(noticeId)?.toNoticeDto()
+    }
+
+    override fun count(): Int {
+        return loadNoticePort.countOpenNotice()
     }
 
 

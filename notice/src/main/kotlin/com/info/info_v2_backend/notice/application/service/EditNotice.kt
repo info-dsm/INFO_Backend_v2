@@ -44,20 +44,17 @@ class EditNotice(
         request.interviewProcessMap?.let {
             notice.changeInterviewProcess(it)
         }
+
         request.certificateList?.let {
             list: MutableList<String> ->
-            list.filter {
-                str: String ->
+            list.filterNot { str: String ->
                 notice.needCertificateUsage.map {
                     it.certificate.name
                 }.contains(str)
             }.map {
-                name: String ->
-                val certificate = loadCertificatePort.load(name)
-                    ?: return@map
                 saveCertificateUsagePort.save(
                     CertificateUsage(
-                        certificate,
+                        loadCertificatePort.load(it)?:return@map,
                         notice
                     )
                 )
@@ -67,18 +64,14 @@ class EditNotice(
 
         request.technologyList?.let {
             list: MutableList<String> ->
-            list.filter {
-                str: String ->
+            list.filterNot { str: String ->
                 notice.technologyUsage.map {
                     it.technology.name
                 }.contains(str)
             }.map {
-                    name: String ->
-                val technology = loadTechnologyPort.load(name)
-                    ?: return@map
                 saveTechnologyUsagePort.save(
                     TechnologyUsage(
-                        technology,
+                        loadTechnologyPort.load(it)?:return@map,
                         notice
                     )
                 )
@@ -88,22 +81,19 @@ class EditNotice(
 
         request.languageList?.let {
             list: MutableList<String> ->
-            list.filter {
-                str: String ->
+            list.filterNot { str: String ->
                 notice.languageUsage.map {
                     it.language.name
                 }.contains(str)
             }.map {
-                    name: String ->
-                val language = loadLanguagePort.load(name)
-                    ?: return@map
                 saveLanguageUsagePort.save(
                     LanguageUsage(
-                        language,
+                        loadLanguagePort.load(it)?:return@map,
                         notice
                     )
                 )
             }
+
         }
 
         saveNoticePort.saveNotice(notice)

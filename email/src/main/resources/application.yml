@@ -4,7 +4,7 @@ spring:
   cloud:
     config:
       name: email
-      profile: local
+      profile: default
 management:
   endpoints:
     web:

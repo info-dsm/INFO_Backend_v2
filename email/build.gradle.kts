@@ -1,4 +1,5 @@
-
+val jar: Jar by tasks
+jar.enabled = false
 
 dependencies {
     //Annotation Processor
@@ -23,9 +24,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
     implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
-    //Sleuth
-    implementation("org.springframework.cloud:spring-cloud-starter-sleuth:3.1.5")
-    //Zipkin
-    implementation("org.springframework.cloud:spring-cloud-sleuth-zipkin:3.1.5")
+    //log4j2
+    implementation("org.apache.logging.log4j:log4j-api:2.16.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.16.0")
 
 }

@@ -45,7 +45,15 @@ class EditNotice(
             notice.changeInterviewProcess(it)
         }
         request.certificateList?.let {
-            it.map {
+            list: MutableList<String> ->
+            list.filter {
+                    str: String ->
+                !str.equals(
+                    notice.needCertificateUsage.map {
+                        it.certificate.name
+                    }
+                )
+            }.map {
                 name: String ->
                 val certificate = loadCertificatePort.load(name)
                     ?: return@map
@@ -60,7 +68,15 @@ class EditNotice(
         }
 
         request.technologyList?.let {
-            it.map {
+            list: MutableList<String> ->
+            list.filter {
+                    str: String ->
+                !str.equals(
+                    notice.technologyUsage.map {
+                        it.technology.name
+                    }
+                )
+            }.map {
                     name: String ->
                 val technology = loadTechnologyPort.load(name)
                     ?: return@map
@@ -75,7 +91,15 @@ class EditNotice(
         }
 
         request.languageList?.let {
-            it.map {
+            list: MutableList<String> ->
+            list.filter {
+                    str: String ->
+                !str.equals(
+                    notice.languageUsage.map {
+                        it.language.name
+                    }
+                )
+            }.map {
                     name: String ->
                 val language = loadLanguagePort.load(name)
                     ?: return@map
@@ -86,8 +110,8 @@ class EditNotice(
                     )
                 )
             }
-
         }
-
+        
+        saveNoticePort.saveNotice(notice)
     }
 }

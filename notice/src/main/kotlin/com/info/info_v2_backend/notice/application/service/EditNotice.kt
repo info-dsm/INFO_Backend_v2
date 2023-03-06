@@ -47,12 +47,10 @@ class EditNotice(
         request.certificateList?.let {
             list: MutableList<String> ->
             list.filter {
-                    str: String ->
-                !str.equals(
-                    notice.needCertificateUsage.map {
-                        it.certificate.name
-                    }
-                )
+                str: String ->
+                notice.needCertificateUsage.map {
+                    it.certificate.name
+                }.contains(str)
             }.map {
                 name: String ->
                 val certificate = loadCertificatePort.load(name)
@@ -70,12 +68,10 @@ class EditNotice(
         request.technologyList?.let {
             list: MutableList<String> ->
             list.filter {
-                    str: String ->
-                !str.equals(
-                    notice.technologyUsage.map {
-                        it.technology.name
-                    }
-                )
+                str: String ->
+                notice.technologyUsage.map {
+                    it.technology.name
+                }.contains(str)
             }.map {
                     name: String ->
                 val technology = loadTechnologyPort.load(name)
@@ -93,12 +89,10 @@ class EditNotice(
         request.languageList?.let {
             list: MutableList<String> ->
             list.filter {
-                    str: String ->
-                !str.equals(
-                    notice.languageUsage.map {
-                        it.language.name
-                    }
-                )
+                str: String ->
+                notice.languageUsage.map {
+                    it.language.name
+                }.contains(str)
             }.map {
                     name: String ->
                 val language = loadLanguagePort.load(name)
@@ -111,7 +105,7 @@ class EditNotice(
                 )
             }
         }
-        
+
         saveNoticePort.saveNotice(notice)
     }
 }

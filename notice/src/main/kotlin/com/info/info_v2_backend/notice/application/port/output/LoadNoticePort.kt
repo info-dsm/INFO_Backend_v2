@@ -11,5 +11,6 @@ interface LoadNoticePort {
 
     fun loadNotice(noticeId: String): Notice?
     fun loadNoticeByCompany(companyNumber: String): List<Notice>
+    fun countOpenNotice(): Int
 
 }

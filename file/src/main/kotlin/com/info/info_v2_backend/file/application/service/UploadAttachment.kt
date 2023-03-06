@@ -23,7 +23,8 @@ class UploadAttachment(
         val fileId = UUID.randomUUID().toString()
         
         val dto = uploadFilePort.getPresignedUrl(request.fileName, request.contentType, "NOTICE/${noticeId}", "ATTACHMENT/${fileId}")
-
+        val authUrl = dto.fileUrl
+        dto.removeParameter()
         val attachment = Attachment(
             fileId,
             dto,
@@ -35,7 +36,7 @@ class UploadAttachment(
         removeAttachmentPort.remove(noticeId)
         saveAttachmentPort.save(attachment)
 
-        return dto.fileUrl
+        return authUrl
     }
 
 

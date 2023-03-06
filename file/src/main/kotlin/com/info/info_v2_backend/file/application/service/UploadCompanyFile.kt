@@ -34,6 +34,8 @@ class UploadCompanyFile(
         try {
             val fileId = UUID.randomUUID().toString()
             val dto = uploadFilePort.getPresignedUrl(request.fileName, request.contentType, "COMPANY/${companyNumber}", "${classification.name}/${fileId}")
+            val authUrl = dto.fileUrl
+            dto.removeParameter()
             val companyFile = CompanyFile(
                 fileId,
                 dto,
@@ -52,7 +54,7 @@ class UploadCompanyFile(
 
             changeCompanyStatusPort.change(companyNumber, 1)
             return PresignedUrlResponse(
-                dto.fileUrl,
+                authUrl,
                 dto.fileName
             )
         } catch (e: BusinessException) {

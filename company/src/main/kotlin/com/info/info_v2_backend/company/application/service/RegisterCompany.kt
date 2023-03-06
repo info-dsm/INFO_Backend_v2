@@ -39,7 +39,7 @@ class RegisterCompany(
     private val saveCompanyDocumentPort: SaveCompanyDocumentPort
 ): RegisterCompanyUsecase {
 
-
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     override fun register(
         emailCheckCode: String,

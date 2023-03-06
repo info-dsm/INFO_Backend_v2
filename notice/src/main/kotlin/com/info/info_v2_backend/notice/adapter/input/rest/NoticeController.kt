@@ -197,7 +197,7 @@ class NoticeController(
         return loadNoticeUsecase.loadMaximumNotice(noticeId)
     }
 
-    @GetMapping("/teacher/{companyNumber}/{noticeId}")
+    @GetMapping("/admin/{companyNumber}/{noticeId}")
     fun getAdminMaximumNotice(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String

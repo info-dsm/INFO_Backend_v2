@@ -127,7 +127,6 @@ class RegisterCompany(
                     )
                 )
             }
-
             
             saveCompanyPort.save(company)
             saveCompanyDocumentPort.save(

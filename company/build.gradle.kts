@@ -2,6 +2,7 @@ val jar: Jar by tasks
 jar.enabled = false
 
 dependencies {
+    implementation(project(":common"))
     implementation(project(":user"))
     //MySQL driver
     implementation("mysql:mysql-connector-java:8.0.31")

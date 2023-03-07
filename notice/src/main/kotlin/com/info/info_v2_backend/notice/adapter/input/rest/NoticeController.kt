@@ -142,8 +142,8 @@ class NoticeController(
         @PathVariable noticeId: String,
         @RequestBody request: EditNoticeRequest,
     ): PresignedUrlListResponse {
-        if (Auth.checkIsTeacher()) editNoticeUsecase.edit(noticeId, request, companyNumber)
-        else editNoticeUsecase.edit(noticeId, request, Auth.checkCompanyNumber(companyNumber))
+        if (Auth.checkIsTeacher()) return editNoticeUsecase.edit(noticeId, request, companyNumber)
+        else return editNoticeUsecase.edit(noticeId, request, Auth.checkCompanyNumber(companyNumber))
     }
 
     @PatchMapping("/{companyNumber}/{noticeId}/attachment")

@@ -16,6 +16,7 @@ import com.info.info_v2_backend.company.application.port.input.businessArea.Load
 import com.info.info_v2_backend.company.application.port.input.file.AddCompanyFileUsecase
 import com.info.info_v2_backend.company.application.port.input.file.ChangeCompanyFileUsecase
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -34,7 +35,14 @@ class CompanyController(
     private val editCompanyUsecase: EditCompanyUsecase,
     private val makeLeadingUsecase: MakeLeadingUsecase,
     private val addBusinessAreaUsecase: AddBusinessAreaUsecase,
+    private val countCompanyUsecase: CountCompanyUsecase
 ) {
+
+    @Cacheable("memberCacheStore")
+    @GetMapping("/count")
+    fun getCompanyCount(): Int {
+        return countCompanyUsecase.count()
+    }
 
     @GetMapping("/{companyNumber}/contactor")
     fun getContactorEmail(
@@ -65,6 +73,7 @@ class CompanyController(
         editCompanyUsecase.editCompany(Auth.checkCompanyNumber(companyNumber), request)
     }
 
+    @Cacheable("memberCacheStore")
     @GetMapping("/business-area")
     fun getBusinessAreaList(): List<BusinessArea> {
         return loadBusinessAreaUsecase.loadAll()
@@ -136,6 +145,7 @@ class CompanyController(
         makeAssociatedUsecase.makeAssociated(companyNumber)
     }
 
+    @Cacheable("memberCacheStore")
     @GetMapping("/list")
     fun getMinimumCompanyList(
         @RequestParam(defaultValue = "0") idx: Int,
@@ -144,6 +154,7 @@ class CompanyController(
         return loadCompanyUsecase.loadMinimumCompanyList(idx, size)
     }
 
+    @Cacheable("memberCacheStore", key = "#companyNumber")
     @GetMapping("/{companyNumber}")
     fun getMaximumCompany(@PathVariable companyNumber: String): MaximumCompanyResponse {
         return loadCompanyUsecase.loadMaximumCompany(companyNumber)
@@ -156,6 +167,7 @@ class CompanyController(
 //
 //    }
 
+    @Cacheable("memberCacheStore", key = "#year")
     @GetMapping("/list/{year}")
     fun getRegisteredNoticeCompanyListByYear(
         @PathVariable year: Int,
@@ -174,7 +186,6 @@ class CompanyController(
         return loadCompanyUsecase.searchCompany(idx, size, name)
     }
 
-
     //회시 담당자 수정
 
     @PostMapping("/leading/{companyNumber}")
@@ -188,14 +199,16 @@ class CompanyController(
     //Internal API
     @GetMapping("/dto/{companyNumber}")
     fun getCompanyDto(@PathVariable companyNumber: String): CompanyDto? {
-        return loadCompanyUsecase.loadCompanyDto(companyNumber)
+        if (Auth.checkIsSystem()) return loadCompanyUsecase.loadCompanyDto(companyNumber)
+        else return null
     }
 
     @GetMapping("/thumbnail/{companyNumber}")
     fun getCompanyThumbnailList(
         @PathVariable companyNumber: String
     ): MutableList<String> {
-        return loadCompanyUsecase.loadCompanyThumbnailList(companyNumber)
+        if (Auth.checkIsSystem()) return loadCompanyUsecase.loadCompanyThumbnailList(companyNumber)
+        else return ArrayList()
     }
 
 

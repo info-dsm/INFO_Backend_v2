@@ -5,14 +5,12 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
+import com.info.info_v2_backend.common.logs.LogFormat
 import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.CreateNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.classification.AddClassificationRequest
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.*
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.certificate.CertificateResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.ClassificationResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.interview.InterviewProcessResponse
@@ -29,20 +27,11 @@ import com.info.info_v2_backend.notice.application.port.input.technology.AddTech
 import com.info.info_v2_backend.notice.application.port.input.technology.LoadTechnologyUsecase
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class NoticeController(
@@ -61,10 +50,19 @@ class NoticeController(
     private val loadLanguageUsecase: LoadLanguageUsecase,
     private val addLanguageUsecase: AddLanguageUsecase,
     private val loadInterviewProcessUsecase: LoadInterviewProcessUsecase,
-    private val loadCertificateUsecase: LoadCertificateUsecase
+    private val loadCertificateUsecase: LoadCertificateUsecase,
+    private val countOpenNoticeUsecase: CountOpenNoticeUsecase
 ){
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
 
+    @Cacheable("memberCacheStore")
+    @GetMapping("/count")
+    fun getOpenNoticeCount(): Int {
+        return countOpenNoticeUsecase.count()
+    }
+
+    @Cacheable("memberCacheStore")
     @GetMapping("/classification")
     fun getClassification(): List<ClassificationResponse> {
         return loadClassificationUsecase.load()
@@ -79,6 +77,7 @@ class NoticeController(
         else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
+    @Cacheable("memberCacheStore")
     @GetMapping("/technology")
     fun getTechnology(): List<TechnologyResponse> {
         return loadTechnologyUsecase.loadAll()
@@ -89,10 +88,12 @@ class NoticeController(
     fun addTechnology(
         @RequestParam name: String
     ) {
+        log.info("addTechnology: $name")
         if(Auth.checkIsTeacher()) return addTechnologyUsecase.add(name)
         else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
+    @Cacheable("memberCacheStore")
     @GetMapping("/language")
     fun getLanguage(): List<LanguageResponse> {
         return loadLanguageUsecase.loadAll()
@@ -103,10 +104,12 @@ class NoticeController(
     fun addLanguage(
         @RequestParam name: String
     ) {
+        log.info("addLanguage: $name")
         if(Auth.checkIsTeacher()) return addLanguageUsecase.add(name)
         else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
+    @Cacheable("memberCacheStore")
     @GetMapping("/interview")
     fun getInterviewProcessList(): List<InterviewProcessResponse> {
         return loadInterviewProcessUsecase.loadAll().map {
@@ -117,11 +120,11 @@ class NoticeController(
         }
     }
 
+    @Cacheable("memberCacheStore")
     @GetMapping("/certificate")
     fun getCertificate(): List<CertificateResponse> {
         return loadCertificateUsecase.loadAll()
     }
-
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -129,19 +132,22 @@ class NoticeController(
         @RequestBody request: CreateNoticeRequest,
         @RequestParam companyNumber: String,
     ): PresignedUrlListResponse {
-        if (Auth.checkIsTeacher()) return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request)
+        log.info("createNotice, companyNumber $companyNumber")
+        if (Auth.checkIsTeacher()) return createNoticeUsecase.create(companyNumber, request)
         return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request)
     }
 
+    @CacheEvict("memberCacheStore", key = "#noticeId")
     @PatchMapping("/{companyNumber}/{noticeId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     fun editNotice(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String,
         @RequestBody request: EditNoticeRequest,
-    ) {
-        if (Auth.checkIsTeacher()) editNoticeUsecase.edit(noticeId, request, companyNumber)
-        else editNoticeUsecase.edit(noticeId, request, Auth.checkCompanyNumber(companyNumber))
+    ): PresignedUrlListResponse {
+        log.info("editNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
+        if (Auth.checkIsTeacher()) return editNoticeUsecase.edit(noticeId, request, companyNumber)
+        else return editNoticeUsecase.edit(noticeId, request, Auth.checkCompanyNumber(companyNumber))
     }
 
     @PatchMapping("/{companyNumber}/{noticeId}/attachment")
@@ -151,6 +157,7 @@ class NoticeController(
         @PathVariable noticeId: String,
         @RequestBody request: GenerateFileListRequest
     ): PresignedUrlListResponse {
+        log.info("changeAttachment, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (Auth.checkIsTeacher()) return changeAttachmentUsecase.change(companyNumber, noticeId, request)
         else return changeAttachmentUsecase.change(Auth.checkCompanyNumber(companyNumber), noticeId, request)
     }
@@ -160,7 +167,8 @@ class NoticeController(
         @RequestParam(defaultValue = "0") idx: Int,
         @RequestParam(defaultValue = "10") size: Int
     ): Page<MinimumNoticeResponse> {
-        return loadWaitingNoticeUsecase.load(idx, size)
+        if (Auth.checkIsTeacher()) return loadWaitingNoticeUsecase.load(idx, size)
+        else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
     @PostMapping("/{companyNumber}/{noticeId}")
@@ -169,6 +177,7 @@ class NoticeController(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String
     ) {
+        log.info("approveNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (!Auth.checkIsTeacher())
             throw BusinessException("권한이 부족합니다.", ErrorCode.NO_AUTHORIZATION_ERROR)
         return approveNoticeUsecase.approve(companyNumber, noticeId)
@@ -176,24 +185,46 @@ class NoticeController(
 
     @DeleteMapping("/{companyNumber}/{noticeId}/conclude")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun concludeNotice(@PathVariable companyNumber: String, @PathVariable noticeId: String) {
+    fun concludeNotice(
+        @PathVariable companyNumber: String,
+        @PathVariable noticeId: String
+    ) {
+        log.info("concludeNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (!Auth.checkIsTeacher()) throw BusinessException("이 작업은 반드시 선생님만 진행할 수 있습니다.", ErrorCode.NO_AUTHORIZATION_ERROR)
         return concludeNoticeUsecase.conclude(noticeId)
     }
 
     @DeleteMapping("/{companyNumber}/{noticeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun removeNotice(@PathVariable companyNumber: String, @PathVariable noticeId: String) {
+    fun removeNotice(
+        @PathVariable companyNumber: String,
+        @PathVariable noticeId: String
+    ) {
+        log.info("removeNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (Auth.checkIsTeacher()) removeNoticeUsecase.remove(noticeId, companyNumber)
         else removeNoticeUsecase.remove(noticeId, Auth.checkCompanyNumber(companyNumber))
     }
 
+    @Cacheable("memberCacheStore", key = "#noticeId")
     @GetMapping("/{noticeId}")
-    fun getMaximumNotice(@PathVariable noticeId: String): MaximumNoticeResponse {
+    fun getMaximumNotice(
+        @PathVariable noticeId: String
+    ): MaximumNoticeResponse {
         return loadNoticeUsecase.loadMaximumNotice(noticeId)
     }
 
+    @GetMapping("/admin/{companyNumber}/{noticeId}")
+    fun getAdminMaximumNotice(
+        @PathVariable companyNumber: String,
+        @PathVariable noticeId: String
+    ): AdminMaximumNoticeResponse {
+        if (Auth.checkIsTeacher()) { return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)}
+        else if (Auth.checkCompanyNumber(companyNumber).equals(companyNumber)) return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)
+        else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
+    }
 
+
+    @Cacheable("memberCacheStore")
     @GetMapping("/list/on")
     fun getNotEndedMinimumNoticeList(
         @RequestParam(defaultValue = "0") idx: Int,
@@ -202,6 +233,7 @@ class NoticeController(
         return loadNoticeUsecase.loadNotEndedMinimumNoticeList(idx, size)
     }
 
+    @Cacheable("memberCacheStore")
     @GetMapping("/list/end")
     fun getEndedMinimumNoticeList(
         @RequestParam(defaultValue = "0") idx: Int,
@@ -211,6 +243,7 @@ class NoticeController(
         return loadNoticeUsecase.loadEndedMinimumNoticeList(idx, size)
     }
 
+    @Cacheable("memberCacheStore")
     @GetMapping("/list/{companyNumber}")
     fun getCompanyNoticeList(
         @PathVariable companyNumber: String
@@ -228,13 +261,11 @@ class NoticeController(
         )
     }
 
-    private val log = LoggerFactory.getLogger(this.javaClass)
-
+    //internal
     @GetMapping("/available")
     fun loadAvailableNotice(@RequestParam noticeId: String): NoticeDto? {
-        val notice = loadNoticeUsecase.loadAvailableNotice(noticeId)
-        log.info("notice: ${notice?.noticeId}")
-        return notice
+        if (Auth.checkIsSystem()) return loadNoticeUsecase.loadAvailableNotice(noticeId)
+        return null
     }
 
 }

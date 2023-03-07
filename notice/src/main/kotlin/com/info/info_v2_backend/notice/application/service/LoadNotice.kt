@@ -3,9 +3,11 @@ package com.info.info_v2_backend.notice.application.service
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.notice.NoticeDto
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.AdminMaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
+import com.info.info_v2_backend.notice.application.port.input.CountOpenNoticeUsecase
 import com.info.info_v2_backend.notice.application.port.input.LoadNoticeUsecase
 import com.info.info_v2_backend.notice.application.port.output.LoadCompanyPort
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
@@ -22,7 +24,7 @@ class LoadNotice(
     private val loadWithConditionPort: LoadWithConditionPort,
     private val filePort: FilePort,
     private val loadCompanyPort: LoadCompanyPort
-): LoadNoticeUsecase {
+): LoadNoticeUsecase, CountOpenNoticeUsecase {
 
     override fun loadMaximumNotice(noticeId: String): MaximumNoticeResponse {
         val maximumNoticeResponse = (loadNoticePort.loadNotice(noticeId)
@@ -30,6 +32,16 @@ class LoadNotice(
                 "Notice를 조회하지 못했습니다.",
                 ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
                 ).toMaximumNoticeResponse()
+        maximumNoticeResponse.addAllAttachmentFileList(filePort.loadAttachmentList(noticeId).toMutableList())
+        return maximumNoticeResponse
+    }
+
+    override fun loadAdminMaximunNotice(noticeId: String): AdminMaximumNoticeResponse {
+        val maximumNoticeResponse = (loadNoticePort.loadNotice(noticeId)
+            ?: throw BusinessException(
+                "Notice를 조회하지 못했습니다.",
+                ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+                ).toAdminMaximumNoticeResponse()
         maximumNoticeResponse.addAllAttachmentFileList(filePort.loadAttachmentList(noticeId).toMutableList())
         return maximumNoticeResponse
     }
@@ -73,6 +85,10 @@ class LoadNotice(
 
     override fun loadNoticeDto(noticeId: String): NoticeDto? {
         return loadNoticePort.loadNotice(noticeId)?.toNoticeDto()
+    }
+
+    override fun count(): Int {
+        return loadNoticePort.countOpenNotice()
     }
 
 

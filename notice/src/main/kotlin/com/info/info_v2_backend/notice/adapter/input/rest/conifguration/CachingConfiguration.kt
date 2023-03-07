@@ -14,5 +14,4 @@ class CachingConfiguration {
     fun cacheManager(): CacheManager {
         return ConcurrentMapCacheManager("memberCacheStore")
     }
-
 }

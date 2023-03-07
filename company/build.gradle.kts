@@ -2,7 +2,6 @@ val jar: Jar by tasks
 jar.enabled = false
 
 dependencies {
-    implementation(project(":common"))
     implementation(project(":user"))
     //MySQL driver
     implementation("mysql:mysql-connector-java:8.0.31")
@@ -29,5 +28,6 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
     //Mongo
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-    
+    //cache
+    implementation("org.springframework.boot:spring-boot-starter-cache")
 }

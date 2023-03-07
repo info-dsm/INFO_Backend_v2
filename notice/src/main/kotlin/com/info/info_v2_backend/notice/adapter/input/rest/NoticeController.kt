@@ -5,6 +5,7 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
+import com.info.info_v2_backend.common.logs.LogFormat
 import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.CreateNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
@@ -52,6 +53,8 @@ class NoticeController(
     private val loadCertificateUsecase: LoadCertificateUsecase,
     private val countOpenNoticeUsecase: CountOpenNoticeUsecase
 ){
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
 
     @Cacheable("memberCacheStore")
     @GetMapping("/count")
@@ -85,6 +88,7 @@ class NoticeController(
     fun addTechnology(
         @RequestParam name: String
     ) {
+        log.info("addTechnology: $name")
         if(Auth.checkIsTeacher()) return addTechnologyUsecase.add(name)
         else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
     }
@@ -100,6 +104,7 @@ class NoticeController(
     fun addLanguage(
         @RequestParam name: String
     ) {
+        log.info("addLanguage: $name")
         if(Auth.checkIsTeacher()) return addLanguageUsecase.add(name)
         else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
     }
@@ -128,6 +133,7 @@ class NoticeController(
         @RequestBody request: CreateNoticeRequest,
         @RequestParam companyNumber: String,
     ): PresignedUrlListResponse {
+        log.info("createNotice, companyNumber $companyNumber")
         if (Auth.checkIsTeacher()) return createNoticeUsecase.create(companyNumber, request)
         return createNoticeUsecase.create(Auth.checkCompanyNumber(companyNumber), request)
     }
@@ -140,6 +146,7 @@ class NoticeController(
         @PathVariable noticeId: String,
         @RequestBody request: EditNoticeRequest,
     ): PresignedUrlListResponse {
+        log.info("editNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (Auth.checkIsTeacher()) return editNoticeUsecase.edit(noticeId, request, companyNumber)
         else return editNoticeUsecase.edit(noticeId, request, Auth.checkCompanyNumber(companyNumber))
     }
@@ -151,6 +158,7 @@ class NoticeController(
         @PathVariable noticeId: String,
         @RequestBody request: GenerateFileListRequest
     ): PresignedUrlListResponse {
+        log.info("changeAttachment, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (Auth.checkIsTeacher()) return changeAttachmentUsecase.change(companyNumber, noticeId, request)
         else return changeAttachmentUsecase.change(Auth.checkCompanyNumber(companyNumber), noticeId, request)
     }
@@ -170,6 +178,7 @@ class NoticeController(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String
     ) {
+        log.info("approveNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (!Auth.checkIsTeacher())
             throw BusinessException("권한이 부족합니다.", ErrorCode.NO_AUTHORIZATION_ERROR)
         return approveNoticeUsecase.approve(companyNumber, noticeId)
@@ -177,14 +186,22 @@ class NoticeController(
 
     @DeleteMapping("/{companyNumber}/{noticeId}/conclude")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun concludeNotice(@PathVariable companyNumber: String, @PathVariable noticeId: String) {
+    fun concludeNotice(
+        @PathVariable companyNumber: String,
+        @PathVariable noticeId: String
+    ) {
+        log.info("concludeNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (!Auth.checkIsTeacher()) throw BusinessException("이 작업은 반드시 선생님만 진행할 수 있습니다.", ErrorCode.NO_AUTHORIZATION_ERROR)
         return concludeNoticeUsecase.conclude(noticeId)
     }
 
     @DeleteMapping("/{companyNumber}/{noticeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun removeNotice(@PathVariable companyNumber: String, @PathVariable noticeId: String) {
+    fun removeNotice(
+        @PathVariable companyNumber: String,
+        @PathVariable noticeId: String
+    ) {
+        log.info("removeNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (Auth.checkIsTeacher()) removeNoticeUsecase.remove(noticeId, companyNumber)
         else removeNoticeUsecase.remove(noticeId, Auth.checkCompanyNumber(companyNumber))
     }
@@ -245,12 +262,11 @@ class NoticeController(
         )
     }
 
-    private val log = LoggerFactory.getLogger(this.javaClass)
-
+    //internal
     @GetMapping("/available")
     fun loadAvailableNotice(@RequestParam noticeId: String): NoticeDto? {
-        val notice = loadNoticeUsecase.loadAvailableNotice(noticeId)
-        return notice
+        if (Auth.checkIsSystem()) return loadNoticeUsecase.loadAvailableNotice(noticeId)
+        return null
     }
 
 }

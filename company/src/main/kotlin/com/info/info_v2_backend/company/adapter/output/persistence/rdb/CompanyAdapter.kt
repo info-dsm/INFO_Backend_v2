@@ -20,7 +20,6 @@ class CompanyAdapter(
     private val companyRepository: CompanyRepository
 ): SaveCompanyPort, LoadCompanyPort {
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     override fun save(company: Company) {
         try {
             companyRepository.save(company)

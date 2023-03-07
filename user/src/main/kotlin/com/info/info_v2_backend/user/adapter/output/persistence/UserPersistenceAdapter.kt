@@ -52,7 +52,7 @@ class UserPersistenceAdapter(
     }
 
     override fun loadContactor(companyEmail: String): Contactor? {
-        return contactorRepository.findByCompanyNumber(companyEmail).orElse(null)
+        return contactorRepository.findFirstByCompanyNumber(companyEmail).orElse(null)
     }
 
     override fun loadStudent(studentEmail: String): Student? {

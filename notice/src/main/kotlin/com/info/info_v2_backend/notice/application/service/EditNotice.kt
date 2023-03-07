@@ -2,12 +2,15 @@ package com.info.info_v2_backend.notice.application.service
 
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
 import com.info.info_v2_backend.notice.application.port.input.EditNoticeUsecase
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
 import com.info.info_v2_backend.notice.application.port.output.SaveNoticePort
 import com.info.info_v2_backend.notice.application.port.output.certificate.LoadCertificatePort
 import com.info.info_v2_backend.notice.application.port.output.certificate.SaveCertificateUsagePort
+import com.info.info_v2_backend.notice.application.port.output.file.FilePort
 import com.info.info_v2_backend.notice.application.port.output.language.LoadLanguagePort
 import com.info.info_v2_backend.notice.application.port.output.language.SaveLanguageUsagePort
 import com.info.info_v2_backend.notice.application.port.output.technology.LoadTechnologyPort
@@ -28,10 +31,11 @@ class EditNotice(
     private val saveCertificateUsagePort: SaveCertificateUsagePort,
     private val loadTechnologyPort: LoadTechnologyPort,
     private val saveTechnologyUsagePort: SaveTechnologyUsagePort,
+    private val filePort: FilePort
 ): EditNoticeUsecase {
 
     @Transactional
-    override fun edit(noticeId: String, request: EditNoticeRequest, companyNumber: String) {
+    override fun edit(noticeId: String, request: EditNoticeRequest, companyNumber: String): PresignedUrlListResponse {
         val notice = loadNoticePort.loadNotice(noticeId)
             .takeIf {
                 it?.company?.companyNumber == companyNumber
@@ -97,5 +101,12 @@ class EditNotice(
         }
 
         saveNoticePort.saveNotice(notice)
+        return filePort.saveFile(
+            notice.id,
+            GenerateFileListRequest(
+                request.generateFileListRequest
+            )
+        )
+
     }
 }

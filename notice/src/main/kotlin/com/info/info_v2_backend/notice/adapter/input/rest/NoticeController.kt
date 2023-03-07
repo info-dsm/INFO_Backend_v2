@@ -121,7 +121,6 @@ class NoticeController(
         return loadCertificateUsecase.loadAll()
     }
 
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun createNotice(

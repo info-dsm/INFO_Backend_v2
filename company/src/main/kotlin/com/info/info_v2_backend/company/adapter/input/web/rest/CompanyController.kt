@@ -180,7 +180,6 @@ class CompanyController(
         return loadCompanyUsecase.searchCompany(idx, size, name)
     }
 
-
     //회시 담당자 수정
 
     @PostMapping("/leading/{companyNumber}")

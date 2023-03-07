@@ -41,6 +41,7 @@ class RegisterCompany(
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
+    
     override fun register(
         emailCheckCode: String,
         request: RegisterCompanyRequest

@@ -34,7 +34,13 @@ class CompanyController(
     private val editCompanyUsecase: EditCompanyUsecase,
     private val makeLeadingUsecase: MakeLeadingUsecase,
     private val addBusinessAreaUsecase: AddBusinessAreaUsecase,
+    private val countCompanyUsecase: CountCompanyUsecase
 ) {
+
+    @GetMapping("/count")
+    fun getCompanyCount(): Int {
+        return countCompanyUsecase.count()
+    }
 
     @GetMapping("/{companyNumber}/contactor")
     fun getContactorEmail(

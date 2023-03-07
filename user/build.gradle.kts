@@ -2,7 +2,6 @@ val jar: Jar by tasks
 jar.enabled = false
 
 dependencies {
-
     //Common
     implementation(project(":common"))
     // Eureka Client

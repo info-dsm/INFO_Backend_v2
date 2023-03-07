@@ -48,4 +48,8 @@ class CompanyAdapter(
         return companyRepository.findByIsNoticeRegisteredYearListContaining(year, PageRequest.of(idx, size, Sort.by("createdAt").descending()))
     }
 
+    override fun count(): Int {
+        return companyRepository.countAll()
+    }
+
 }

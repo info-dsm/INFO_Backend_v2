@@ -191,7 +191,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Check gradle file existence
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "${{ env.MODULE }}/build/libs/*.jar"
+
       - name: Build with Gradle
+        if: steps.check_files.outputs.files_exists == 'false'
         run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod

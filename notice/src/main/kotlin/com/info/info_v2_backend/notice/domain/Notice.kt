@@ -3,10 +3,7 @@ package com.info.info_v2_backend.notice.domain
 import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.workPlace.WorkPlaceRequest
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.*
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.certificate.CertificateResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.BigClassificationResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.ClassificationResponse
@@ -266,6 +263,13 @@ class Notice(
             )
         )
 
+    }
+
+    fun toAdminMaximumNoticeResponse(): AdminMaximumNoticeResponse {
+        return AdminMaximumNoticeResponse(
+            toMaximumNoticeResponse(),
+            this.pay.toPayRequest()
+        )
     }
 
     fun toMaximumNoticeResponse(): MaximumNoticeResponse {

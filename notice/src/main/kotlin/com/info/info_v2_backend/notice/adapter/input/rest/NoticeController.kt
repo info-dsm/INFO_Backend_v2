@@ -36,10 +36,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
 
 @RestController
 class NoticeController(
@@ -143,9 +141,9 @@ class NoticeController(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String,
         @RequestBody request: EditNoticeRequest,
-    ) {
-        if (Auth.checkIsTeacher()) editNoticeUsecase.edit(noticeId, request, companyNumber)
-        else editNoticeUsecase.edit(noticeId, request, Auth.checkCompanyNumber(companyNumber))
+    ): PresignedUrlListResponse {
+        if (Auth.checkIsTeacher()) return editNoticeUsecase.edit(noticeId, request, companyNumber)
+        else return editNoticeUsecase.edit(noticeId, request, Auth.checkCompanyNumber(companyNumber))
     }
 
     @PatchMapping("/{companyNumber}/{noticeId}/attachment")

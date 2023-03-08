@@ -38,7 +38,7 @@ class CompanyController(
     private val countCompanyUsecase: CountCompanyUsecase
 ) {
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/count")
     fun getCompanyCount(): Int {
         return countCompanyUsecase.count()
@@ -73,7 +73,7 @@ class CompanyController(
         editCompanyUsecase.editCompany(Auth.checkCompanyNumber(companyNumber), request)
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/business-area")
     fun getBusinessAreaList(): List<BusinessArea> {
         return loadBusinessAreaUsecase.loadAll()
@@ -145,7 +145,7 @@ class CompanyController(
         makeAssociatedUsecase.makeAssociated(companyNumber)
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/list")
     fun getMinimumCompanyList(
         @RequestParam(defaultValue = "0") idx: Int,

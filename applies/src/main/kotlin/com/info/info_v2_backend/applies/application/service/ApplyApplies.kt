@@ -12,6 +12,7 @@ import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -26,7 +27,7 @@ class ApplyApplies(
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    override fun apply(noticeId: String, request: GenerateFileListRequest, studentEmail: String): PresignedUrlResponse {
+    override fun apply(noticeId: String, request: GenerateFileListRequest, studentEmail: String): PresignedUrlListResponse {
         val student = loadStudentPort.loadStudent(
             studentEmail
         )?: throw BusinessException(

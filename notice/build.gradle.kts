@@ -27,6 +27,6 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
     implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
-    //cache
-    implementation("org.springframework.boot:spring-boot-starter-cache")
+//    //cache
+//    implementation("org.springframework.boot:spring-boot-starter-cache")
 }

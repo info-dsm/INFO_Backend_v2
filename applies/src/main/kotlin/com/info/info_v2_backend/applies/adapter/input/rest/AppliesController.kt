@@ -8,6 +8,7 @@ import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -35,7 +36,7 @@ class AppliesController(
     fun apply(
         @PathVariable noticeId: String,
         @RequestBody request: GenerateFileListRequest
-    ): PresignedUrlResponse {
+    ): PresignedUrlListResponse {
         return applyUsecase.apply(noticeId, request, Auth.getUserEmail()?: throw BusinessException(null, ErrorCode.TOKEN_NEED_ERROR))
     }
 

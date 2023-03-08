@@ -81,7 +81,7 @@ class CompanyController(
 
     @PutMapping("/business-area")
     fun addBusinessArea(@RequestParam name: String) {
-        return addBusinessAreaUsecase.add(name)
+        if (Auth.checkIsTeacher()) return addBusinessAreaUsecase.add(name)
     }
 
     @PatchMapping("/{companyNumber}/certificate")

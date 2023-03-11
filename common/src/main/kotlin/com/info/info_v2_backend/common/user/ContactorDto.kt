@@ -1,8 +1,6 @@
-package com.info.info_v2_backend.user.adapter.input.web.rest.dto.response
+package com.info.info_v2_backend.common.user
 
-import com.info.info_v2_backend.common.user.UserDto
-
-class ContactorResponse(
+class ContactorDto(
     name: String,
     email: String,
     val rank: String,

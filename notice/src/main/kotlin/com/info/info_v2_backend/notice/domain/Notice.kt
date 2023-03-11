@@ -177,8 +177,8 @@ class Notice(
     }
 
     fun checkIsAvailableAppliesStatus(): Boolean {
-        if (this.noticeOpenPeriod.endDate <= LocalDate.now()
-            || this.noticeOpenPeriod.startDate >= LocalDate.now()) return false
+        if (this.noticeOpenPeriod.endDate.isBefore(LocalDate.now())
+            || this.noticeOpenPeriod.startDate.isAfter(LocalDate.now())) return false
         else if (this.isDelete) return false
         else if (this.isPersonalContact) return false
         return true

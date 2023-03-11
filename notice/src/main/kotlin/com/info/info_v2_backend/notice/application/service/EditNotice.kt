@@ -104,7 +104,7 @@ class EditNotice(
         return filePort.saveFile(
             notice.id,
             GenerateFileListRequest(
-                request.generateFileListRequest
+                request.generateFileListRequest?:ArrayList()
             )
         )
 

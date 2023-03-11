@@ -31,8 +31,10 @@ class EmploymentController(
         @PathVariable noticeId: String,
         @PathVariable studentEmail: String,
     ) {
-        if (Auth.checkIsTeacher()) employStudentUsecase.employ(studentEmail, noticeId)
-        else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
+        if (Auth.checkIsTeacher()) return employStudentUsecase.employ(studentEmail, noticeId)
+        Auth.companyNumber()?.let {
+            return employStudentUsecase.employ(studentEmail, noticeId)
+        }?: throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
     @DeleteMapping("/{companyNumber}/{studentEmail}")
@@ -41,7 +43,8 @@ class EmploymentController(
         @PathVariable companyNumber: String,
         @PathVariable studentEmail: String
     ) {
-        failEmploymentUsecase.failEmployment(companyNumber, studentEmail)
+        if (Auth.checkIsTeacher()) return failEmploymentUsecase.failEmployment(companyNumber, studentEmail)
+        return failEmploymentUsecase.failEmployment(Auth.checkCompanyNumber(companyNumber), studentEmail)
     }
 
     @PutMapping("/{companyNumber}/{studentEmail}")
@@ -50,15 +53,19 @@ class EmploymentController(
         @PathVariable companyNumber: String,
         @PathVariable studentEmail: String
     ) {
-        confirmEmploymentUsecase.confirmEmployment(companyNumber, studentEmail)
+        if (Auth.checkIsTeacher()) return confirmEmploymentUsecase.confirmEmployment(companyNumber, studentEmail)
+        return confirmEmploymentUsecase.confirmEmployment(Auth.checkCompanyNumber(companyNumber), studentEmail)
     }
 
     @GetMapping("/{companyNumber}")
     fun getEmploymentList(
         @PathVariable companyNumber: String,
     ): List<EmploymentDto> {
+        if (Auth.checkIsSystem()) return loadEmploymentUsecase.loadCompanyConfirmedEmploymentLine(companyNumber)
         if (Auth.checkIsTeacher()) return loadEmploymentUsecase.loadCompanyEmploymentLine(companyNumber)
-        return loadEmploymentUsecase.loadCompanyConfirmedEmploymentLine(companyNumber)
+        Auth.companyNumber()?.filter { it.equals(companyNumber) }?.let {
+            return loadEmploymentUsecase.loadCompanyEmploymentLine(companyNumber)
+        }?: return loadEmploymentUsecase.loadCompanyConfirmedEmploymentLine(companyNumber)
     }
 
 }

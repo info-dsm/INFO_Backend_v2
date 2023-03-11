@@ -3,7 +3,7 @@ package com.info.info_v2_backend.user.application.service
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.user.StudentDto
-import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.ContactorResponse
+import com.info.info_v2_backend.common.user.ContactorDto
 import com.info.info_v2_backend.user.application.port.input.LoadContactorUsecase
 import com.info.info_v2_backend.user.application.port.input.LoadStudentUsecase
 import com.info.info_v2_backend.user.application.port.output.LoadContactorPort
@@ -15,7 +15,7 @@ class LoadUser(
     private val loadContactorPort: LoadContactorPort,
     private val loadStudentPort: LoadStudentPort
 ): LoadContactorUsecase, LoadStudentUsecase {
-    override fun loadContactor(companyNumber: String): ContactorResponse {
+    override fun loadContactor(companyNumber: String): ContactorDto {
         return (loadContactorPort.loadContactor(companyNumber)
             ?: throw BusinessException("Contactor를 조회하지 못했습니다. -> $companyNumber", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR))
             .toContactorResponse()

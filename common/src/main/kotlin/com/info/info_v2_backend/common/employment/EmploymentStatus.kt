@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.employment.domain.status
+package com.info.info_v2_backend.common.employment
 
 enum class EmploymentStatus(
     val meaning: String

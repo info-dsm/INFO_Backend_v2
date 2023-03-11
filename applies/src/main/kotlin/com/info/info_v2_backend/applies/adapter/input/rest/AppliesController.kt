@@ -9,7 +9,6 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
-import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -55,17 +54,19 @@ class AppliesController(
         @RequestParam(required = false) status: AppliesStatus?
     ): List<AppliesResponse> {
         status?.let {
-            if (status != AppliesStatus.APPROVE && Auth.checkIsTeacher()) return loadAppliesUsecase.loadAppliesListByStatus(
-                companyNumber,
-                noticeId,
-                status
-            )
-            else if (status == AppliesStatus.APPROVE && Auth.checkIsTeacher()) return loadAppliesUsecase.loadAppliesListByStatus(
-                Auth.checkCompanyNumber(
-                    companyNumber
-                ), noticeId, status
-            )
-            else throw BusinessException(
+            if (Auth.checkIsTeacher()) {
+                return loadAppliesUsecase.loadAppliesListByStatus(
+                    companyNumber,
+                    noticeId,
+                    status
+                )
+            } else if (status == AppliesStatus.APPROVE) {
+                return loadAppliesUsecase.loadAppliesListByStatus(
+                    Auth.checkCompanyNumber(
+                        companyNumber
+                    ), noticeId, status
+                )
+            } else throw BusinessException(
                 "이 작업은 선생님만 수행할 수 있습니다.",
                 ErrorCode.NO_AUTHORIZATION_ERROR
             )

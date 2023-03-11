@@ -7,11 +7,13 @@ import org.springframework.boot.runApplication
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 import org.springframework.cloud.openfeign.EnableFeignClients
+import org.springframework.context.annotation.ComponentScan
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.scheduling.annotation.EnableAsync
 
+@ComponentScan(basePackages = ["com.info.info_v2_backend.user"])
 @ConfigurationPropertiesScan
 @EnableFeignClients
 @EnableDiscoveryClient

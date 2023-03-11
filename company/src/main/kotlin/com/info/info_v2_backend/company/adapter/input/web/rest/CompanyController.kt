@@ -2,6 +2,8 @@ package com.info.info_v2_backend.company.adapter.input.web.rest
 
 import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.company.CompanyDto
+import com.info.info_v2_backend.common.exception.BusinessException
+import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
@@ -20,7 +22,6 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 
 
 @RestController
@@ -43,14 +44,6 @@ class CompanyController(
     fun getCompanyCount(): Int {
         return countCompanyUsecase.count()
     }
-
-    @GetMapping("/{companyNumber}/contactor")
-    fun getContactorEmail(
-        @PathVariable companyNumber: String
-    ): String? {
-        return loadCompanyUsecase.loadCompanyDto(companyNumber)?.contactorEmail
-    }
-
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
@@ -210,6 +203,5 @@ class CompanyController(
         if (Auth.checkIsSystem()) return loadCompanyUsecase.loadCompanyThumbnailList(companyNumber)
         else return ArrayList()
     }
-
 
 }

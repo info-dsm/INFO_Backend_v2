@@ -1,12 +1,13 @@
 package com.info.info_v2_backend.common.employment
 
+
 data class EmploymentDto (
     val id: String,
     val notice: EmploymentNoticeResponse,
     val student: EmploymentStudentResponse,
     val company: EmploymentCompanyResponse,
-    val contactor: EmploymentContactorResponse
-
+    val contactor: EmploymentContactorResponse,
+    val status: EmploymentStatus
 ) {
     data class EmploymentNoticeResponse(
         val noticeId: String

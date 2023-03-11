@@ -265,7 +265,7 @@ class NoticeController(
     @GetMapping("/available")
     fun loadAvailableNotice(@RequestParam noticeId: String): NoticeDto? {
         if (Auth.checkIsSystem()) return loadNoticeUsecase.loadAvailableNotice(noticeId)
-        return null
+        throw BusinessException("Not system request", ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
 }

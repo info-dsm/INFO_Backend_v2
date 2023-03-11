@@ -7,6 +7,7 @@ import com.info.info_v2_backend.common.auth.AuthenticationCodeDto
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
+import com.info.info_v2_backend.auth.application.port.input.ChangePasswordUsecase
 import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*

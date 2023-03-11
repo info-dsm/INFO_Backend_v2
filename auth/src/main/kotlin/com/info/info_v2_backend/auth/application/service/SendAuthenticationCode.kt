@@ -1,7 +1,7 @@
 package com.info.info_v2_backend.auth.application.service
 
 import com.info.info_v2_backend.auth.application.port.input.SendAuthenticationCodeUsecase
-import com.info.info_v2_backend.auth.application.port.output.LoadUserDetailsPort
+import com.info.info_v2_backend.auth.application.port.output.userFeignPort.LoadUserDetailsPort
 import com.info.info_v2_backend.auth.application.port.output.SaveCodePort
 import com.info.info_v2_backend.auth.application.port.output.SendEmailPort
 import com.info.info_v2_backend.auth.domain.Code

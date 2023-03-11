@@ -1,6 +1,6 @@
 package com.info.info_v2_backend.auth.application.service
 
-import com.info.info_v2_backend.auth.application.port.output.LoadUserDetailsPort
+import com.info.info_v2_backend.auth.application.port.output.userFeignPort.LoadUserDetailsPort
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CommonUserDetails

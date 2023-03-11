@@ -19,6 +19,10 @@ class UserFeignClientFallback: FallbackFactory<UserFeignClient> {
             override fun change(email: String, password: String) {
                 return 
             }
+
+            override fun load(companyNumber: String): ContactorDto? {
+                return null
+            }
         }
     }
 }

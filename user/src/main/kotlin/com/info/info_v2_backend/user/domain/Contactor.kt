@@ -1,7 +1,7 @@
 package com.info.info_v2_backend.user.domain
 
 import com.info.info_v2_backend.common.user.Role
-import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.ContactorResponse
+import com.info.info_v2_backend.common.user.ContactorDto
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
 import javax.persistence.Column
@@ -38,8 +38,8 @@ class Contactor(
     val companyNumber: String = companyNumber
 
 
-    fun toContactorResponse(): ContactorResponse {
-        return ContactorResponse(
+    fun toContactorResponse(): ContactorDto {
+        return ContactorDto(
             this.name,
             this.email,
             this.rank,

@@ -2,6 +2,8 @@ package com.info.info_v2_backend.company.adapter.input.web.rest
 
 import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.company.CompanyDto
+import com.info.info_v2_backend.common.exception.BusinessException
+import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
@@ -20,7 +22,6 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 
 
 @RestController
@@ -38,19 +39,11 @@ class CompanyController(
     private val countCompanyUsecase: CountCompanyUsecase
 ) {
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/count")
     fun getCompanyCount(): Int {
         return countCompanyUsecase.count()
     }
-
-    @GetMapping("/{companyNumber}/contactor")
-    fun getContactorEmail(
-        @PathVariable companyNumber: String
-    ): String? {
-        return loadCompanyUsecase.loadCompanyDto(companyNumber)?.contactorEmail
-    }
-
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
@@ -73,7 +66,7 @@ class CompanyController(
         editCompanyUsecase.editCompany(Auth.checkCompanyNumber(companyNumber), request)
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/business-area")
     fun getBusinessAreaList(): List<BusinessArea> {
         return loadBusinessAreaUsecase.loadAll()
@@ -81,7 +74,7 @@ class CompanyController(
 
     @PutMapping("/business-area")
     fun addBusinessArea(@RequestParam name: String) {
-        return addBusinessAreaUsecase.add(name)
+        if (Auth.checkIsTeacher()) return addBusinessAreaUsecase.add(name)
     }
 
     @PatchMapping("/{companyNumber}/certificate")
@@ -145,7 +138,7 @@ class CompanyController(
         makeAssociatedUsecase.makeAssociated(companyNumber)
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/list")
     fun getMinimumCompanyList(
         @RequestParam(defaultValue = "0") idx: Int,
@@ -210,6 +203,5 @@ class CompanyController(
         if (Auth.checkIsSystem()) return loadCompanyUsecase.loadCompanyThumbnailList(companyNumber)
         else return ArrayList()
     }
-
 
 }

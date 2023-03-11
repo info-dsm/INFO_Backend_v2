@@ -1,9 +1,6 @@
 package com.info.info_v2_backend.auth.adapter.input.rest
 
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.CheckTokenExpiredTimeRequest
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginCompanyRequest
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginRequest
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.TokenReissueRequest
+import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.*
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenResponse
 import com.info.info_v2_backend.auth.application.port.input.*
 import com.info.info_v2_backend.common.auth.AuthenticationCodeDto
@@ -23,7 +20,8 @@ class AuthController(
     private val reissuePort: ReissueUsecase,
     private val sendCodeUsecase: SendAuthenticationCodeUsecase,
     private val checkCodeUsecase: CheckCodeUsecase,
-    private val checkTokenExpiredTimeUsecase: CheckTokenExpiredTimeUsecase
+    private val checkTokenExpiredTimeUsecase: CheckTokenExpiredTimeUsecase,
+    private val changePasswordUsecase: ChangePasswordUsecase
 ) {
 
     @PostMapping("/login/user")
@@ -88,9 +86,9 @@ class AuthController(
 
     @PutMapping("/password")
     fun changePassword(
-
+        @RequestBody request: ChangePasswordRequest
     ) {
-
+        return changePasswordUsecase.change(request)
     }
 
     @GetMapping("/token")
@@ -99,10 +97,5 @@ class AuthController(
     ): Int {
         return checkTokenExpiredTimeUsecase.checkTokenExpiredTime(request)
     }
-
-
-    //check Password Hint By
-    //
-
 
 }

@@ -14,7 +14,7 @@ interface CompanyRepository: JpaRepository<Company, String> {
     fun findByCompanyNumber(@Param(value = "companyNumber") companyNumber: String): Optional<Company>
     fun findByIsNoticeRegisteredYearListContaining(year: Int, pageable: Pageable): Page<Company>
 
-    @Query("select count(*) from company where company_is_delete = false", nativeQuery = true)
+    @Query("select count(*) from company where company_is_delete = false and company_creation_status", nativeQuery = true)
     fun countAll(): Int
 
 }

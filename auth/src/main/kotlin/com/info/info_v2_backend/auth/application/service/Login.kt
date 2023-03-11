@@ -30,7 +30,7 @@ class Login(
 
     override fun loginCompany(request: LoginCompanyRequest): TokenResponse {
         val userDetails = authDetailsService.loadUserByUsername(
-            loadContactorPort.load(request.companyNumber)
+            loadContactorPort.load(request.companyNumber)?.email
                 ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
         )
         println(userDetails.getCompanyNumber())

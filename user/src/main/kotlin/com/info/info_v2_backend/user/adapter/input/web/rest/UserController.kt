@@ -6,7 +6,7 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.user.StudentDto
 import com.info.info_v2_backend.common.user.UserDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CommonUserDetails
-import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.ContactorResponse
+import com.info.info_v2_backend.common.user.ContactorDto
 import com.info.info_v2_backend.user.application.port.input.LoadCommonUserDetailsUsecase
 import com.info.info_v2_backend.user.application.port.input.LoadContactorUsecase
 import com.info.info_v2_backend.user.application.port.input.LoadPasswordHintUsecase
@@ -36,18 +36,11 @@ class UserController(
 
     @GetMapping("/password/hint")
     fun getPasswordHint(@RequestParam email: String): String? {
-        email.takeIf {
-            (Auth.checkIsTeacher() || Auth.checkIsSystem())
-        }?.let {
-            return loadPasswordHintUsecase.load(it)
-        }?:Auth.getUserEmail().takeIf { it == email }?.let {
-            return loadPasswordHintUsecase.load(it)
-        }
-        throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
+        return loadPasswordHintUsecase.load(email)
     }
 
     @GetMapping("/contactor")
-    fun getContactor(@RequestParam companyNumber: String): ContactorResponse {
+    fun getContactor(@RequestParam companyNumber: String): ContactorDto {
         return loadContactorUsecase.loadContactor(companyNumber)
     }
 

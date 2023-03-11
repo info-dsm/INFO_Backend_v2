@@ -7,8 +7,8 @@ import com.info.info_v2_backend.common.applies.AppliesStatus
 import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
-import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
 
 
 @RestController
@@ -36,8 +34,8 @@ class AppliesController(
     @ResponseStatus(HttpStatus.CREATED)
     fun apply(
         @PathVariable noticeId: String,
-        @RequestBody request: GenerateFileRequest
-    ): PresignedUrlResponse {
+        @RequestBody request: GenerateFileListRequest
+    ): PresignedUrlListResponse {
         return applyUsecase.apply(noticeId, request, Auth.getUserEmail()?: throw BusinessException(null, ErrorCode.TOKEN_NEED_ERROR))
     }
 
@@ -56,17 +54,19 @@ class AppliesController(
         @RequestParam(required = false) status: AppliesStatus?
     ): List<AppliesResponse> {
         status?.let {
-            if (status != AppliesStatus.APPROVE && Auth.checkIsTeacher()) return loadAppliesUsecase.loadAppliesListByStatus(
-                companyNumber,
-                noticeId,
-                status
-            )
-            else if (status == AppliesStatus.APPROVE && Auth.checkIsTeacher()) return loadAppliesUsecase.loadAppliesListByStatus(
-                Auth.checkCompanyNumber(
-                    companyNumber
-                ), noticeId, status
-            )
-            else throw BusinessException(
+            if (Auth.checkIsTeacher()) {
+                return loadAppliesUsecase.loadAppliesListByStatus(
+                    companyNumber,
+                    noticeId,
+                    status
+                )
+            } else if (status == AppliesStatus.APPROVE) {
+                return loadAppliesUsecase.loadAppliesListByStatus(
+                    Auth.checkCompanyNumber(
+                        companyNumber
+                    ), noticeId, status
+                )
+            } else throw BusinessException(
                 "이 작업은 선생님만 수행할 수 있습니다.",
                 ErrorCode.NO_AUTHORIZATION_ERROR
             )

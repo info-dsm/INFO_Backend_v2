@@ -36,7 +36,7 @@ class UploadResume(
             noticeId,
             studentEmail
         )
-        loadResumePort.load(noticeId, studentEmail)?.let {
+        loadResumePort.load(noticeId, studentEmail).map {
             removeFilePort.remove(it.id)
         }
 

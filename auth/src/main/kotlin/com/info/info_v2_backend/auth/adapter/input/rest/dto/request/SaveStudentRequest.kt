@@ -19,7 +19,8 @@ class SaveStudentRequest(
             this.name,
             this.email,
             this.password,
-            this.githubLink
+            this.githubLink,
+            this.entranceYear
         )
     }
 }

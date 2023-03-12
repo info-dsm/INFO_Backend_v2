@@ -6,7 +6,6 @@ import javax.validation.constraints.NotEmpty
 
 data class LoginRequest (
     @field:NotEmpty
-    @field:SchoolEmail
     val email: String,
     @field:NotEmpty
     val password: String

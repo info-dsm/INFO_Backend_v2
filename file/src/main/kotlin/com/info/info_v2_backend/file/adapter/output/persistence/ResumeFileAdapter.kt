@@ -18,10 +18,10 @@ class ResumeFileAdapter(
         resumeRepository.deleteByNoticeAndStudent(noticeId, studentEmail)
     }
 
-    override fun load(noticeId: String, studentEmail: String): Resume? {
+    override fun load(noticeId: String, studentEmail: String): List<Resume> {
         return resumeRepository.findByNoticeIdAndStudentEmail(
             noticeId,
             studentEmail
-        ).orElse(null)
+        )
     }
 }

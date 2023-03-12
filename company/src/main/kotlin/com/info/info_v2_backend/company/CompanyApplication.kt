@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.scheduling.annotation.EnableAsync
 
-@ComponentScan(basePackages = ["com.info.info_v2_backend.user"])
 @ConfigurationPropertiesScan
 @EnableFeignClients
 @EnableDiscoveryClient

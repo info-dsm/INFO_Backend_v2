@@ -466,11 +466,3 @@ jobs:
             docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
-
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-uesr.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

@@ -82,7 +82,7 @@ abstract class User(
         return !this.isDeleted
     }
 
-    fun editPassword(password: String){
+    fun changePassword(password: String){
         this.password = password
     }
 

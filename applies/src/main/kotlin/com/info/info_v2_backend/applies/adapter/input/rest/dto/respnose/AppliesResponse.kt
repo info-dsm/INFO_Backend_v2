@@ -9,7 +9,7 @@ data class AppliesResponse(
     val applier: ApplierResponse,
     val noticeId: String,
     val status: AppliesStatus,
-    val resumeList: FileResponse
+    val resumeList: List<FileResponse>
 
 ) {
     data class ApplierResponse (

@@ -8,4 +8,5 @@ interface LoadCompanyPort {
     fun loadCompany(companyId: String): Company?
     fun loadAllCompanyList(idx: Int, size: Int): Page<Company>
     fun loadAllCompanyListByYear(idx: Int, size: Int, year: Int): Page<Company>
+    fun count(): Int
 }

@@ -41,7 +41,7 @@ class RegisterCompany(
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-
+    
     override fun register(
         emailCheckCode: String,
         request: RegisterCompanyRequest
@@ -127,7 +127,7 @@ class RegisterCompany(
                     )
                 )
             }
-
+            
             saveCompanyPort.save(company)
             saveCompanyDocumentPort.save(
                 CompanyDocument(

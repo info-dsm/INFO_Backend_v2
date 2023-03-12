@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.notice.adapter.input.rest.dto.request
 
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.openPeriod.EditNoticeOpenPeriodRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.pay.EditPayRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.support.EditMealSupportRequest
@@ -24,6 +25,7 @@ data class EditNoticeRequest(
     val interviewProcessMap: MutableMap<Int, InterviewProcess>?,
     val certificateList: MutableList<String>?,
     val languageList: MutableList<String>?,
-    val technologyList: MutableList<String>?
+    val technologyList: MutableList<String>?,
+    val generateFileListRequest: List<GenerateFileRequest>?
 
 )

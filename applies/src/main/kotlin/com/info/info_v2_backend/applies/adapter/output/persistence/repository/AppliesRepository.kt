@@ -10,7 +10,7 @@ import java.util.Optional
 interface AppliesRepository: JpaRepository<Applies, String> {
 
     @Query(nativeQuery = true, value = "select * from applies where applies_notice_id = :noticeId and applies_status = :status")
-    fun findByNoticeAndStatus(@Param(value = "noticeId") noticeId: String, @Param(value = "status") status: AppliesStatus): List<Applies>
+    fun findByNoticeAndStatus(@Param(value = "noticeId") noticeId: String, @Param(value = "status") status: String): List<Applies>
 
     @Query(nativeQuery = true, value = "select * from applies where applies_notice_id = :noticeId")
     fun findByNotice(@Param(value = "noticeId") noticeId: String): List<Applies>

@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.file.application.service
 
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.file.application.port.input.applies.UploadResumeUsecase
@@ -35,7 +36,7 @@ class UploadResume(
             noticeId,
             studentEmail
         )
-        loadResumePort.load(noticeId, studentEmail)?.let {
+        loadResumePort.load(noticeId, studentEmail).map {
             removeFilePort.remove(it.id)
         }
 

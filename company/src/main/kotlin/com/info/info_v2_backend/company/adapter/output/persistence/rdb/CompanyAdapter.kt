@@ -20,7 +20,6 @@ class CompanyAdapter(
     private val companyRepository: CompanyRepository
 ): SaveCompanyPort, LoadCompanyPort {
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     override fun save(company: Company) {
         try {
             companyRepository.save(company)
@@ -46,6 +45,10 @@ class CompanyAdapter(
 
     override fun loadAllCompanyListByYear(idx: Int, size: Int, year: Int): Page<Company> {
         return companyRepository.findByIsNoticeRegisteredYearListContaining(year, PageRequest.of(idx, size, Sort.by("createdAt").descending()))
+    }
+
+    override fun count(): Int {
+        return companyRepository.countAll()
     }
 
 }

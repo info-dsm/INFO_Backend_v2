@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.auth.adapter.output.rest
 
+import com.info.info_v2_backend.common.user.ContactorDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CommonUserDetails
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.openfeign.FallbackFactory
@@ -15,6 +16,13 @@ class UserFeignClientFallback: FallbackFactory<UserFeignClient> {
                 return null
             }
 
+            override fun change(email: String, password: String) {
+                return 
+            }
+
+            override fun load(companyNumber: String): ContactorDto? {
+                return null
+            }
         }
     }
 }

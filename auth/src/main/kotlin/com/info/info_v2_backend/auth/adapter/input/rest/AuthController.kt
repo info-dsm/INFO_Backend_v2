@@ -1,18 +1,18 @@
 package com.info.info_v2_backend.auth.adapter.input.rest
 
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.CheckTokenExpiredTimeRequest
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginCompanyRequest
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginRequest
-import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.TokenReissueRequest
+import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.*
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenResponse
+import com.info.info_v2_backend.auth.adapter.input.rest.vaildation.SchoolEmail
 import com.info.info_v2_backend.auth.application.port.input.*
 import com.info.info_v2_backend.common.auth.AuthenticationCodeDto
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
+import com.info.info_v2_backend.auth.application.port.input.ChangePasswordUsecase
 import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
 @Validated
@@ -23,13 +23,14 @@ class AuthController(
     private val reissuePort: ReissueUsecase,
     private val sendCodeUsecase: SendAuthenticationCodeUsecase,
     private val checkCodeUsecase: CheckCodeUsecase,
-    private val checkTokenExpiredTimeUsecase: CheckTokenExpiredTimeUsecase
+    private val checkTokenExpiredTimeUsecase: CheckTokenExpiredTimeUsecase,
+    private val changePasswordUsecase: ChangePasswordUsecase
 ) {
 
     @PostMapping("/login/user")
     @ResponseStatus(HttpStatus.CREATED)
     fun userLogin(
-        @RequestBody request: LoginRequest
+        @Valid @RequestBody request: LoginRequest
     ): TokenResponse {
         return loginUsecase.loginUser(request)
     }
@@ -45,10 +46,10 @@ class AuthController(
     @PostMapping("/signup/student")
     @ResponseStatus(HttpStatus.CREATED)
     fun studentSignup(
-        @RequestBody request: SaveStudentDto,
+        @Valid @RequestBody request: SaveStudentRequest,
         @RequestParam(value = "emailCode") emailAuthenticationCode: String
     ) {
-        studentSignupUsecase.studentSignup(request, emailAuthenticationCode)
+        studentSignupUsecase.studentSignup(request.toSaveStudentDto(), emailAuthenticationCode)
     }
 
     @PostMapping("/signup/teacher")
@@ -88,9 +89,9 @@ class AuthController(
 
     @PutMapping("/password")
     fun changePassword(
-
+        @RequestBody request: ChangePasswordRequest
     ) {
-
+        return changePasswordUsecase.change(request)
     }
 
     @GetMapping("/token")
@@ -99,10 +100,5 @@ class AuthController(
     ): Int {
         return checkTokenExpiredTimeUsecase.checkTokenExpiredTime(request)
     }
-
-
-    //check Password Hint By
-    //
-
 
 }

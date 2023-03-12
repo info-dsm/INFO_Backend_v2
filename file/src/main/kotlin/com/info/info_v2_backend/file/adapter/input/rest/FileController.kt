@@ -74,12 +74,20 @@ class FileController(
     fun uploadResume(
         @PathVariable noticeId: String,
         @PathVariable studentEmail: String,
-        @RequestBody request: GenerateFileRequest
-    ): PresignedUrlResponse {
-        return uploadResumeUsecase.uploadResume(
-            request,
-            noticeId,
-            studentEmail
+        @RequestBody request: GenerateFileListRequest
+    ): PresignedUrlListResponse {
+        return PresignedUrlListResponse(
+            request.request.map {
+                    geneFileRequest: GenerateFileRequest ->
+                return@map PresignedUrlResponse(
+                    uploadResumeUsecase.uploadResume(
+                        geneFileRequest,
+                        noticeId,
+                        studentEmail
+                    ).url,
+                    geneFileRequest.fileName
+                )
+            }.toMutableList()
         )
     }
 
@@ -88,7 +96,7 @@ class FileController(
     fun getAppliesResume(
         @PathVariable noticeId: String,
         @PathVariable studentEmail: String
-    ): FileResponse {
+    ): List<FileResponse> {
         return loadResumeUsecase.load(noticeId, studentEmail)
     }
 
@@ -107,7 +115,7 @@ class FileController(
                         uploadAttachmentUsecase.uploadAttachment(
                             geneFileRequest,
                             noticeId
-                        ),
+                        ).url,
                     geneFileRequest.fileName
                 )
             }.toMutableList()

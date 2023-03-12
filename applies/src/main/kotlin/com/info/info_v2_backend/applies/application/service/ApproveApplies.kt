@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service
 @Service
 class ApproveApplies(
     private val loadAppliesPort: LoadAppliesPort,
-    private val saveAppliesPort: SaveAppliesPort,
-    private val updateNoticeAppliesCountPort: UpdateNoticeAppliesCountPort
+    private val saveAppliesPort: SaveAppliesPort
 ): ApproveAppliesUsecase {
 
     override fun approve(noticeId: String, studentEmail: String) {
@@ -21,6 +20,5 @@ class ApproveApplies(
 
         applies.approve()
         saveAppliesPort.save(applies)
-        updateNoticeAppliesCountPort.addCount(noticeId)
     }
 }

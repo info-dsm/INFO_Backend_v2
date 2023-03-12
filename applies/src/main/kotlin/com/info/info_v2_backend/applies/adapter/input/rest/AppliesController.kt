@@ -9,6 +9,7 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -29,6 +30,7 @@ class AppliesController(
     private val approveAppliesUsecase: ApproveAppliesUsecase,
     private val rejectAppliesUsecase: RejectAppliesUsecase
 ) {
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     @PostMapping("/{noticeId}")
     @ResponseStatus(HttpStatus.CREATED)
@@ -36,6 +38,7 @@ class AppliesController(
         @PathVariable noticeId: String,
         @RequestBody request: GenerateFileListRequest
     ): PresignedUrlListResponse {
+        log.info("apply, noticeId: $noticeId, email: ${Auth.getUserEmail()}")
         return applyUsecase.apply(noticeId, request, Auth.getUserEmail()?: throw BusinessException(null, ErrorCode.TOKEN_NEED_ERROR))
     }
 
@@ -44,6 +47,7 @@ class AppliesController(
     fun cancelApply(
         @PathVariable noticeId: String
     ) {
+        log.info("cancelApply, noticeId: $noticeId, email: ${Auth.getUserEmail()}")
         return cancelApplyUsecase.cancelApply(noticeId, Auth.getUserEmail()?: throw BusinessException(null, ErrorCode.TOKEN_NEED_ERROR))
     }
 
@@ -53,6 +57,7 @@ class AppliesController(
         @PathVariable noticeId: String,
         @RequestParam(required = false) status: AppliesStatus?
     ): List<AppliesResponse> {
+        log.info("getNoticeAppliesList, companyNumber: $companyNumber, noticeId: $noticeId, status: $status, email: ${Auth.getUserEmail()}")
         status?.let {
             if (Auth.checkIsTeacher()) {
                 return loadAppliesUsecase.loadAppliesListByStatus(
@@ -87,6 +92,7 @@ class AppliesController(
     fun getTotalAppliesList(
         @RequestParam status: AppliesStatus
     ): List<AppliesResponse> {
+        log.info("getTotalAppliesList, status: $status, email: ${Auth.getUserEmail()}")
         if (Auth.checkIsTeacher()) return loadAppliesUsecase.loadEveryAppliesListByStatus(status)
         else throw BusinessException(
             "이 작업은 선생님만 수행할 수 있습니다.",
@@ -100,6 +106,7 @@ class AppliesController(
         @PathVariable noticeId: String,
         @PathVariable studentEmail: String
     ) {
+        log.info("approveApplies, noticeId: $noticeId, studentEmail: $studentEmail, email: ${Auth.getUserEmail()}")
         if (!Auth.checkIsTeacher())
             throw BusinessException(
                 "이 작업은 선생님만 수행할 수 있습니다.",
@@ -114,6 +121,7 @@ class AppliesController(
         @PathVariable noticeId: String,
         @PathVariable studentEmail: String
     ) {
+        log.info("rejectApplies, noticeId: $noticeId, studentEmail: $studentEmail, email: ${Auth.getUserEmail()}")
         if (!Auth.checkIsTeacher())
             throw BusinessException(
                 "이 작업은 선생님만 수행할 수 있습니다.",
@@ -126,6 +134,7 @@ class AppliesController(
     fun getStudentAppliesList(
         @RequestParam studentEmail: String?
     ): List<AppliesResponse> {
+        log.info("getStudentAppliesList, studentEmail: $studentEmail, email: ${Auth.getUserEmail()}")
         studentEmail?.let {
             if (Auth.checkIsTeacher()) return loadAppliesUsecase.loadAppliesListByStudentEmail(studentEmail)
             else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
@@ -139,6 +148,7 @@ class AppliesController(
         @PathVariable noticeId: String,
         @RequestParam studentEmail: String
     ): AppliesDto? {
+        log.info("getApplies, noticeId: $noticeId, studentEmail: $studentEmail, isSystem: ${Auth.checkIsSystem()}")
         return loadAppliesUsecase.loadApplies(noticeId, studentEmail)
     }
 

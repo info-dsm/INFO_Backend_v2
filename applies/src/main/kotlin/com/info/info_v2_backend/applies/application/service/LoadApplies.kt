@@ -9,7 +9,6 @@ import com.info.info_v2_backend.common.applies.AppliesDto
 import com.info.info_v2_backend.common.applies.AppliesStatus
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.common.file.dto.response.FileResponse
 import org.springframework.stereotype.Service
 
 @Service

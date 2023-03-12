@@ -3,6 +3,7 @@ package com.info.info_v2_backend.applies.application.service
 import com.info.info_v2_backend.applies.application.port.input.ApplyAppliesUsecase
 import com.info.info_v2_backend.applies.application.port.output.applies.SaveAppliesPort
 import com.info.info_v2_backend.applies.application.port.output.notice.LoadNoticePort
+import com.info.info_v2_backend.applies.application.port.output.notice.UpdateNoticeAppliesCountPort
 import com.info.info_v2_backend.applies.application.port.output.student.LoadStudentPort
 import com.info.info_v2_backend.applies.application.port.output.resume.ResumePort
 import com.info.info_v2_backend.applies.domain.Applies
@@ -22,7 +23,8 @@ class ApplyApplies(
     private val loadNoticePort: LoadNoticePort,
     private val loadStudentPort: LoadStudentPort,
     private val applyAppliesPort: SaveAppliesPort,
-    private val resumePort: ResumePort
+    private val resumePort: ResumePort,
+    private val updateNoticeAppliesCountPort: UpdateNoticeAppliesCountPort
 ): ApplyAppliesUsecase {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -52,6 +54,7 @@ class ApplyApplies(
                 )
             )
         )
+        updateNoticeAppliesCountPort.addCount(noticeId)
         return resumePort.uploadResume(noticeId, applies.applicant.email, request)
     }
 

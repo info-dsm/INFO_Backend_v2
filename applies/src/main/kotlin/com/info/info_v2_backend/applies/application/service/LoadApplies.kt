@@ -22,10 +22,9 @@ class LoadApplies(
         return loadAppliesPort.loadAppliesList(noticeId, status).map {
             applies: Applies ->
             if (!(applies.notice.companyNumber == companyNumber)) throw BusinessException(null, ErrorCode.INVALID_INPUT_DATA_ERROR)
-            resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email)?.let {
-                resume: FileResponse ->
-                return@let applies.toAppliesResponse(resume)
-            }?: throw BusinessException(null, ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+            resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email).let {
+                return@let applies.toAppliesResponse(it)
+            }
         }
     }
 
@@ -37,20 +36,18 @@ class LoadApplies(
     override fun loadEveryAppliesListByStatus(status: AppliesStatus): List<AppliesResponse> {
         return loadAppliesPort.loadEveryAppliesByStatus(status).map {
             applies: Applies ->
-            resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email)?.let {
-                    resume: FileResponse ->
-                return@let applies.toAppliesResponse(resume)
-            }?: throw BusinessException(null, ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+            resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email).let {
+                return@let applies.toAppliesResponse(it)
+            }
         }
     }
 
     override fun loadAppliesListByStudentEmail(studentEmail: String): List<AppliesResponse> {
         return loadAppliesPort.loadAppliesByStudentEmail(studentEmail).map {
                 applies: Applies ->
-            resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email)?.let {
-                    resume: FileResponse ->
-                return@let applies.toAppliesResponse(resume)
-            }?: throw BusinessException(null, ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+            resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email).let {
+                return@let applies.toAppliesResponse(it)
+            }
         }
     }
 

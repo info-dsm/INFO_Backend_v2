@@ -96,7 +96,7 @@ class FileController(
     fun getAppliesResume(
         @PathVariable noticeId: String,
         @PathVariable studentEmail: String
-    ): FileResponse {
+    ): List<FileResponse> {
         return loadResumeUsecase.load(noticeId, studentEmail)
     }
 

@@ -9,7 +9,8 @@ class SaveStudentDto(
     name: String,
     email: String,
     password: String,
-    val githubLink: String?
+    val githubLink: String?,
+    val entranceYear: String
 ): SaveUserDto(
     name,
     email,

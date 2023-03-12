@@ -43,7 +43,7 @@ class Applies(
         this.status = AppliesStatus.REJECT
     }
 
-    fun toAppliesResponse(file: FileResponse): AppliesResponse {
+    fun toAppliesResponse(fileList: List<FileResponse>): AppliesResponse {
         return AppliesResponse(
             this.id,
             AppliesResponse.ApplierResponse(
@@ -52,7 +52,7 @@ class Applies(
             ),
             this.notice.noticeId,
             this.status,
-            file
+            fileList
         )
     }
     fun toAppliesDto(): AppliesDto {

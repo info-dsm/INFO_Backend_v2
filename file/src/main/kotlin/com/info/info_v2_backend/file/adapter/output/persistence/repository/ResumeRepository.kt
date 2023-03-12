@@ -11,5 +11,6 @@ interface ResumeRepository: JpaRepository<Resume, String> {
     @Query(nativeQuery = true, value = "delete from resume where notice_id = :noticeId and resume_student_email = :resumeStudentEmail")
     fun deleteByNoticeAndStudent(@Param(value = "noticeId") noticeId: String, @Param(value = "resumeStudentEmail") studentEmail: String)
 
-    fun findByNoticeIdAndStudentEmail(noticeId: String, studentEmail: String): Optional<Resume>
+    @Query(nativeQuery = true, value = "select * from resume where notice_id = :noticeId and resume_student_email = :studentEmail")
+    fun findByNoticeIdAndStudentEmail(@Param(value = "noticeId") noticeId: String, @Param(value = "studentEmail") studentEmail: String): List<Resume>
 }

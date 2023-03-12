@@ -122,14 +122,6 @@ class AppliesController(
         return rejectAppliesUsecase.reject(noticeId, studentEmail)
     }
 
-    @GetMapping("/{noticeId}")
-    fun getApplies(
-        @PathVariable noticeId: String,
-        @RequestParam studentEmail: String
-    ): AppliesDto? {
-        return loadAppliesUsecase.loadApplies(noticeId, studentEmail)
-    }
-
     @GetMapping("/student")
     fun getStudentAppliesList(
         @RequestParam studentEmail: String?
@@ -140,5 +132,14 @@ class AppliesController(
         }?: return loadAppliesUsecase.loadAppliesListByStudentEmail(Auth.getUserEmail()?: throw BusinessException(null, ErrorCode.TOKEN_NEED_ERROR))
     }
 
+
+    //internal
+    @GetMapping("/{noticeId}")
+    fun getApplies(
+        @PathVariable noticeId: String,
+        @RequestParam studentEmail: String
+    ): AppliesDto? {
+        return loadAppliesUsecase.loadApplies(noticeId, studentEmail)
+    }
 
 }

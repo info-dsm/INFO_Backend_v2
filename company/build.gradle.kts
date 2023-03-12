@@ -29,8 +29,4 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
     //Mongo
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-    //Sleuth
-    implementation("org.springframework.cloud:spring-cloud-starter-sleuth:3.1.5")
-    //Zipkin
-    implementation("org.springframework.cloud:spring-cloud-sleuth-zipkin:3.1.5")
 }

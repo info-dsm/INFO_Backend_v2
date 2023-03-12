@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param
 
 interface AttachmentRepository: JpaRepository<Attachment, String> {
 
-    @Query(nativeQuery = true, "delete file, attachment from file inner join attachment on file.file_id = attachment.file_id where attachment.notice_id = :noticeId")
+    @Query(nativeQuery = true, value = "delete file, attachment from file inner join attachment on file.file_id = attachment.file_id where attachment.notice_id = :noticeId")
     fun deleteByNotice(@Param(value = "noticeId") noticeId: String)
-    @Query(nativeQuery = true, "select * from file a, attachment b where b.notice_id = :noticeId and a.file_id = b.file_id")
+    @Query(nativeQuery = true, value = "select * from file a, attachment b where b.notice_id = :noticeId and a.file_id = b.file_id")
     fun findByNotice(@Param(value = "noticeId") noticeId: String): List<Attachment>
 }

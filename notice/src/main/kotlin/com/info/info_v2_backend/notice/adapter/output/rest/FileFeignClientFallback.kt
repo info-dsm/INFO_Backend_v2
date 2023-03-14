@@ -21,6 +21,10 @@ class FileFeignClientFallback: FallbackFactory<FileFeignClient> {
                 return ArrayList()
             }
 
+            override fun removeFile(noticeId: String) {
+                return
+            }
+
         }
     }
 

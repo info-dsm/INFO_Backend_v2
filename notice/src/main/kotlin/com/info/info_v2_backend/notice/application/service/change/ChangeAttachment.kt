@@ -28,12 +28,13 @@ class ChangeAttachment(
                 "모집공고를 조회할 수 없습니다. -> $companyNumber, $noticeId",
                 ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR
             )
-        return filePort.saveFile(
+        val urlList = filePort.saveFile(
             noticeId,
             request
         )
 
-
+        filePort.removeFile(noticeId)
+        return urlList
     }
 
 

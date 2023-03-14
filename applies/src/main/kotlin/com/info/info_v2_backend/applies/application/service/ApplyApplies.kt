@@ -27,7 +27,7 @@ class ApplyApplies(
     private val applyAppliesPort: SaveAppliesPort,
     private val resumePort: ResumePort,
     private val updateNoticeAppliesCountPort: UpdateNoticeAppliesCountPort,
-    private val cancelApply: CancelApplyPort
+    private val cancelApply: CancelApplyPort,
 ): ApplyAppliesUsecase {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -60,6 +60,7 @@ class ApplyApplies(
             )
         )
         cancelApply.cancelApply(noticeId, studentEmail)
+        resumePort.removeResume(noticeId, studentEmail)
         updateNoticeAppliesCountPort.addCount(noticeId)
         return resumePort.uploadResume(noticeId, applies.applicant.email, request)
     }

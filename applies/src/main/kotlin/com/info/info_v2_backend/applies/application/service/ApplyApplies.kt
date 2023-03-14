@@ -45,6 +45,8 @@ class ApplyApplies(
             noticeId
         )?: throw BusinessException("채용공고를 조회히자 못했습니다. -> $noticeId", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
 
+        cancelApply.cancelApply(noticeId, studentEmail)
+
         val applies = applyAppliesPort.save(
             Applies(
                 Applicant(
@@ -59,7 +61,7 @@ class ApplyApplies(
                 null
             )
         )
-        cancelApply.cancelApply(noticeId, studentEmail)
+        
         resumePort.removeResume(noticeId, studentEmail)
         updateNoticeAppliesCountPort.addCount(noticeId)
         return resumePort.uploadResume(noticeId, applies.applicant.email, request)

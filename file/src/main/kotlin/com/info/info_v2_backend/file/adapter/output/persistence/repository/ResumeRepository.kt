@@ -12,7 +12,7 @@ interface ResumeRepository: JpaRepository<Resume, String> {
 
     @Modifying
     @Transactional
-    @Query(nativeQuery = true, value = "update file set file_is_deleted = true from file inner join resume on file.file_id = resume.file_id where resume.notice_id = :noticeId and resume.resume_student_email = :resumeStudentEmail")
+    @Query(nativeQuery = true, value = "update file, resume set file.file_is_deleted = 'true' where file.file_id = resume.file_id and resume.notice_id = :noticeId and resume.resume_student_email = :resumeStudentEmail")
     fun deleteByNoticeAndStudent(@Param(value = "noticeId") noticeId: String, @Param(value = "resumeStudentEmail") studentEmail: String)
 
     @Query(nativeQuery = true, value = "select * from resume, file where notice_id = :noticeId and resume_student_email = :studentEmail and file.file_id = resume.file_id and file_is_deleted = false")

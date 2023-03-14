@@ -80,6 +80,7 @@ class FileController(
         @PathVariable studentEmail: String,
         @RequestBody request: GenerateFileListRequest
     ): PresignedUrlListResponse {
+        removeResumeUsecase.remove(noticeId, studentEmail)
         return PresignedUrlListResponse(
             request.request.map {
                     geneFileRequest: GenerateFileRequest ->
@@ -120,6 +121,7 @@ class FileController(
         @PathVariable noticeId: String,
         @RequestBody request: GenerateFileListRequest
     ): PresignedUrlListResponse {
+        removeAttachmentUsecase.remove(noticeId)
         return PresignedUrlListResponse(
             request.request.map {
                 geneFileRequest: GenerateFileRequest ->

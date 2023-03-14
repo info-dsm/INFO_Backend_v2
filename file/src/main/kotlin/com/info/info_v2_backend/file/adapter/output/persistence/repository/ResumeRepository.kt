@@ -5,11 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import org.springframework.transaction.annotation.Transactional
 import java.util.Optional
 
 interface ResumeRepository: JpaRepository<Resume, String> {
 
     @Modifying
+    @Transactional
     @Query(nativeQuery = true, value = "update file set file_is_deleted = true from file inner join resume on file.file_id = resume.file_id where resume.notice_id = :noticeId and resume.resume_student_email = :resumeStudentEmail")
     fun deleteByNoticeAndStudent(@Param(value = "noticeId") noticeId: String, @Param(value = "resumeStudentEmail") studentEmail: String)
 

@@ -9,7 +9,6 @@ class AuthFeignClientFallbackFactory: FallbackFactory<AuthFeignClient> {
     override fun create(cause: Throwable): AuthFeignClient {
         return object : AuthFeignClient {
             override fun check(request: AuthenticationCodeDto): Boolean {
-                println(cause)
                 return false
             }
         }

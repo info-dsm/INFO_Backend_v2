@@ -10,7 +10,7 @@ import java.util.Optional
 
 interface CompanyRepository: JpaRepository<Company, String> {
 
-    @Query("select * from company where company_number = :companyNumber", nativeQuery = true)
+    @Query("select * from company where company_number = :companyNumber and company_is_delete = false", nativeQuery = true)
     fun findByCompanyNumber(@Param(value = "companyNumber") companyNumber: String): Optional<Company>
     fun findByIsNoticeRegisteredYearListContaining(year: Int, pageable: Pageable): Page<Company>
 

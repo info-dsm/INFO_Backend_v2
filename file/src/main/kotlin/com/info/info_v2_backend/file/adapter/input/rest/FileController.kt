@@ -54,8 +54,8 @@ class FileController(
 
 
     @GetMapping("/company/{companyNumber}")
-    fun getCompanyFileList(@PathVariable companyNumber: String): List<CompanyFileResponse> {
-        return loadCompanyFileUsecase.loadByCompanyNumber(companyNumber)
+    fun getCompanyPhotoFileList(@PathVariable companyNumber: String): List<CompanyFileResponse> {
+        return loadCompanyFileUsecase.loadPhotosByCompanyNumber(companyNumber)
     }
 
 

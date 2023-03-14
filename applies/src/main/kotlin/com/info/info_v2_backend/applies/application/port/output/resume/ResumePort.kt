@@ -11,5 +11,6 @@ import org.springframework.web.multipart.MultipartFile
 interface ResumePort {
 
     fun uploadResume(noticeId: String, studentEmail: String, @RequestBody request: GenerateFileListRequest): PresignedUrlListResponse
-    fun loadAppliesResume(noticeId: String, studentEmail: String): FileResponse?
+    fun loadAppliesResume(noticeId: String, studentEmail: String): List<FileResponse>
+    fun removeResume(noticeId: String, studentEmail: String)
 }

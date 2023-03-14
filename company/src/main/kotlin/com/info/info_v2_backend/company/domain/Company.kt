@@ -72,7 +72,7 @@ class Company(
 
     @Column(name = "company_creation_status", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    var creationStatus: CompanyCreationStatus = CompanyCreationStatus.WAITING
+    var creationStatus: CompanyCreationStatus = CompanyCreationStatus.CREATED
         protected set
 
 

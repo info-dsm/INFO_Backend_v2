@@ -10,4 +10,5 @@ interface FilePort {
 
     fun saveFile(noticeId: String, request: GenerateFileListRequest): PresignedUrlListResponse
     fun loadAttachmentList(noticeId: String): List<AttachmentResponse>
+    fun removeFile(noticeId: String)
 }

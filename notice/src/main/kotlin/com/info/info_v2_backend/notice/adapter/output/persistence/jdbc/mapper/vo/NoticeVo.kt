@@ -145,8 +145,8 @@ class NoticeVo(
             this.otherFeatures,
             this.workPlace.toWorkPlaceRequest(),
             this.applicantCount,
+            this.isPersonalContact,
             attachmentList,
-            this.isPersonalContact
         )
     }
 

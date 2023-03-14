@@ -26,13 +26,13 @@ class FileFeignClientFallbackFactory(
                 throw BusinessException("File Upload 중 오류가 발생했습니다.", ErrorCode.BAD_GATEWAY_ERROR)
             }
 
+            override fun loadCompanyPhotoFile(companyNumber: String): List<CompanyFileResponse> {
+                return ArrayList()
+            }
+
 
             override fun remove(companyNumber: String, fileId: String, classificationType: CompanyFileClassificationType) {
                 throw BusinessException(cause.message, ErrorCode.BAD_GATEWAY_ERROR)
-            }
-
-            override fun loadCompanyFile(companyNumber: String): List<CompanyFileResponse> {
-                return ArrayList()
             }
 
         }

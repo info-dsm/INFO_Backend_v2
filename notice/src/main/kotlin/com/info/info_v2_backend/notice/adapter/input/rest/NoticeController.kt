@@ -218,8 +218,9 @@ class NoticeController(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String
     ): AdminMaximumNoticeResponse {
+        log.info("getAdminMaximumNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (Auth.checkIsTeacher()) { return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)}
-        else if (Auth.checkCompanyNumber(companyNumber).equals(companyNumber)) return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)
+        else if (Auth.checkCompanyNumber(companyNumber) == companyNumber) return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)
         else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 

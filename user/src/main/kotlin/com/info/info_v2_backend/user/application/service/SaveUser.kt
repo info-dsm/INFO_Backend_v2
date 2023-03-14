@@ -4,6 +4,7 @@ import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveCont
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveUserDto
+import com.info.info_v2_backend.user.application.port.input.ChangePasswordUsecase
 import com.info.info_v2_backend.user.application.port.input.SaveUserUsecase
 import com.info.info_v2_backend.user.application.port.output.SaveUserPort
 import org.springframework.security.crypto.password.PasswordEncoder

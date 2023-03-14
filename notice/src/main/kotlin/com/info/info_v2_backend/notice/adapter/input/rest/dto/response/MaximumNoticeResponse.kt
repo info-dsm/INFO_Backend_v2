@@ -31,8 +31,9 @@ data class MaximumNoticeResponse(
     val otherFeatures: String?,
     val workPlace: WorkPlaceRequest,
     val applicantCount: Int,
+    val isPersonalContact: Boolean,
     var attachmentFileList: MutableList<AttachmentResponse>,
-    val isPersonalContact: Boolean
+    val needAttachment: String? = "이력서, 자기소개서, 포트폴리오"
 
 ) {
 

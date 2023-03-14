@@ -24,6 +24,10 @@ class FileFeignClientFallback: FallbackFactory<FileFeignClient> {
                 return ArrayList()
             }
 
+            override fun removeResume(noticeId: String, studentEmail: String) {
+                return
+            }
+
         }
     }
 

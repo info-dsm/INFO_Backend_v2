@@ -36,9 +36,6 @@ class UploadResume(
             noticeId,
             studentEmail
         )
-        loadResumePort.load(noticeId, studentEmail).map {
-            removeFilePort.remove(it.id)
-        }
 
         saveResumeFilePort.save(resume)
         return PresignedUrlResponse(

@@ -15,7 +15,8 @@ import javax.persistence.*
 @Table(name = "applies")
 class Applies(
     applicant: Applicant,
-    notice: AppliesNotice
+    notice: AppliesNotice,
+    message: String?
 ): TimeEntity() {
     @Id
     @Column(name = "id", nullable = false)
@@ -34,13 +35,17 @@ class Applies(
     var status: AppliesStatus = AppliesStatus.WAITING
         protected set
 
+    @Column(name = "message")
+    var message: String? = message
+        protected set
 
     fun approve() {
         this.status = AppliesStatus.APPROVE
     }
 
-    fun reject() {
+    fun reject(message: String?) {
         this.status = AppliesStatus.REJECT
+        this.message = message
     }
 
     fun toAppliesResponse(fileList: List<FileResponse>): AppliesResponse {
@@ -52,7 +57,8 @@ class Applies(
             ),
             this.notice.noticeId,
             this.status,
-            fileList
+            fileList,
+            this.message
         )
     }
     fun toAppliesDto(): AppliesDto {

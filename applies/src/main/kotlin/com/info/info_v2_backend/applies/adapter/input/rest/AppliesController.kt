@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.applies.adapter.input.rest
 
+import com.info.info_v2_backend.applies.adapter.input.rest.dto.request.RejectAppliesRequest
 import com.info.info_v2_backend.applies.adapter.input.rest.dto.respnose.AppliesResponse
 import com.info.info_v2_backend.applies.application.port.input.*
 import com.info.info_v2_backend.common.applies.AppliesDto
@@ -119,7 +120,8 @@ class AppliesController(
     @DeleteMapping("/{noticeId}/{studentEmail}")
     fun rejectApplies(
         @PathVariable noticeId: String,
-        @PathVariable studentEmail: String
+        @PathVariable studentEmail: String,
+        @RequestBody request: RejectAppliesRequest
     ) {
         log.info("rejectApplies, noticeId: $noticeId, studentEmail: $studentEmail, email: ${Auth.getUserEmail()}")
         if (!Auth.checkIsTeacher())
@@ -127,7 +129,7 @@ class AppliesController(
                 "이 작업은 선생님만 수행할 수 있습니다.",
                 ErrorCode.NO_AUTHORIZATION_ERROR
             )
-        return rejectAppliesUsecase.reject(noticeId, studentEmail)
+        return rejectAppliesUsecase.reject(noticeId, studentEmail, request.message)
     }
 
     @GetMapping("/student")

@@ -312,8 +312,8 @@ class Notice(
             this.otherFeatures,
             this.workPlace.toWorkPlaceRequest(),
             this.applicantCount,
-            ArrayList(),
-            this.isPersonalContact
+            this.isPersonalContact,
+            ArrayList()
         )
     }
 

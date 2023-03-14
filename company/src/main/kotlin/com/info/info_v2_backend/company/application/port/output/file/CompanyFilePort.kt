@@ -9,6 +9,6 @@ import org.springframework.web.multipart.MultipartFile
 interface CompanyFilePort {
 
     fun upload(companyId: String, classification: CompanyFileClassificationType, request: GenerateFileRequest): PresignedUrlResponse
-    fun loadCompanyFile(companyNumber: String): List<CompanyFileResponse>
+    fun loadCompanyPhotoFile(companyNumber: String): List<CompanyFileResponse>
     fun remove(companyNumber: String, fileId: String, classificationType: CompanyFileClassificationType)
 }

@@ -56,13 +56,13 @@ class NoticeController(
     private val log = LoggerFactory.getLogger(this.javaClass)
 
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/count")
     fun getOpenNoticeCount(): Int {
         return countOpenNoticeUsecase.count()
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/classification")
     fun getClassification(): List<ClassificationResponse> {
         return loadClassificationUsecase.load()
@@ -77,7 +77,7 @@ class NoticeController(
         else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/technology")
     fun getTechnology(): List<TechnologyResponse> {
         return loadTechnologyUsecase.loadAll()
@@ -93,7 +93,7 @@ class NoticeController(
         else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/language")
     fun getLanguage(): List<LanguageResponse> {
         return loadLanguageUsecase.loadAll()
@@ -109,7 +109,7 @@ class NoticeController(
         else throw BusinessException(null, ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/interview")
     fun getInterviewProcessList(): List<InterviewProcessResponse> {
         return loadInterviewProcessUsecase.loadAll().map {
@@ -120,7 +120,7 @@ class NoticeController(
         }
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/certificate")
     fun getCertificate(): List<CertificateResponse> {
         return loadCertificateUsecase.loadAll()
@@ -218,13 +218,14 @@ class NoticeController(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String
     ): AdminMaximumNoticeResponse {
+        log.info("getAdminMaximumNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (Auth.checkIsTeacher()) { return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)}
-        else if (Auth.checkCompanyNumber(companyNumber).equals(companyNumber)) return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)
+        else if (Auth.checkCompanyNumber(companyNumber) == companyNumber) return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)
         else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/list/on")
     fun getNotEndedMinimumNoticeList(
         @RequestParam(defaultValue = "0") idx: Int,
@@ -233,7 +234,7 @@ class NoticeController(
         return loadNoticeUsecase.loadNotEndedMinimumNoticeList(idx, size)
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/list/end")
     fun getEndedMinimumNoticeList(
         @RequestParam(defaultValue = "0") idx: Int,
@@ -243,7 +244,7 @@ class NoticeController(
         return loadNoticeUsecase.loadEndedMinimumNoticeList(idx, size)
     }
 
-    @Cacheable("memberCacheStore")
+    //@Cacheable("memberCacheStore")
     @GetMapping("/list/{companyNumber}")
     fun getCompanyNoticeList(
         @PathVariable companyNumber: String
@@ -265,7 +266,7 @@ class NoticeController(
     @GetMapping("/available")
     fun loadAvailableNotice(@RequestParam noticeId: String): NoticeDto? {
         if (Auth.checkIsSystem()) return loadNoticeUsecase.loadAvailableNotice(noticeId)
-        return null
+        throw BusinessException("Not system request", ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
 }

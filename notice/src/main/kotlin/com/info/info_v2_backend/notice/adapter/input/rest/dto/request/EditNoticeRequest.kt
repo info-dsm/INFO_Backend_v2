@@ -26,6 +26,6 @@ data class EditNoticeRequest(
     val certificateList: MutableList<String>?,
     val languageList: MutableList<String>?,
     val technologyList: MutableList<String>?,
-    val generateFileListRequest: List<GenerateFileRequest>
+    val generateFileListRequest: List<GenerateFileRequest>?
 
 )

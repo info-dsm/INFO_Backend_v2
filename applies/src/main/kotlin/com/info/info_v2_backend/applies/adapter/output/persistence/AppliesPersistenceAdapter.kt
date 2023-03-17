@@ -19,7 +19,7 @@ class AppliesPersistenceAdapter(
 
     override fun loadAppliesList(noticeId: String, status: AppliesStatus?): List<Applies> {
         status?.let {
-            return appliesRepository.findByNoticeAndStatus(noticeId, status)
+            return appliesRepository.findByNoticeAndStatus(noticeId, status.name)
         }?: return appliesRepository.findByNotice(noticeId)
     }
 

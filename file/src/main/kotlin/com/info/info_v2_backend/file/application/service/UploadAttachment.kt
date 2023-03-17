@@ -1,6 +1,7 @@
 package com.info.info_v2_backend.file.application.service
 
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.file.application.port.input.notice.UploadAttachmentUsecase
 import com.info.info_v2_backend.file.application.port.output.UploadFilePort
 import com.info.info_v2_backend.file.application.port.output.notice.RemoveAttachmentPort
@@ -19,7 +20,7 @@ class UploadAttachment(
     private val removeAttachmentPort: RemoveAttachmentPort
 ): UploadAttachmentUsecase {
 
-    override fun uploadAttachment(request: GenerateFileRequest, noticeId: String): String {
+    override fun uploadAttachment(request: GenerateFileRequest, noticeId: String): PresignedUrlResponse {
         val fileId = UUID.randomUUID().toString()
         
         val dto = uploadFilePort.getPresignedUrl(request.fileName, request.contentType, "NOTICE/${noticeId}", "ATTACHMENT/${fileId}")
@@ -33,10 +34,12 @@ class UploadAttachment(
             )
         )
 
-        removeAttachmentPort.remove(noticeId)
         saveAttachmentPort.save(attachment)
 
-        return authUrl
+        return PresignedUrlResponse(
+            authUrl,
+            dto.fileName
+        )
     }
 
 

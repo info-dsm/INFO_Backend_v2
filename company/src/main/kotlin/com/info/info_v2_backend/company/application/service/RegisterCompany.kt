@@ -43,7 +43,6 @@ class RegisterCompany(
 
     
     override fun register(
-        emailCheckCode: String,
         request: RegisterCompanyRequest
     ): PresignedUrlListResponse {
 

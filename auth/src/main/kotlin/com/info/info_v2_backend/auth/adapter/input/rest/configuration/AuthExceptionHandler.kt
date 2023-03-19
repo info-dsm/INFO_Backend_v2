@@ -5,6 +5,7 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.exception.ErrorResponse
 import com.info.info_v2_backend.common.logs.LogFormat
 import org.springframework.core.annotation.Order
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -13,24 +14,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import javax.validation.ConstraintViolationException
 import javax.validation.ValidationException
 
 @RestControllerAdvice
-@RestController
 class AuthExceptionHandler: ResponseEntityExceptionHandler() {
 
 
     @ExceptionHandler(BusinessException::class)
-    private fun businessExceptionHandler(e: BusinessException): ResponseEntity<*> {
-        return ResponseEntity.status(e.errorCode.status).body(
-            ErrorResponse(
-                e.message,
-                e.errorCode
-            )
-        )
+    private fun businessExceptionHandler(ex: BusinessException, request: WebRequest) : ResponseEntity<*> {
+        return handleExceptionInternal(ex, ErrorResponse(
+            ex.message,
+            ex.errorCode
+        ), HttpHeaders(), HttpStatus.valueOf(ex.errorCode.status), request);
     }
 
     @ExceptionHandler(value = [ConstraintViolationException::class])

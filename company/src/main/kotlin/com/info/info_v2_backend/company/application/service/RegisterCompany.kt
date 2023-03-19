@@ -87,7 +87,7 @@ class RegisterCompany(
                 )
             }
 
-            val companyPhotoFileList = request.companyPhotoList.request.map {
+            val companyPhotoFileList = request.companyPhotoList?.request?.map {
                 uploadFile(
                     CompanyFileClassificationType.COMPANY_PHOTO,
                     request.companyNumber,
@@ -136,9 +136,12 @@ class RegisterCompany(
             list.addAll(
                 companyIntroductionFileList
             )
-            list.addAll(
-                companyPhotoFileList
-            )
+            companyPhotoFileList?.let {
+                list.addAll(
+                    it
+                )
+            }
+
             return PresignedUrlListResponse(
                 list
             )

@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.auth.adapter.output.rest.configuration
+package com.info.info_v2_backend.notice.adapter.output.rest.configuration
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.info.info_v2_backend.common.exception.BusinessException
@@ -8,7 +8,6 @@ import feign.Response
 import feign.codec.ErrorDecoder
 import feign.codec.StringDecoder
 import org.slf4j.LoggerFactory
-
 
 class FeignErrorDecoder(
 ): ErrorDecoder {
@@ -31,5 +30,4 @@ class FeignErrorDecoder(
         log.info(parsedMessageResponse.message)
         return parsedMessageResponse
     }
-
 }

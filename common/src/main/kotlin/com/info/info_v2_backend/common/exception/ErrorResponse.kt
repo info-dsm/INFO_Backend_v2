@@ -1,10 +1,16 @@
 package com.info.info_v2_backend.common.exception
 
+
 class ErrorResponse(
-    val message: String,
-    val status: Int,
-    val code: String,
+    var message: String?,
+    var status: Int?,
+    var code: String?,
 ) {
+    constructor():this(
+        message = null,
+        status = null,
+        code = null
+    )
 
     constructor(
         message: String? = null,

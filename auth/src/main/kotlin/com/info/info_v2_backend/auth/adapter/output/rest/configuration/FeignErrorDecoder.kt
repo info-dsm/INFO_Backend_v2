@@ -15,7 +15,7 @@ class FeignErrorDecoder(
     private val objectMapper = ObjectMapper()
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    override fun decode(methodKey: String?, response: Response): Exception {
+    override fun decode(methodKey: String?, response: Response): Exception? {
         val response = parse(response)
         log.info(response?.message)
         log.info("DDDDDDDDD")
@@ -25,6 +25,7 @@ class FeignErrorDecoder(
     }
 
     private fun parse(response: Response): ErrorResponse? {
+        log.info(response.body().toString())
         return runCatching {
             objectMapper.readValue(response.body().asInputStream(), ErrorResponse::class.java)
         }.getOrNull()

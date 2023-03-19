@@ -43,16 +43,8 @@ class RegisterCompany(
 
     
     override fun register(
-        emailCheckCode: String,
         request: RegisterCompanyRequest
     ): PresignedUrlListResponse {
-        if (checkEmailCodePort.check(
-                AuthenticationCodeDto(
-                    request.companyContact.email,
-                    emailCheckCode,
-                    AuthenticationCodeType.SIGNUP_EMAIL
-                )
-            ) || Auth.checkIsTeacher()) {
 
             loadCompanyPort.loadCompany(request.companyNumber)?.let {
                 throw BusinessException("이미 존재하는 사업자등록번호입니다.", ErrorCode.ALREADY_EXISTS_ERROR)
@@ -150,7 +142,6 @@ class RegisterCompany(
             return PresignedUrlListResponse(
                 list
             )
-        } else throw BusinessException("인증번호가 올바르지 않습니다. -> ${emailCheckCode}", ErrorCode.INVALID_INPUT_DATA_ERROR)
     }
 
     private fun uploadFile(

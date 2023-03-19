@@ -47,11 +47,10 @@ class CompanyController(
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     fun registerCompany(
-        @RequestParam emailCheckCode: String,
         @RequestBody(required = true) request: RegisterCompanyRequest
     ): PresignedUrlListResponse {
         return registerCompanyUsecase.register(
-            emailCheckCode, request
+            request
         )
     }
 

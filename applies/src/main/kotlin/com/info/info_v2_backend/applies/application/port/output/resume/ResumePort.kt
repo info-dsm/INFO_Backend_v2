@@ -12,4 +12,5 @@ interface ResumePort {
 
     fun uploadResume(noticeId: String, studentEmail: String, @RequestBody request: GenerateFileListRequest): PresignedUrlListResponse
     fun loadAppliesResume(noticeId: String, studentEmail: String): List<FileResponse>
+    fun removeResume(noticeId: String, studentEmail: String)
 }

@@ -24,7 +24,7 @@ class LoadNotice(
     private val loadNoticePort: LoadNoticePort,
     private val loadWithConditionPort: LoadWithConditionPort,
     private val filePort: FilePort,
-    private val loadCompanyPort: LoadCompanyPort
+    private val loadCompanyPort: LoadCompanyPort,
 ): LoadNoticeUsecase, CountOpenNoticeUsecase {
 
     private val log = LoggerFactory.getLogger(this.javaClass)

@@ -33,7 +33,7 @@ class AuthExceptionHandler: ResponseEntityExceptionHandler() {
         )
     }
 
-    @ExceptionHandler(value = [ConstraintViolationException::class, MethodArgumentNotValidException::class])
+    @ExceptionHandler(value = [ConstraintViolationException::class])
     @ResponseBody
     private fun validationExceptionHandler(e: ValidationException): ResponseEntity<*> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(

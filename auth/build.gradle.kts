@@ -14,7 +14,6 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.5")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
 
-
     //Hystrix
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE")
     //Security

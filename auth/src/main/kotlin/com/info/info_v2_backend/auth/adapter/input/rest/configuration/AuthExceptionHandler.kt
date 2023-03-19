@@ -5,6 +5,7 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.exception.ErrorResponse
 import feign.FeignException
 import feign.Request
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,22 +21,28 @@ import javax.validation.ValidationException
 
 @RestControllerAdvice
 class AuthExceptionHandler: ResponseEntityExceptionHandler() {
-
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     @ExceptionHandler(BusinessException::class)
     private fun businessExceptionHandler(ex: BusinessException, request: WebRequest) : ResponseEntity<*> {
+        var parsedMessage: String? = null
+        ex.message?.let { 
+            parsedMessage = messageParser(it) 
+        }
+        log.warn(parsedMessage)
         return handleExceptionInternal(ex, ErrorResponse(
-            ex.message?.let { messageParser(it) },
+            parsedMessage?:ex.errorCode.message,
             ex.errorCode
         ), HttpHeaders(), HttpStatus.valueOf(ex.errorCode.status), request);
     }
 
     @ExceptionHandler(value = [ConstraintViolationException::class])
     @ResponseBody
-    private fun validationExceptionHandler(e: ValidationException): ResponseEntity<*> {
+    private fun validationExceptionHandler(ex: ValidationException): ResponseEntity<*> {
+        log.warn(ex.message)
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             ErrorResponse(
-                e.message?.let { messageParser(it) },
+                ex.message,
                 ErrorCode.INPUT_DATA_NOT_FOUND_ERROR
             )
         )

@@ -25,7 +25,7 @@ class AuthExceptionHandler: ResponseEntityExceptionHandler() {
     @ExceptionHandler(BusinessException::class)
     private fun businessExceptionHandler(ex: BusinessException, request: WebRequest) : ResponseEntity<*> {
         return handleExceptionInternal(ex, ErrorResponse(
-            ex.message,
+            ex.message?.let { messageParser(it) },
             ex.errorCode
         ), HttpHeaders(), HttpStatus.valueOf(ex.errorCode.status), request);
     }
@@ -35,10 +35,14 @@ class AuthExceptionHandler: ResponseEntityExceptionHandler() {
     private fun validationExceptionHandler(e: ValidationException): ResponseEntity<*> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             ErrorResponse(
-                e.message?.substring(0, e.message?.indexOf("MESSAGE:")?:0),
+                e.message?.let { messageParser(it) },
                 ErrorCode.INPUT_DATA_NOT_FOUND_ERROR
             )
         )
+    }
+
+    private fun messageParser(logMessage: String): String {
+        return logMessage.substring(0, logMessage.indexOf("MESSAGE:")?:0)
     }
 
 }

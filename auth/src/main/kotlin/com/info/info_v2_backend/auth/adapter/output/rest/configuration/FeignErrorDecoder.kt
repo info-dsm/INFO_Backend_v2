@@ -5,9 +5,12 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.exception.ErrorResponse
 import feign.Response
+import feign.codec.Decoder
 import feign.codec.ErrorDecoder
 import feign.codec.StringDecoder
+import feign.gson.GsonDecoder
 import org.slf4j.LoggerFactory
+import java.lang.reflect.Type
 
 
 class FeignErrorDecoder(

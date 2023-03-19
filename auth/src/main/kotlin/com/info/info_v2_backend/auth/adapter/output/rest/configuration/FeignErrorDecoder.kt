@@ -25,9 +25,9 @@ class FeignErrorDecoder(
     }
 
     private fun parse(response: Response): ErrorResponse? {
-        log.info(response.body().toString())
+        log.info(response.body().asInputStream().readAllBytes().toString())
         return runCatching {
-            objectMapper.readValue(response.body().asInputStream(), ErrorResponse::class.java)
+            objectMapper.readValue(response.body().asInputStream().readAllBytes(), ErrorResponse::class.java)
         }.getOrNull()
     }
 

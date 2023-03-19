@@ -24,8 +24,8 @@ class UserExceptionHandler: ResponseEntityExceptionHandler() {
     @ExceptionHandler(BusinessException::class)
     private fun businessExceptionHandler(ex: BusinessException, request: WebRequest) : ResponseEntity<*> {
         var parsedMessage: String? = null
-        ex.message?.let {
-            parsedMessage = messageParser(it)
+        ex.message?.let { 
+            parsedMessage = messageParser(it) 
         }
         log.warn(parsedMessage)
         return handleExceptionInternal(ex, ErrorResponse(
@@ -47,7 +47,7 @@ class UserExceptionHandler: ResponseEntityExceptionHandler() {
     }
 
     private fun messageParser(logMessage: String): String {
-        return logMessage.substring(0, logMessage.indexOf("MESSAGE:")?:0)
+        return logMessage.substring(logMessage.indexOf("MESSAGE:"))
     }
 
 }

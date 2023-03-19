@@ -3,20 +3,18 @@ package com.info.info_v2_backend.auth.adapter.input.rest.configuration
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.exception.ErrorResponse
-import com.info.info_v2_backend.common.logs.LogFormat
-import org.springframework.core.annotation.Order
+import feign.FeignException
+import feign.Request
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.MethodArgumentNotValidException
-import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.WebRequest
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver
+import org.springframework.web.servlet.handler.DispatcherServletWebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+import javax.servlet.http.HttpServletRequest
 import javax.validation.ConstraintViolationException
 import javax.validation.ValidationException
 

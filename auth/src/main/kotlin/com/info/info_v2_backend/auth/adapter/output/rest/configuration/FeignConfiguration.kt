@@ -6,15 +6,13 @@ import feign.RequestInterceptor
 import feign.RequestTemplate
 import feign.codec.Decoder
 import feign.codec.Encoder
-import feign.jaxb.JAXBContextFactory
-import feign.jaxb.JAXBDecoder
-import feign.jaxb.JAXBEncoder
+import feign.codec.ErrorDecoder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
 class FeignConfiguration {
-    @Bean
+       @Bean
     fun requestInterceptor(): RequestInterceptor? {
         return RequestInterceptor { requestTemplate: RequestTemplate ->
             requestTemplate.header(
@@ -24,21 +22,8 @@ class FeignConfiguration {
     }
 
     @Bean
-    fun encoder(): Encoder? {
-        return JAXBEncoder(
-            JAXBContextFactory.Builder()
-                .withMarshallerJAXBEncoding("UTF-8")
-                .build()
-        )
-    }
-
-    @Bean
-    fun decoder(): Decoder? {
-        return JAXBDecoder(
-            JAXBContextFactory.Builder()
-                .withMarshallerJAXBEncoding("UTF-8")
-                .build()
-        )
+    fun getErrorDecoder(): ErrorDecoder {
+        return FeignErrorDecoder()
     }
 
 }

@@ -9,13 +9,18 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class FeignConfiguration {
-    @Bean
+       @Bean
     fun requestInterceptor(): RequestInterceptor? {
         return RequestInterceptor { requestTemplate: RequestTemplate ->
             requestTemplate.header(
                 HeaderProperty.AUTH_LEVEL,
                 Role.SYSTEM.mean)
         }
+    }
+
+    @Bean
+    fun getErrorDecoder(): ErrorDecoder {
+        return FeignErrorDecoder()
     }
 
 }

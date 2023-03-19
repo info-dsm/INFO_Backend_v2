@@ -21,7 +21,7 @@ data class CompanyContactRequest(
         message = "비밀번호는 영소문자,대문자,숫자,특수문자 8~30자여야 합니다.")
     val password: String,
 
-    val passwordHint: String
+    val passwordHint: String?
 ) {
 
     fun toContactorId(): ContactorId {

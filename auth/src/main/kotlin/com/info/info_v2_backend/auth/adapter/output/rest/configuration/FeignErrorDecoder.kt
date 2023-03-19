@@ -6,13 +6,15 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.exception.ErrorResponse
 import feign.Response
 import feign.codec.ErrorDecoder
+import feign.codec.StringDecoder
 import org.slf4j.LoggerFactory
-import java.lang.Exception
 
 
 class FeignErrorDecoder(
 ): ErrorDecoder {
     private val objectMapper = ObjectMapper()
+    private val stringDecoder = StringDecoder()
+
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     override fun decode(methodKey: String?, response: Response): Exception? {
@@ -20,12 +22,13 @@ class FeignErrorDecoder(
         log.info(response?.message)
         log.info("DDDDDDDDD")
         return BusinessException(response?.message,
-            ErrorCode.values().filter { it.code == (response?.code ?: ErrorCode.FEIGN_ERROR.code) }.first()
+            ErrorCode.values().first { it.code == (response?.code ?: ErrorCode.FEIGN_ERROR.code) }
         )
     }
 
     private fun parse(response: Response): ErrorResponse? {
-        val parsedMessageResponse = objectMapper.readValue(response.body().asInputStream().readAllBytes(), ErrorResponse::class.java)
+        val message = stringDecoder.decode(response, String::class.java).toString()
+        val parsedMessageResponse = objectMapper.readValue(message, ErrorResponse::class.java)
         log.info(parsedMessageResponse.message)
         return parsedMessageResponse
     }

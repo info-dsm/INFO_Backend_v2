@@ -49,7 +49,7 @@ class AuthExceptionHandler: ResponseEntityExceptionHandler() {
     }
 
     private fun messageParser(logMessage: String): String {
-        return logMessage.substring(logMessage.indexOf("MESSAGE:"))
+        return logMessage.substring(logMessage.indexOf("MESSAGE: ") + 9)
     }
 
 }

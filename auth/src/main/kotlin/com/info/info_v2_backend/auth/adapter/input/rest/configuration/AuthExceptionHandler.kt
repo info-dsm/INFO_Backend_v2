@@ -13,16 +13,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import javax.validation.ConstraintViolationException
 import javax.validation.ValidationException
 
 @RestControllerAdvice
 @RestController
-class AuthExceptionHandler {
+class AuthExceptionHandler: ResponseEntityExceptionHandler() {
 
 
     @ExceptionHandler(BusinessException::class)
-    fun businessExceptionHandler(e: BusinessException): ResponseEntity<*> {
+    private fun businessExceptionHandler(e: BusinessException): ResponseEntity<*> {
         return ResponseEntity.status(e.errorCode.status).body(
             ErrorResponse(
                 e.message,
@@ -33,7 +35,7 @@ class AuthExceptionHandler {
 
     @ExceptionHandler(value = [ConstraintViolationException::class, MethodArgumentNotValidException::class])
     @ResponseBody
-    fun validationExceptionHandler(e: ValidationException): ResponseEntity<*> {
+    private fun validationExceptionHandler(e: ValidationException): ResponseEntity<*> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             ErrorResponse(
                 e.message?.substring(0, e.message?.indexOf("MESSAGE:")?:0),

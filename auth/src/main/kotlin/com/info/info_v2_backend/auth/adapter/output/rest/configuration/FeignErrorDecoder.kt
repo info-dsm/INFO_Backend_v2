@@ -12,12 +12,10 @@ import org.springframework.stereotype.Component
 import java.lang.Exception
 
 
-@Configuration
 class FeignErrorDecoder(
 ): ErrorDecoder {
     private val objectMapper = ObjectMapper()
 
-    @Bean
     override fun decode(methodKey: String?, response: Response): Exception {
         val response = parse(response)
         return BusinessException(response?.message,

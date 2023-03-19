@@ -12,6 +12,11 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.4")
     //OpenFiegn
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.5")
+    implementation("io.github.openfeign:feign-gson:12.2")
+
+    implementation("io.github.openfeign:feign-jaxb:9.3.1")
+
+
     //Hystrix
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE")
     //Security

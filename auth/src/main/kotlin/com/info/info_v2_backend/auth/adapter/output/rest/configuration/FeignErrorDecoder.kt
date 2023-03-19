@@ -6,18 +6,19 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.exception.ErrorResponse
 import feign.Response
 import feign.codec.ErrorDecoder
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.stereotype.Component
+import org.slf4j.LoggerFactory
 import java.lang.Exception
 
 
 class FeignErrorDecoder(
 ): ErrorDecoder {
     private val objectMapper = ObjectMapper()
+    private val log = LoggerFactory.getLogger(this.javaClass)
 
     override fun decode(methodKey: String?, response: Response): Exception {
         val response = parse(response)
+        log.info(response?.message)
+        log.info("DDDDDDDDD")
         return BusinessException(response?.message,
             ErrorCode.values().filter { it.code == (response?.code ?: ErrorCode.FEIGN_ERROR.code) }.first()
         )

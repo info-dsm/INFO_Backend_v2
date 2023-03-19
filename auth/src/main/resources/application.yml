@@ -4,7 +4,7 @@ spring:
   cloud:
     config:
       name: auth
-      profile: local
+      profile: default
 management:
   endpoints:
     web:

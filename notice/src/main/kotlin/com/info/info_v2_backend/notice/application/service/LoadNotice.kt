@@ -92,8 +92,8 @@ class LoadNotice(
         return loadNoticePort.loadNotice(noticeId)?.toNoticeDto()
     }
 
-    override fun loadNoticeBySmallClassification(smallClassification: String): List<MinimumNoticeResponse> {
-        return loadNoticePort.loadNoticeBySmallClassifiction(smallClassification).map {
+    override fun loadNoticeBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<MinimumNoticeResponse> {
+        return loadNoticePort.loadNoticeBySmallClassification(smallClassification, idx, size).map {
             it.toMinimumNoticeResponse(
                 loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
             )

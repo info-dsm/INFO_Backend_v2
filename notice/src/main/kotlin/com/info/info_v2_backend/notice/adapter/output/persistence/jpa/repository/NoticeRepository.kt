@@ -20,7 +20,7 @@ interface NoticeRepository: JpaRepository<Notice, String> {
     @Query(value = "select count(*) from notice where current_date between start_date and end_date and notice_is_approve = 'APPROVE' and notice_is_delete = 'false'", nativeQuery = true)
     fun countOpenNotice(): Int
 
-    @Query(value = "select * from notice a, recruitment_small_classification_usage b where b.notice_id = a.id and b.small_classification_id = :smallClassification", nativeQuery = true)
+    @Query(value = "select a.* from notice a, recruitment_small_classification_usage b where b.notice_id = a.id and b.small_classification_id = :smallClassification", nativeQuery = true)
     fun findBySmallClassification(
         @Param(value = "smallClassification")
         smallClassification: String

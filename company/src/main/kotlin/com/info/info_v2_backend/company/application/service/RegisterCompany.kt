@@ -79,7 +79,7 @@ class RegisterCompany(
                 )
             }
 
-            val companyIntroductionFileList = request.companyIntroductionFile.request.map {
+            val companyIntroductionFileList = request.companyIntroductionFile?.request?.map {
                 uploadFile(
                     CompanyFileClassificationType.COMPANY_INTRODUCTION,
                     request.companyNumber,
@@ -133,9 +133,12 @@ class RegisterCompany(
             list.add(
                 logoFile
             )
-            list.addAll(
-                companyIntroductionFileList
-            )
+            companyIntroductionFileList?.let {
+                list.addAll(
+                    it
+                )
+            }
+
             companyPhotoFileList?.let {
                 list.addAll(
                     it

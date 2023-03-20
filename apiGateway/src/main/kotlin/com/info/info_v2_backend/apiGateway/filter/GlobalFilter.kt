@@ -44,7 +44,7 @@ class GlobalFilter(
                     log.info("Global Filter End: response code -> {}", response.getStatusCode())
                 }))
             } else {
-                val authorizationHeader = request.headers[HttpHeaders.AUTHORIZATION]!![0]
+                val authorizationHeader = (request.headers[HttpHeaders.AUTHORIZATION]?: throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR))[0]
                 val jwt = authorizationHeader.replace("Bearer ", "")
                 val body = getTokenBody(jwt)
                 body?: let {
@@ -60,7 +60,7 @@ class GlobalFilter(
                 }
 
                 chain.filter(exchange).then(Mono.fromRunnable(Runnable {
-                    log.info("Global Filter End: response code -> {}", response.getStatusCode())
+                    log.info("Global Filter End: response code -> {}", response.statusCode)
                 }))
             }
         }

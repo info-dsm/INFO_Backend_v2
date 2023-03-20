@@ -30,7 +30,7 @@ data class RegisterCompanyRequest(
     val businessRegisteredCertificate: GenerateFileRequest,
     val companyIntroductionFile: GenerateFileListRequest,
     val companyLogo: GenerateFileRequest,
-    val companyPhotoList: GenerateFileListRequest
+    val companyPhotoList: GenerateFileListRequest?
 ) {
 
 

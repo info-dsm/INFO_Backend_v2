@@ -6,13 +6,11 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.user.StudentDto
 import com.info.info_v2_backend.common.user.UserDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CommonUserDetails
-import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.ContactorResponse
-import com.info.info_v2_backend.user.application.port.input.LoadCommonUserDetailsUsecase
-import com.info.info_v2_backend.user.application.port.input.LoadContactorUsecase
-import com.info.info_v2_backend.user.application.port.input.LoadPasswordHintUsecase
-import com.info.info_v2_backend.user.application.port.input.LoadStudentUsecase
+import com.info.info_v2_backend.common.user.ContactorDto
+import com.info.info_v2_backend.user.application.port.input.*
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
@@ -21,7 +19,8 @@ class UserController(
     private val loadCommonUserDetailsUsecase: LoadCommonUserDetailsUsecase,
     private val loadPasswordHintUsecase: LoadPasswordHintUsecase,
     private val loadContactorUsecase: LoadContactorUsecase,
-    private val loadStudentUsecase: LoadStudentUsecase
+    private val loadStudentUsecase: LoadStudentUsecase,
+    private val changePasswordUsecase: ChangePasswordUsecase
 ) {
 
     @GetMapping
@@ -36,18 +35,11 @@ class UserController(
 
     @GetMapping("/password/hint")
     fun getPasswordHint(@RequestParam email: String): String? {
-        email.takeIf {
-            (Auth.checkIsTeacher() || Auth.checkIsSystem())
-        }?.let {
-            return loadPasswordHintUsecase.load(it)
-        }?:Auth.getUserEmail().takeIf { it == email }?.let {
-            return loadPasswordHintUsecase.load(it)
-        }
-        throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
+        return loadPasswordHintUsecase.load(email)
     }
 
     @GetMapping("/contactor")
-    fun getContactor(@RequestParam companyNumber: String): ContactorResponse {
+    fun getContactor(@RequestParam companyNumber: String): ContactorDto {
         return loadContactorUsecase.loadContactor(companyNumber)
     }
 
@@ -72,6 +64,16 @@ class UserController(
         @PathVariable generation: Int
     ): List<StudentDto> {
         return loadStudentUsecase.loadStudentListByGeneration(generation)
+    }
+
+    //Internal
+    @PutMapping("/password")
+    fun changePassword(
+        @RequestParam email: String,
+        @RequestParam newPassword: String
+    ) {
+        if (Auth.checkIsSystem()) return changePasswordUsecase.change(email, newPassword)
+        throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
 }

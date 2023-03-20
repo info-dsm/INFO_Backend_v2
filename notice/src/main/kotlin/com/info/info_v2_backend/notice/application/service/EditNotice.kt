@@ -101,12 +101,14 @@ class EditNotice(
         }
 
         saveNoticePort.saveNotice(notice)
-        return filePort.saveFile(
+        val urlList = filePort.saveFile(
             notice.id,
             GenerateFileListRequest(
-                request.generateFileListRequest
+                request.generateFileListRequest?:ArrayList()
             )
         )
+        filePort.removeFile(noticeId)
+        return urlList 
 
     }
 }

@@ -2,12 +2,12 @@ package com.info.info_v2_backend.company.adapter.input.web.rest.dto.response
 
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.register.CompanyInformationRequest
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
-import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.ContactorResponse
+import com.info.info_v2_backend.common.user.ContactorDto
 
 data class MaximumCompanyResponse(
     val companyNumber: String,
     val companyName: String,
-    val contactor: ContactorResponse,
+    val contactor: ContactorDto,
     val companyInformation: CompanyInformationRequest,
     val businessTagged: List<BusinessArea>,
     val isLeading: Boolean,

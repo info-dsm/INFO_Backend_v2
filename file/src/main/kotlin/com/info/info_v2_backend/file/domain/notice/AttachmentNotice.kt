@@ -10,8 +10,4 @@ class AttachmentNotice(
     @Column(name = "notice_id", nullable = false)
     val noticeId = noticeId
 
-    override fun equals(other: Any?): Boolean {
-        if (other is AttachmentNotice) return other.noticeId == this.noticeId
-        return super.equals(other)
-    }
 }

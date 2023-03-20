@@ -6,5 +6,5 @@ import java.util.Optional
 
 interface ContactorRepository: JpaRepository<Contactor, String> {
 
-    fun findByCompanyNumber(companyNumber: String): Optional<Contactor>
+    fun findFirstByCompanyNumber(companyNumber: String): Optional<Contactor>
 }

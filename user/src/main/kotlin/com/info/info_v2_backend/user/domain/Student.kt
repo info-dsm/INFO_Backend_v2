@@ -16,7 +16,8 @@ class Student(
     name: String,
     email: String,
     password: String,
-    githubLink: String?
+    githubLink: String?,
+    entranceYear: Int
 ): User(
     name,
     email,
@@ -26,7 +27,7 @@ class Student(
 ) {
     val studentKey: String = studentKey
 
-    val entranceYear: Int = Year.now().minusYears((studentKey.substring(0, 1).toLong()-1)).value
+    val entranceYear: Int = entranceYear
 
 //    @OneToMany(mappedBy = "student")
 //    var hiredStudentList: MutableList<HiredStudent> = ArrayList()

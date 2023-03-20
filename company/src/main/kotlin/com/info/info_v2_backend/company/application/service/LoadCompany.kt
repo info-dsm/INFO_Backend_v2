@@ -3,10 +3,8 @@ package com.info.info_v2_backend.company.application.service
 import com.info.info_v2_backend.common.company.CompanyDto
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.common.file.FileProperty
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
-import com.info.info_v2_backend.common.file.dto.type.FileType
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.CompanyIntroductionResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
@@ -86,14 +84,14 @@ class LoadCompany(
     }
 
     override fun loadCompanyThumbnailList(companyNumber: String): MutableList<String> {
-        val thumbnailList: MutableList<String> = companyFilePort.loadCompanyFile(companyNumber).map {
+        val thumbnailList: MutableList<String> = companyFilePort.loadCompanyPhotoFile(companyNumber).map {
             it.fileUrl
         }.toMutableList()
         return thumbnailList
     }
 
     private fun getCompanyIntroductionResponse(company: Company): CompanyIntroductionResponse {
-        val companyFileList = companyFilePort.loadCompanyFile(company.companyNumber)
+        val companyFileList = companyFilePort.loadCompanyPhotoFile(company.companyNumber)
         val introductionResponse = CompanyIntroductionResponse(
             company.companyIntroduction.introduction,
             CompanyFileResponse(company.companyNumber, CompanyFileClassificationType.BUSINESS_CERTIFICATE),

@@ -12,11 +12,11 @@ class RejectApplies(
     private val loadAppliesPort: LoadAppliesPort,
     private val saveAppliesPort: SaveAppliesPort
 ): RejectAppliesUsecase {
-    override fun reject(noticeId: String, studentEmail: String) {
+    override fun reject(noticeId: String, studentEmail: String, message: String?) {
         val applies = loadAppliesPort.loadAppliesByNoticeAndStudentEmail(noticeId, studentEmail)
             ?: throw BusinessException("지원을 조회하지 못했습니다. -> $studentEmail", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
 
-        applies.reject()
+        applies.reject(message)
         saveAppliesPort.save(applies)
     }
 }

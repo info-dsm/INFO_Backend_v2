@@ -2,7 +2,9 @@ package com.info.info_v2_backend.employment.domain.company
 
 import com.info.info_v2_backend.common.employment.EmploymentDto
 import javax.persistence.Column
+import javax.persistence.Embeddable
 
+@Embeddable
 class EmploymentContactor(
     contactorEmail: String
 ) {

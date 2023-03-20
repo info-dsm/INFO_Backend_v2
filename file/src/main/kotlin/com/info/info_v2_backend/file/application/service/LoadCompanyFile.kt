@@ -14,8 +14,8 @@ class LoadCompanyFile(
         return loadCompanyFilePort.load(fileId)
     }
 
-    override fun loadByCompanyNumber(companyNumber: String): List<CompanyFileResponse> {
-        return loadCompanyFilePort.loadByCompanyNumber(companyNumber).map {
+    override fun loadPhotosByCompanyNumber(companyNumber: String): List<CompanyFileResponse> {
+        return loadCompanyFilePort.loadPhotosByCompanyNumber(companyNumber).map {
             it.toCompanyFileResponse()
         }
     }

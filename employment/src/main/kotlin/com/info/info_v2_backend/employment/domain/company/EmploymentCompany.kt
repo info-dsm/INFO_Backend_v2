@@ -18,8 +18,4 @@ class EmploymentCompany(
         )
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (other is EmploymentCompany) return this.companyNumber == other.companyNumber
-        return super.equals(other)
-    }
 }

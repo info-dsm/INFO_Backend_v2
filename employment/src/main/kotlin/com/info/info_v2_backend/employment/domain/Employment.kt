@@ -1,16 +1,13 @@
 package com.info.info_v2_backend.employment.domain
 
 import com.info.info_v2_backend.common.employment.EmploymentDto
+import com.info.info_v2_backend.common.employment.EmploymentStatus
 import com.info.info_v2_backend.employment.domain.company.EmploymentCompany
 import com.info.info_v2_backend.employment.domain.company.EmploymentContactor
 import com.info.info_v2_backend.employment.domain.notice.EmploymentNotice
-import com.info.info_v2_backend.employment.domain.status.EmploymentStatus
 import com.info.info_v2_backend.employment.domain.student.EmployedStudent
 import com.info.info_v2_backend.employment.domain.time.TimeEntity
-import javax.persistence.Column
-import javax.persistence.Embedded
-import javax.persistence.Entity
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class Employment(
@@ -41,6 +38,7 @@ class Employment(
         protected set
 
     @Column(name = "employment_status", nullable = false)
+    @Enumerated(value = EnumType.STRING)
     var status: EmploymentStatus = EmploymentStatus.INTERN
         protected set
 
@@ -58,7 +56,8 @@ class Employment(
             this.notice.toEmploymentNoticeResponse(),
             this.student.toEmploymentStudentResponse(),
             this.company.toEmploymentCompanyResponse(),
-            this.contactor.toEmploymentContactorResponse()
+            this.contactor.toEmploymentContactorResponse(),
+            this.status
         )
     }
 

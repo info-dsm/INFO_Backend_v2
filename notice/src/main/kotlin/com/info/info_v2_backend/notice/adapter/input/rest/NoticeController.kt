@@ -68,6 +68,7 @@ class NoticeController(
     fun getNoticeBySmallClassification(
         @PathVariable smallClassification: String
     ): List<MinimumNoticeResponse> {
+        log.info("getNoticeBySmallClassification: $smallClassification")
         return loadNoticeUsecase.loadCompanyMinimumNoticeList(
             smallClassification
         )

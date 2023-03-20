@@ -27,6 +27,10 @@ class NoticeAdapter(
         return noticeRepository.findByIdOrNull(noticeId)
     }
 
+    override fun loadNoticeBySmallClassifiction(smallClassification: String): List<Notice> {
+        return noticeRepository.findBySmallClassification(smallClassification)
+    }
+
     override fun loadNoticeByCompany(companyNumber: String): List<Notice> {
         return noticeRepository.findByCompany(
             companyNumber

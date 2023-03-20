@@ -66,11 +66,15 @@ class NoticeController(
 
     @GetMapping("/classification/{smallClassification}")
     fun getNoticeBySmallClassification(
-        @PathVariable smallClassification: String
-    ): List<MinimumNoticeResponse> {
+        @PathVariable smallClassification: String,
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): Page<MinimumNoticeResponse> {
         log.info("getNoticeBySmallClassification: $smallClassification")
         return loadNoticeUsecase.loadNoticeBySmallClassification(
-            smallClassification
+            smallClassification,
+            idx,
+            size
         )
     }
 

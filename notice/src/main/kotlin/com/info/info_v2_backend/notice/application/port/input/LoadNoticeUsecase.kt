@@ -21,6 +21,6 @@ interface LoadNoticeUsecase {
     fun loadAvailableNotice(noticeId: String): NoticeDto?
     fun loadNoticeDto(noticeId: String): NoticeDto?
 
-    fun loadNoticeBySmallClassification(smallClassification: String): List<MinimumNoticeResponse>
+    fun loadNoticeBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<MinimumNoticeResponse>
 
 }

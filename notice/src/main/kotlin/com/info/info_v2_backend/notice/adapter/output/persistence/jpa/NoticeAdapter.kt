@@ -19,7 +19,7 @@ class NoticeAdapter(
         noticeRepository.deleteById(noticeId)
     }
 
-    override fun saveNotice(notice: Notice) {
+    override fun saveNotice(notice: Notice) {3
         noticeRepository.save(notice)
     }
 

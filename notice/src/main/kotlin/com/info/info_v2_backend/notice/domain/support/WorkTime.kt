@@ -8,7 +8,9 @@ import javax.persistence.Embeddable
 @Embeddable
 class WorkTime(
     commuteStartTime: Int?,
+    commuteStartTimeMinute: Int?,
     commuteEndTime: Int?,
+    commuteEndTimeMinute: Int?,
     workTimePerDay: Int,
     workTimePerWeek: Int,
     isFlexible: Boolean
@@ -18,8 +20,16 @@ class WorkTime(
     var commuteStartTime: Int? = commuteStartTime
         protected set
 
+    @Column(name = "commute_start_time_minute", nullable = true)
+    var commuteStartTimeMinute: Int? = commuteStartTimeMinute
+        protected set
+
     @Column(name = "commute_end_time", nullable = true)
     var commuteEndTime: Int? = commuteEndTime
+        protected set
+
+    @Column(name = "commute_end_time_minute", nullable = true)
+    var commuteEndTimeMinute: Int? = commuteEndTimeMinute
         protected set
 
     @Column(name = "work_time_per_day")
@@ -38,7 +48,9 @@ class WorkTime(
     fun toWorkTimeRequest(): WorkTimeRequest {
         return WorkTimeRequest(
             this.commuteStartTime,
+            this.commuteStartTimeMinute,
             this.commuteEndTime,
+            this.commuteEndTimeMinute,
             this.workTimePerDay,
             this.workTimePerWeek,
             this.isFlexible

@@ -64,7 +64,7 @@ class NoticeController(
         return countOpenNoticeUsecase.count()
     }
 
-    @GetMapping("/classification")
+    @GetMapping("/classification/small")
     fun getNoticeBySmallClassification(
         @RequestParam smallClassification: String,
         @RequestParam(defaultValue = "0") idx: Int,

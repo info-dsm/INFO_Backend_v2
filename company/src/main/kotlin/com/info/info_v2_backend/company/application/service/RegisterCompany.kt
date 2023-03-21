@@ -45,7 +45,6 @@ class RegisterCompany(
     override fun register(
         request: RegisterCompanyRequest
     ): PresignedUrlListResponse {
-
             loadCompanyPort.loadCompany(request.companyNumber)?.let {
                 throw BusinessException("이미 존재하는 사업자등록번호입니다.", ErrorCode.ALREADY_EXISTS_ERROR)
             }

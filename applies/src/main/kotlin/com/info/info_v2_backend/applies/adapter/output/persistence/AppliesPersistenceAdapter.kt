@@ -6,6 +6,8 @@ import com.info.info_v2_backend.applies.application.port.output.applies.LoadAppl
 import com.info.info_v2_backend.applies.application.port.output.applies.SaveAppliesPort
 import com.info.info_v2_backend.applies.domain.Applies
 import com.info.info_v2_backend.common.applies.AppliesStatus
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 
 @Service
@@ -36,8 +38,8 @@ class AppliesPersistenceAdapter(
         appliesRepository.deleteByIdAndAndApplicant(noticeId, studentEmail)
     }
 
-    override fun loadEveryAppliesByStatus(status: AppliesStatus): List<Applies> {
-        return appliesRepository.findByStatus(status)
+    override fun loadEveryAppliesByStatus(status: AppliesStatus, idx: Int, size: Int): Page<Applies> {
+        return appliesRepository.findByStatus(status, PageRequest.of(idx, size))
     }
 
     override fun loadAppliesByStudentEmail(studentEmail: String): List<Applies> {

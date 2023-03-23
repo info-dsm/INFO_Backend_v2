@@ -47,11 +47,10 @@ class CompanyController(
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     fun registerCompany(
-        @RequestParam emailCheckCode: String,
         @RequestBody(required = true) request: RegisterCompanyRequest
     ): PresignedUrlListResponse {
         return registerCompanyUsecase.register(
-            emailCheckCode, request
+            request
         )
     }
 
@@ -180,6 +179,12 @@ class CompanyController(
     @ResponseStatus(HttpStatus.ACCEPTED)
     fun makeLeading(@PathVariable companyNumber: String) {
         return makeLeadingUsecase.makeLeading(companyNumber)
+    }
+
+    @DeleteMapping("/leading/{companyNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun cancelLeading(@PathVariable companyNumber: String) {
+        return makeLeadingUsecase.cancelLeading(companyNumber)
     }
 
 

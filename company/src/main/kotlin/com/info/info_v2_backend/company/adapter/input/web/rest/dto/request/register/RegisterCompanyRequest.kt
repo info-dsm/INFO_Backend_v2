@@ -28,9 +28,9 @@ data class RegisterCompanyRequest(
     )
     val introduction: String,
     val businessRegisteredCertificate: GenerateFileRequest,
-    val companyIntroductionFile: GenerateFileListRequest,
-    val companyLogo: GenerateFileRequest,
-    val companyPhotoList: GenerateFileListRequest
+    val companyIntroductionFile: GenerateFileListRequest?,
+    val companyLogo: GenerateFileRequest?,
+    val companyPhotoList: GenerateFileListRequest?
 ) {
 
 

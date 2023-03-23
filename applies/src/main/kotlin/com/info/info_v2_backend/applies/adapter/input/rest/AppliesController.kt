@@ -11,6 +11,7 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -91,10 +92,12 @@ class AppliesController(
 
     @GetMapping
     fun getTotalAppliesList(
-        @RequestParam status: AppliesStatus
-    ): List<AppliesResponse> {
-        log.info("getTotalAppliesList, status: $status, email: ${Auth.getUserEmail()}")
-        if (Auth.checkIsTeacher()) return loadAppliesUsecase.loadEveryAppliesListByStatus(status)
+        @RequestParam status: AppliesStatus,
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): Page<AppliesResponse> {
+        log.info("getTotalAppliesList, status: $status, idx: $idx, size: $size, email: ${Auth.getUserEmail()}")
+        if (Auth.checkIsTeacher()) return loadAppliesUsecase.loadAppliesListByStatus(status, idx, size)
         else throw BusinessException(
             "이 작업은 선생님만 수행할 수 있습니다.",
             ErrorCode.NO_AUTHORIZATION_ERROR

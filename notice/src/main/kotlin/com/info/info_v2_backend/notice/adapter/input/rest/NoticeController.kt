@@ -25,6 +25,7 @@ import com.info.info_v2_backend.notice.application.port.input.language.AddLangua
 import com.info.info_v2_backend.notice.application.port.input.language.LoadLanguageUsecase
 import com.info.info_v2_backend.notice.application.port.input.technology.AddTechnologyUsecase
 import com.info.info_v2_backend.notice.application.port.input.technology.LoadTechnologyUsecase
+import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassification
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
@@ -56,11 +57,27 @@ class NoticeController(
     private val log = LoggerFactory.getLogger(this.javaClass)
 
 
+
     //@Cacheable("memberCacheStore")
     @GetMapping("/count")
     fun getOpenNoticeCount(): Int {
         return countOpenNoticeUsecase.count()
     }
+
+    @GetMapping("/classification/small")
+    fun getNoticeBySmallClassification(
+        @RequestParam smallClassification: String,
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): Page<MinimumNoticeResponse> {
+        log.info("getNoticeBySmallClassification: $smallClassification")
+        return loadNoticeUsecase.loadNoticeBySmallClassification(
+            smallClassification,
+            idx,
+            size
+        )
+    }
+
 
     //@Cacheable("memberCacheStore")
     @GetMapping("/classification")

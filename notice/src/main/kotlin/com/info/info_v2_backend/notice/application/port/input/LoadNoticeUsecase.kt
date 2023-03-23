@@ -17,7 +17,10 @@ interface LoadNoticeUsecase {
 
     fun loadCompanyMinimumNoticeList(companyNumber: String): List<MinimumNoticeResponse>
     fun loadCompanyMinimumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse>
+
     fun loadAvailableNotice(noticeId: String): NoticeDto?
     fun loadNoticeDto(noticeId: String): NoticeDto?
+
+    fun loadNoticeBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<MinimumNoticeResponse>
 
 }

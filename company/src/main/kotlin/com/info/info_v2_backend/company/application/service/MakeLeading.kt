@@ -21,4 +21,13 @@ class MakeLeading(
         company.makeLeading()
         saveCompanyPort.save(company)
     }
+
+    override fun cancelLeading(companyNumber: String) {
+        val company = loadCompanyPort.loadCompany(companyNumber)
+            ?: throw BusinessException(
+                errorCode = ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR
+            )
+        company.cancelLeading()
+        saveCompanyPort.save(company)
+    }
 }

@@ -45,7 +45,6 @@ class RegisterCompany(
     override fun register(
         request: RegisterCompanyRequest
     ): PresignedUrlListResponse {
-
             loadCompanyPort.loadCompany(request.companyNumber)?.let {
                 throw BusinessException("이미 존재하는 사업자등록번호입니다.", ErrorCode.ALREADY_EXISTS_ERROR)
             }
@@ -71,7 +70,7 @@ class RegisterCompany(
                 )
             }
 
-            val logoFile = request.companyLogo.let {
+            val logoFile = request.companyLogo?.let {
                 uploadFile(
                     CompanyFileClassificationType.COMPANY_LOGO,
                     request.companyNumber,
@@ -79,7 +78,7 @@ class RegisterCompany(
                 )
             }
 
-            val companyIntroductionFileList = request.companyIntroductionFile.request.map {
+            val companyIntroductionFileList = request.companyIntroductionFile?.request?.map {
                 uploadFile(
                     CompanyFileClassificationType.COMPANY_INTRODUCTION,
                     request.companyNumber,
@@ -87,7 +86,7 @@ class RegisterCompany(
                 )
             }
 
-            val companyPhotoFileList = request.companyPhotoList.request.map {
+            val companyPhotoFileList = request.companyPhotoList?.request?.map {
                 uploadFile(
                     CompanyFileClassificationType.COMPANY_PHOTO,
                     request.companyNumber,
@@ -130,15 +129,24 @@ class RegisterCompany(
             list.add(
                 businessCertificateFile
             )
-            list.add(
-                logoFile
-            )
-            list.addAll(
-                companyIntroductionFileList
-            )
-            list.addAll(
-                companyPhotoFileList
-            )
+            logoFile?.let {
+                list.add(
+                    it
+                )
+            }
+
+            companyIntroductionFileList?.let {
+                list.addAll(
+                    it
+                )
+            }
+        
+            companyPhotoFileList?.let {
+                list.addAll(
+                    it
+                )
+            }
+
             return PresignedUrlListResponse(
                 list
             )

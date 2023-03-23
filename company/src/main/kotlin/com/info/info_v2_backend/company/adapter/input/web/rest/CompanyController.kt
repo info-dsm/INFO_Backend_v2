@@ -181,6 +181,12 @@ class CompanyController(
         return makeLeadingUsecase.makeLeading(companyNumber)
     }
 
+    @DeleteMapping("/leading/{companyNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun cancelLeading(@PathVariable companyNumber: String) {
+        return makeLeadingUsecase.cancelLeading(companyNumber)
+    }
+
 
 
     //Internal API

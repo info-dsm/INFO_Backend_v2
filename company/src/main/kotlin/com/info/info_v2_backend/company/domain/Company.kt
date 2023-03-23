@@ -111,6 +111,10 @@ class Company(
         this.isLeading = true
     }
 
+    fun cancelLeading() {
+        this.isLeading = false
+    }
+
     fun toCompanyDto(logoUrl: String): CompanyDto {
         return CompanyDto(
             this.companyNumber,

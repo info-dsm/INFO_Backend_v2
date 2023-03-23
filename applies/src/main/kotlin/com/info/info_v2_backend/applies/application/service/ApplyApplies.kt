@@ -2,6 +2,7 @@ package com.info.info_v2_backend.applies.application.service
 
 import com.info.info_v2_backend.applies.application.port.input.ApplyAppliesUsecase
 import com.info.info_v2_backend.applies.application.port.output.applies.CancelApplyPort
+import com.info.info_v2_backend.applies.application.port.output.applies.LoadAppliesPort
 import com.info.info_v2_backend.applies.application.port.output.applies.SaveAppliesPort
 import com.info.info_v2_backend.applies.application.port.output.company.LoadCompanyPort
 import com.info.info_v2_backend.applies.application.port.output.notice.LoadNoticePort
@@ -30,7 +31,8 @@ class ApplyApplies(
     private val resumePort: ResumePort,
     private val updateNoticeAppliesCountPort: UpdateNoticeAppliesCountPort,
     private val cancelApply: CancelApplyPort,
-    private val loadCompanyPort: LoadCompanyPort
+    private val loadCompanyPort: LoadCompanyPort,
+    private val loadAppliesPort: LoadAppliesPort
 ): ApplyAppliesUsecase {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -51,8 +53,11 @@ class ApplyApplies(
         val company = loadCompanyPort.loadCompany(notice.companyNumber)
             ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
 
-        cancelApply.cancelApply(noticeId, studentEmail)
-
+        loadAppliesPort.loadAppliesByNoticeAndStudentEmail(noticeId, studentEmail)?.let {
+            cancelApply.cancelApply(noticeId, studentEmail)
+        }?:let {
+            updateNoticeAppliesCountPort.addCount(noticeId)
+        }
         val applies = applyAppliesPort.save(
             Applies(
                 Applicant(
@@ -73,7 +78,6 @@ class ApplyApplies(
         )
         
         resumePort.removeResume(noticeId, studentEmail)
-        updateNoticeAppliesCountPort.addCount(noticeId)
         return resumePort.uploadResume(noticeId, applies.applicant.email, request)
     }
 

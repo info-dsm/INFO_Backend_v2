@@ -187,7 +187,10 @@ class Notice(
     fun toNoticeDto(): NoticeDto {
         return NoticeDto(
             this.id,
-            this.company.companyNumber
+            this.company.companyNumber,
+            this.smallClassificationUsageList.joinToString {
+                ","
+            }
         )
     }
 //

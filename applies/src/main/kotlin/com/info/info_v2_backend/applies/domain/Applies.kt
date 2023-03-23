@@ -1,6 +1,7 @@
 package com.info.info_v2_backend.applies.domain
 
 import com.info.info_v2_backend.applies.adapter.input.rest.dto.respnose.AppliesResponse
+import com.info.info_v2_backend.applies.domain.company.AppliesCompany
 import com.info.info_v2_backend.applies.domain.notice.AppliesNotice
 import com.info.info_v2_backend.applies.domain.time.TimeEntity
 import com.info.info_v2_backend.applies.domain.user.Applicant
@@ -16,6 +17,7 @@ import javax.persistence.*
 class Applies(
     applicant: Applicant,
     notice: AppliesNotice,
+    company: AppliesCompany,
     message: String?
 ): TimeEntity() {
     @Id
@@ -28,6 +30,10 @@ class Applies(
 
     @Embedded
     var notice: AppliesNotice = notice
+        protected set
+
+    @Embedded
+    var company: AppliesCompany = company
         protected set
 
     @Column(name = "applies_status")
@@ -55,7 +61,14 @@ class Applies(
                 this.applicant.email,
                 this.applicant.name
             ),
-            this.notice.noticeId,
+            AppliesResponse.AppliesNoticeResponse(
+                this.notice.noticeId,
+                this.notice.classificationList.split(",").map { it.trim() }
+            ),
+            AppliesResponse.AppliesCompanyResponse(
+                this.company.companyName,
+                this.company.companyNumber
+            ),
             this.status,
             fileList,
             this.message

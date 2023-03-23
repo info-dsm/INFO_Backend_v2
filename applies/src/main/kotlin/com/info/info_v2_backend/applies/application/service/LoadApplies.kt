@@ -9,6 +9,7 @@ import com.info.info_v2_backend.common.applies.AppliesDto
 import com.info.info_v2_backend.common.applies.AppliesStatus
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,7 +21,7 @@ class LoadApplies(
     override fun loadAppliesListByStatus(companyNumber: String, noticeId: String, status: AppliesStatus?): List<AppliesResponse> {
         return loadAppliesPort.loadAppliesList(noticeId, status).map {
             applies: Applies ->
-            if (!(applies.notice.companyNumber == companyNumber)) throw BusinessException(null, ErrorCode.INVALID_INPUT_DATA_ERROR)
+            if (!(applies.company.companyNumber == companyNumber)) throw BusinessException(null, ErrorCode.INVALID_INPUT_DATA_ERROR)
             resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email).let {
                 return@let applies.toAppliesResponse(it)
             }
@@ -32,8 +33,8 @@ class LoadApplies(
             ?.toAppliesDto()
     }
 
-    override fun loadEveryAppliesListByStatus(status: AppliesStatus): List<AppliesResponse> {
-        return loadAppliesPort.loadEveryAppliesByStatus(status).map {
+    override fun loadAppliesListByStatus(status: AppliesStatus, idx: Int, size: Int): Page<AppliesResponse> {
+        return loadAppliesPort.loadEveryAppliesByStatus(status, idx, size).map {
             applies: Applies ->
             resumePort.loadAppliesResume(applies.notice.noticeId, applies.applicant.email).let {
                 return@let applies.toAppliesResponse(it)

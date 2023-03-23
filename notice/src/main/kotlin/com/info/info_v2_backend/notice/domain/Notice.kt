@@ -188,7 +188,9 @@ class Notice(
         return NoticeDto(
             this.id,
             this.company.companyNumber,
-            this.smallClassificationUsageList.joinToString {
+            this.smallClassificationUsageList.map {
+                it.smallClassification.name
+            }.joinToString {
                 ","
             }
         )

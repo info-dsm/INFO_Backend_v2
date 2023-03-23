@@ -190,9 +190,7 @@ class Notice(
             this.company.companyNumber,
             this.smallClassificationUsageList.map {
                 it.smallClassification.name
-            }.joinToString {
-                ","
-            }
+            }.joinToString(",")
         )
     }
 //

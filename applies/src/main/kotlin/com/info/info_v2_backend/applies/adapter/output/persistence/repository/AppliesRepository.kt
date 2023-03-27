@@ -30,12 +30,12 @@ interface AppliesRepository: JpaRepository<Applies, String> {
         value = "select * from applies where applies_status = :status order by created_at desc",
         countQuery = "select count(*) from applies where applies_status = :status"
     )
-    fun findByStatus(@Param(value = "status") status: AppliesStatus, pageable: Pageable): Page<Applies>
+    fun findByStatus(@Param(value = "status") status: String, pageable: Pageable): Page<Applies>
 
     @Query(nativeQuery = true, value = "select * from applies where applicant_email = :studentEmail")
     fun findByApplicant(@Param(value = "studentEmail") studentEmail: String): List<Applies>
 
-    @Query(nativeQuery = true, value = "select * from applies where applicant_email = :studentEmail and applies_notice_id = :noticeId")
+    @Query(nativeQuery = true, value = "select * from applies where applicant_email = :studentEmail and applies_notice_id = :noticeId and ")
     fun findByNoticeAndApplicant(@Param(value = "noticeId") noticeId: String, @Param(value = "studentEmail") studentEmail: String): Optional<Applies>
 
 }

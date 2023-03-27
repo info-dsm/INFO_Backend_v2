@@ -39,7 +39,7 @@ class AppliesPersistenceAdapter(
     }
 
     override fun loadEveryAppliesByStatus(status: AppliesStatus, idx: Int, size: Int): Page<Applies> {
-        return appliesRepository.findByStatus(status, PageRequest.of(idx, size))
+        return appliesRepository.findByStatus(status.name, PageRequest.of(idx, size))
     }
 
     override fun loadAppliesByStudentEmail(studentEmail: String): List<Applies> {

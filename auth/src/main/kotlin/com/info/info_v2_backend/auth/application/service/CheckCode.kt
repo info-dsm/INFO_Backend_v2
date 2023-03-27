@@ -13,7 +13,7 @@ class CheckCode(
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     override fun check(dto: AuthenticationCodeDto): Boolean {
-        val code = loadCodePort.load(dto.email)
+        val code = loadCodePort.load(dto.email, dto.type)
         log.info("${code.identifyKey}, ${code.type}, ${code.data}, ${code.targetEmail}, ${code.timeToLive}")
         if (code.type == dto.type && code.data == dto.data) return true
         return false

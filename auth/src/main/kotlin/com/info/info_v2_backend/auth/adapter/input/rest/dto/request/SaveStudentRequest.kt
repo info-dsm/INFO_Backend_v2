@@ -9,8 +9,7 @@ class SaveStudentRequest(
     @field:SchoolEmail
     val email: String,
     val password: String,
-    val githubLink: String?,
-    val entranceYear: Int
+    val githubLink: String?
 ){
 
     fun toSaveStudentDto(): SaveStudentDto {
@@ -20,7 +19,6 @@ class SaveStudentRequest(
             this.email,
             this.password,
             this.githubLink,
-            this.entranceYear
         )
     }
 }

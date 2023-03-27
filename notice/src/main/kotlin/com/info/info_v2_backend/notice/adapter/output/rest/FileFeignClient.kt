@@ -24,4 +24,7 @@ interface FileFeignClient: FilePort {
         @PathVariable noticeId: String
     ): List<AttachmentResponse>
 
+    @DeleteMapping("/notice/{noticeId}/attachment")
+    override fun removeFile(@PathVariable noticeId: String)
+
 }

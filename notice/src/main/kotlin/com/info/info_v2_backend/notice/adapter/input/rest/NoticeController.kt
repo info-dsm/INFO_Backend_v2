@@ -25,6 +25,7 @@ import com.info.info_v2_backend.notice.application.port.input.language.AddLangua
 import com.info.info_v2_backend.notice.application.port.input.language.LoadLanguageUsecase
 import com.info.info_v2_backend.notice.application.port.input.technology.AddTechnologyUsecase
 import com.info.info_v2_backend.notice.application.port.input.technology.LoadTechnologyUsecase
+import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassification
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
@@ -56,11 +57,27 @@ class NoticeController(
     private val log = LoggerFactory.getLogger(this.javaClass)
 
 
+
     //@Cacheable("memberCacheStore")
     @GetMapping("/count")
     fun getOpenNoticeCount(): Int {
         return countOpenNoticeUsecase.count()
     }
+
+    @GetMapping("/classification/small")
+    fun getNoticeBySmallClassification(
+        @RequestParam smallClassification: String,
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): Page<MinimumNoticeResponse> {
+        log.info("getNoticeBySmallClassification: $smallClassification")
+        return loadNoticeUsecase.loadNoticeBySmallClassification(
+            smallClassification,
+            idx,
+            size
+        )
+    }
+
 
     //@Cacheable("memberCacheStore")
     @GetMapping("/classification")
@@ -218,8 +235,9 @@ class NoticeController(
         @PathVariable companyNumber: String,
         @PathVariable noticeId: String
     ): AdminMaximumNoticeResponse {
+        log.info("getAdminMaximumNotice, companyNumber: ${companyNumber}, noticeId: ${noticeId}")
         if (Auth.checkIsTeacher()) { return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)}
-        else if (Auth.checkCompanyNumber(companyNumber).equals(companyNumber)) return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)
+        else if (Auth.checkCompanyNumber(companyNumber) == companyNumber) return loadNoticeUsecase.loadAdminMaximunNotice(noticeId)
         else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 

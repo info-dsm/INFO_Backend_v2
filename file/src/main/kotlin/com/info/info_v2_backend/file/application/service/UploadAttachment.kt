@@ -34,7 +34,6 @@ class UploadAttachment(
             )
         )
 
-        removeAttachmentPort.remove(noticeId)
         saveAttachmentPort.save(attachment)
 
         return PresignedUrlResponse(

@@ -8,6 +8,7 @@ import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListRespons
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.scheduling.annotation.Async
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
@@ -22,6 +23,9 @@ interface FileFeignClient: ResumePort {
     override fun uploadResume(@PathVariable noticeId: String, @PathVariable studentEmail: String, @RequestBody request: GenerateFileListRequest): PresignedUrlListResponse
 
     @GetMapping("/applies/{noticeId}/{studentEmail}/resume")
-    override fun loadAppliesResume(@PathVariable noticeId: String, @PathVariable studentEmail: String): FileResponse?
+    override fun loadAppliesResume(@PathVariable noticeId: String, @PathVariable studentEmail: String): List<FileResponse>
+
+    @DeleteMapping("/applies/{noticeId}/{studentEmail}/resume")
+    override fun removeResume(@PathVariable noticeId: String, @PathVariable studentEmail: String)
 
 }

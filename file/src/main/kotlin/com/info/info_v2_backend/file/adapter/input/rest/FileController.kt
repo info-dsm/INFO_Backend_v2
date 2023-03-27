@@ -9,12 +9,14 @@ import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.file.application.port.input.applies.LoadResumeUsecase
+import com.info.info_v2_backend.file.application.port.input.applies.RemoveResumeUsecase
 import com.info.info_v2_backend.file.application.port.input.notice.UploadAttachmentUsecase
 import com.info.info_v2_backend.file.application.port.input.company.LoadCompanyFileUsecase
 import com.info.info_v2_backend.file.application.port.input.company.RemoveCompanyFileUsecase
 import com.info.info_v2_backend.file.application.port.input.company.UploadCompanyFileUsecase
 import com.info.info_v2_backend.file.application.port.input.applies.UploadResumeUsecase
 import com.info.info_v2_backend.file.application.port.input.notice.LoadAttachmentUsecase
+import com.info.info_v2_backend.file.application.port.input.notice.RemoveAttachmentUsecase
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -34,7 +36,9 @@ class FileController(
     private val uploadResumeUsecase: UploadResumeUsecase,
     private val uploadAttachmentUsecase: UploadAttachmentUsecase,
     private val loadAttachmentUsecase: LoadAttachmentUsecase,
-    private val loadResumeUsecase: LoadResumeUsecase
+    private val loadResumeUsecase: LoadResumeUsecase,
+    private val removeResumeUsecase: RemoveResumeUsecase,
+    private val removeAttachmentUsecase: RemoveAttachmentUsecase
 ) {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
@@ -54,8 +58,8 @@ class FileController(
 
 
     @GetMapping("/company/{companyNumber}")
-    fun getCompanyFileList(@PathVariable companyNumber: String): List<CompanyFileResponse> {
-        return loadCompanyFileUsecase.loadByCompanyNumber(companyNumber)
+    fun getCompanyPhotoFileList(@PathVariable companyNumber: String): List<CompanyFileResponse> {
+        return loadCompanyFileUsecase.loadPhotosByCompanyNumber(companyNumber)
     }
 
 
@@ -76,6 +80,7 @@ class FileController(
         @PathVariable studentEmail: String,
         @RequestBody request: GenerateFileListRequest
     ): PresignedUrlListResponse {
+        removeResumeUsecase.remove(noticeId, studentEmail)
         return PresignedUrlListResponse(
             request.request.map {
                     geneFileRequest: GenerateFileRequest ->
@@ -96,10 +101,18 @@ class FileController(
     fun getAppliesResume(
         @PathVariable noticeId: String,
         @PathVariable studentEmail: String
-    ): FileResponse {
+    ): List<FileResponse> {
         return loadResumeUsecase.load(noticeId, studentEmail)
     }
 
+
+    @DeleteMapping("/applies/{noticeId}/{studentEmail}/resume")
+    fun removeResume(
+        @PathVariable noticeId: String,
+        @PathVariable studentEmail: String
+    ) {
+        return removeResumeUsecase.remove(noticeId, studentEmail)
+    }
 
 
 
@@ -108,6 +121,7 @@ class FileController(
         @PathVariable noticeId: String,
         @RequestBody request: GenerateFileListRequest
     ): PresignedUrlListResponse {
+        removeAttachmentUsecase.remove(noticeId)
         return PresignedUrlListResponse(
             request.request.map {
                 geneFileRequest: GenerateFileRequest ->
@@ -127,6 +141,13 @@ class FileController(
         @PathVariable noticeId: String
     ): List<AttachmentResponse> {
         return loadAttachmentUsecase.loadAttachmentList(noticeId)
+    }
+
+    @DeleteMapping("/notice/{noticeId}/attachment")
+    fun removeAttachment(
+        @PathVariable noticeId: String
+    ) {
+        return removeAttachmentUsecase.remove(noticeId)
     }
 
 

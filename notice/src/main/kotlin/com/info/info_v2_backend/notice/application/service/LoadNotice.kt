@@ -24,7 +24,7 @@ class LoadNotice(
     private val loadNoticePort: LoadNoticePort,
     private val loadWithConditionPort: LoadWithConditionPort,
     private val filePort: FilePort,
-    private val loadCompanyPort: LoadCompanyPort
+    private val loadCompanyPort: LoadCompanyPort,
 ): LoadNoticeUsecase, CountOpenNoticeUsecase {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -90,6 +90,14 @@ class LoadNotice(
 
     override fun loadNoticeDto(noticeId: String): NoticeDto? {
         return loadNoticePort.loadNotice(noticeId)?.toNoticeDto()
+    }
+
+    override fun loadNoticeBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<MinimumNoticeResponse> {
+        return loadNoticePort.loadNoticeBySmallClassification(smallClassification, idx, size).map {
+            it.toMinimumNoticeResponse(
+                loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+            )
+        }
     }
 
     override fun count(): Int {

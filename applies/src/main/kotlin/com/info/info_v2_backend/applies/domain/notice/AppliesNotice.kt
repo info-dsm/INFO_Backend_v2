@@ -7,14 +7,14 @@ import javax.persistence.Embeddable
 @Embeddable
 class AppliesNotice(
     noticeId: String,
-    companyNumber: String
+    classificationList: String
 ) {
     @Column(name = "applies_notice_id", nullable = false)
     var noticeId: String = noticeId
         protected set
 
-    @Column(name = "applies_notice_company_number", nullable = false)
-    var companyNumber: String = companyNumber
+    @Column(name = "applies_classification_list", nullable = false)
+    var classificationList: String = classificationList
         protected set
 
     fun toAppliesNoticeDto(): AppliesDto.AppliesNoticeDto {

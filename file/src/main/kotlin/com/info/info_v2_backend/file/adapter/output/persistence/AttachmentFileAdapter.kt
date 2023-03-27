@@ -17,11 +17,11 @@ class AttachmentFileAdapter(
     }
 
     override fun remove(noticeId: String) {
-        attachmentRepository.deleteByNotice(AttachmentNotice(noticeId))
+        attachmentRepository.deleteByNotice(noticeId)
     }
 
     override fun loadAttachment(noticeId: String): List<Attachment> {
-        return attachmentRepository.findByNotice(AttachmentNotice(noticeId))
+        return attachmentRepository.findByNotice(noticeId)
     }
 
 

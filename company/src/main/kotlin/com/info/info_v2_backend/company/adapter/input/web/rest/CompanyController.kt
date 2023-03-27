@@ -39,7 +39,6 @@ class CompanyController(
     private val countCompanyUsecase: CountCompanyUsecase
 ) {
 
-    //@Cacheable("memberCacheStore")
     @GetMapping("/count")
     fun getCompanyCount(): Int {
         return countCompanyUsecase.count()
@@ -48,11 +47,10 @@ class CompanyController(
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     fun registerCompany(
-        @RequestParam emailCheckCode: String,
         @RequestBody(required = true) request: RegisterCompanyRequest
     ): PresignedUrlListResponse {
         return registerCompanyUsecase.register(
-            emailCheckCode, request
+            request
         )
     }
 
@@ -66,7 +64,6 @@ class CompanyController(
         editCompanyUsecase.editCompany(Auth.checkCompanyNumber(companyNumber), request)
     }
 
-    //@Cacheable("memberCacheStore")
     @GetMapping("/business-area")
     fun getBusinessAreaList(): List<BusinessArea> {
         return loadBusinessAreaUsecase.loadAll()
@@ -138,7 +135,6 @@ class CompanyController(
         makeAssociatedUsecase.makeAssociated(companyNumber)
     }
 
-    //@Cacheable("memberCacheStore")
     @GetMapping("/list")
     fun getMinimumCompanyList(
         @RequestParam(defaultValue = "0") idx: Int,
@@ -147,7 +143,6 @@ class CompanyController(
         return loadCompanyUsecase.loadMinimumCompanyList(idx, size)
     }
 
-    @Cacheable("memberCacheStore", key = "#companyNumber")
     @GetMapping("/{companyNumber}")
     fun getMaximumCompany(@PathVariable companyNumber: String): MaximumCompanyResponse {
         return loadCompanyUsecase.loadMaximumCompany(companyNumber)
@@ -160,7 +155,6 @@ class CompanyController(
 //
 //    }
 
-    @Cacheable("memberCacheStore", key = "#year")
     @GetMapping("/list/{year}")
     fun getRegisteredNoticeCompanyListByYear(
         @PathVariable year: Int,
@@ -185,6 +179,12 @@ class CompanyController(
     @ResponseStatus(HttpStatus.ACCEPTED)
     fun makeLeading(@PathVariable companyNumber: String) {
         return makeLeadingUsecase.makeLeading(companyNumber)
+    }
+
+    @DeleteMapping("/leading/{companyNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun cancelLeading(@PathVariable companyNumber: String) {
+        return makeLeadingUsecase.cancelLeading(companyNumber)
     }
 
 

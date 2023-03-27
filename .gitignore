@@ -40,3 +40,4 @@ lib/
 
 
 apiGateway/src/main/resources/application.yml
+deploy.sh

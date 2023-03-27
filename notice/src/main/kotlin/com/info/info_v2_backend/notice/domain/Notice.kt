@@ -187,7 +187,10 @@ class Notice(
     fun toNoticeDto(): NoticeDto {
         return NoticeDto(
             this.id,
-            this.company.companyNumber
+            this.company.companyNumber,
+            this.smallClassificationUsageList.map {
+                it.smallClassification.name
+            }.joinToString(",")
         )
     }
 //
@@ -312,8 +315,8 @@ class Notice(
             this.otherFeatures,
             this.workPlace.toWorkPlaceRequest(),
             this.applicantCount,
-            ArrayList(),
-            this.isPersonalContact
+            this.isPersonalContact,
+            ArrayList()
         )
     }
 

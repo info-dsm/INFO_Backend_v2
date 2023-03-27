@@ -16,8 +16,8 @@ class CompanyFileAdapter(
         return companyFileRepository.findById(fileId).orElse(null)
     }
 
-    override fun loadByCompanyNumber(companyNumber: String): List<CompanyFile> {
-        return companyFileRepository.findByCompanyNumber(companyNumber)
+    override fun loadPhotosByCompanyNumber(companyNumber: String): List<CompanyFile> {
+        return companyFileRepository.findCompanyPhotosByCompanyNumber(companyNumber)
     }
 
     override fun save(file: CompanyFile) {

@@ -48,4 +48,8 @@ object FileConvert {
         localFile.delete()
     }
 
+    fun getUrlWithoutParameters(url: String): String {
+        return url.substring(0, url.lastIndexOf('?'))
+    }
+
 }

@@ -11,7 +11,7 @@ import com.info.info_v2_backend.company.domain.introduction.CompanyIntroduction
 import com.info.info_v2_backend.company.domain.name.CompanyName
 import com.info.info_v2_backend.company.domain.status.CompanyCreationStatus
 import com.info.info_v2_backend.company.domain.time.TimeEntity
-import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.ContactorResponse
+import com.info.info_v2_backend.common.user.ContactorDto
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import org.springframework.data.domain.Persistable
@@ -72,7 +72,7 @@ class Company(
 
     @Column(name = "company_creation_status", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    var creationStatus: CompanyCreationStatus = CompanyCreationStatus.WAITING
+    var creationStatus: CompanyCreationStatus = CompanyCreationStatus.CREATED
         protected set
 
 
@@ -111,6 +111,10 @@ class Company(
         this.isLeading = true
     }
 
+    fun cancelLeading() {
+        this.isLeading = false
+    }
+
     fun toCompanyDto(logoUrl: String): CompanyDto {
         return CompanyDto(
             this.companyNumber,
@@ -144,7 +148,7 @@ class Company(
         )
     }
 
-    fun toMaximumCompanyResponse(companyContactor: ContactorResponse, companyIntroductionResponse: CompanyIntroductionResponse): MaximumCompanyResponse {
+    fun toMaximumCompanyResponse(companyContactor: ContactorDto, companyIntroductionResponse: CompanyIntroductionResponse): MaximumCompanyResponse {
         return MaximumCompanyResponse(
             this.companyNumber,
             this.companyName.companyName,

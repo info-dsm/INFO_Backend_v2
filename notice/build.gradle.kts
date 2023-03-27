@@ -15,6 +15,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.4")
     //OpenFiegn
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.5")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
     //Hystrix
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE")
     //Kafka
@@ -27,5 +28,6 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
     implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
-    
+//    //cache
+//    implementation("org.springframework.boot:spring-boot-starter-cache")
 }

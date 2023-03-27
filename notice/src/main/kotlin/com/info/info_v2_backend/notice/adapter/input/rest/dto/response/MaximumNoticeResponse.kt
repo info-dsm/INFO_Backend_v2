@@ -31,33 +31,14 @@ data class MaximumNoticeResponse(
     val otherFeatures: String?,
     val workPlace: WorkPlaceRequest,
     val applicantCount: Int,
+    val isPersonalContact: Boolean,
     var attachmentFileList: MutableList<AttachmentResponse>,
-    val isPersonalContact: Boolean
+    val needAttachment: String? = "이력서, 자기소개서, 포트폴리오"
 
 ) {
 
     fun addAllAttachmentFileList(attachmentFileList: MutableList<AttachmentResponse>) {
         this.attachmentFileList = attachmentFileList
-    }
-
-    fun addAllInterviewProcessMap(interviewProcessMap: MutableMap<Int, InterviewProcess>) {
-        val map: MutableMap<Int, String> = HashMap()
-        interviewProcessMap.map {
-            map.put(it.key, it.value.meaning)
-        }
-        this.interviewProcessList = map
-    }
-
-    fun addAllLanguageResponse(languageList: MutableList<LanguageResponse>) {
-        this.languageList = languageList
-    }
-
-    fun addAllTechnologyResponse(technologyList: MutableList<TechnologyResponse>) {
-        this.technologyList = technologyList
-    }
-
-    fun addAllCertificateResponse(certificateList: MutableList<CertificateResponse>) {
-        this.certificateList = certificateList
     }
 
 }

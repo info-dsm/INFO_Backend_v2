@@ -15,6 +15,7 @@ buildscript {
 
 
 
+
 plugins {
     kotlin("jvm") version("1.7.20")
     id("org.springframework.boot") version("2.7.5")
@@ -65,7 +66,6 @@ subprojects {
         compileOnly("org.springframework.boot:spring-boot-autoconfigure-processor")
         implementation("org.springframework.boot:spring-boot-starter-web")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-        implementation("org.springframework.boot:spring-boot-starter-log4j2")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -91,17 +91,11 @@ subprojects {
         compileOnly {
             extendsFrom(configurations.annotationProcessor.get())
         }
-        all {
-            exclude(group="org.springframework.boot", module="spring-boot-starter-logging")
-        }
     }
 
 }
 val bootJar: BootJar by tasks
 bootJar.enabled = false
-val jar: Jar by tasks
-jar.enabled = false
-
 
 project(":common") {
     dependencies {

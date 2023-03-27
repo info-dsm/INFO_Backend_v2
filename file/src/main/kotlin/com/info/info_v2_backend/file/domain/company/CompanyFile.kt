@@ -26,7 +26,7 @@ class CompanyFile(
     fileDto.fileName
 ) {
 
-    @Column(name = "file_company_id", nullable = false)
+    @Column(name = "company_number", nullable = false)
     val companyNumber: String = companyNumber
 
     @Column(name = "company_file_classification", nullable = false)

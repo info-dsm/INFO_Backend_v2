@@ -21,7 +21,7 @@ class RecruitmentSmallClassification(
     val smallClassificationUsageList: MutableList<RecruitmentSmallClassificationUsage> = ArrayList()
 
     @ManyToOne
-    @JoinColumn(name = "big_classifiction", nullable = false)
+    @JoinColumn(name = "big_classification", nullable = false)
     val bigClassification: RecruitmentBigClassification = bigClassification
 
     fun toClassificationResponse(): ClassificationResponse {

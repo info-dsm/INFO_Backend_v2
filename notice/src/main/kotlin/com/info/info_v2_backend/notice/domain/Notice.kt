@@ -3,10 +3,7 @@ package com.info.info_v2_backend.notice.domain
 import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.workPlace.WorkPlaceRequest
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeResponse
-import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNoticeWithApproveStatusResponse
+import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.*
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.certificate.CertificateResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.BigClassificationResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.ClassificationResponse
@@ -180,8 +177,8 @@ class Notice(
     }
 
     fun checkIsAvailableAppliesStatus(): Boolean {
-        if (this.noticeOpenPeriod.endDate <= LocalDate.now()
-            || this.noticeOpenPeriod.startDate >= LocalDate.now()) return false
+        if (this.noticeOpenPeriod.endDate.isBefore(LocalDate.now())
+            || this.noticeOpenPeriod.startDate.isAfter(LocalDate.now())) return false
         else if (this.isDelete) return false
         else if (this.isPersonalContact) return false
         return true
@@ -190,7 +187,10 @@ class Notice(
     fun toNoticeDto(): NoticeDto {
         return NoticeDto(
             this.id,
-            this.company.companyNumber
+            this.company.companyNumber,
+            this.smallClassificationUsageList.map {
+                it.smallClassification.name
+            }.joinToString(",")
         )
     }
 //
@@ -268,6 +268,13 @@ class Notice(
 
     }
 
+    fun toAdminMaximumNoticeResponse(): AdminMaximumNoticeResponse {
+        return AdminMaximumNoticeResponse(
+            toMaximumNoticeResponse(),
+            this.pay.toPayRequest()
+        )
+    }
+
     fun toMaximumNoticeResponse(): MaximumNoticeResponse {
         return MaximumNoticeResponse(
             this.id,
@@ -308,8 +315,8 @@ class Notice(
             this.otherFeatures,
             this.workPlace.toWorkPlaceRequest(),
             this.applicantCount,
-            ArrayList(),
-            this.isPersonalContact
+            this.isPersonalContact,
+            ArrayList()
         )
     }
 

@@ -4,7 +4,7 @@ import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginCompany
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.request.LoginRequest
 import com.info.info_v2_backend.auth.adapter.input.rest.dto.response.TokenResponse
 import com.info.info_v2_backend.auth.application.port.input.LoginUsecase
-import com.info.info_v2_backend.auth.application.port.output.LoadContactorPort
+import com.info.info_v2_backend.auth.application.port.output.userFeignPort.LoadContactorPort
 import com.info.info_v2_backend.auth.application.port.output.SaveCodePort
 import com.info.info_v2_backend.auth.domain.Code
 import com.info.info_v2_backend.common.auth.AuthenticationCodeType
@@ -30,7 +30,7 @@ class Login(
 
     override fun loginCompany(request: LoginCompanyRequest): TokenResponse {
         val userDetails = authDetailsService.loadUserByUsername(
-            loadContactorPort.load(request.companyNumber)
+            loadContactorPort.load(request.companyNumber)?.email
                 ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
         )
         println(userDetails.getCompanyNumber())

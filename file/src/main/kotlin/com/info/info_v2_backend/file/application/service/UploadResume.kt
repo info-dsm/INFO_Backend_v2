@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.file.application.service
 
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.file.application.port.input.applies.UploadResumeUsecase
@@ -27,19 +28,18 @@ class UploadResume(
     ): PresignedUrlResponse {
         val fileId = UUID.randomUUID().toString()
         val dto = uploadFilePort.getPresignedUrl(request.fileName, request.contentType, "NOTICE/${noticeId}", "RESUME/${fileId}")
+        val authUrl = dto.fileUrl
+        dto.removeParameter()
         val resume = Resume(
             fileId,
             dto,
             noticeId,
             studentEmail
         )
-        loadResumePort.load(noticeId, studentEmail)?.let {
-            removeFilePort.remove(it.id)
-        }
 
         saveResumeFilePort.save(resume)
         return PresignedUrlResponse(
-            dto.fileUrl,
+            authUrl,
             dto.fileName
         )
     }

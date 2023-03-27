@@ -33,9 +33,10 @@ class GatewayExceptionHandler(
             is ResponseStatusException -> {
                 if (ex.status == HttpStatus.NOT_FOUND) {
                     ErrorResponse(code = ErrorCode.NO_DATA_FOUND_ERROR)
+                } else {
+                    log.warn(ex.message)
+                    ErrorResponse(code = ErrorCode.FRAME_WORK_INTERNAL_ERROR)
                 }
-                log.warn(ex.message)
-                ErrorResponse(code = ErrorCode.FRAME_WORK_INTERNAL_ERROR)
             }
             is BusinessException -> {
                 log.warn(ex.message)

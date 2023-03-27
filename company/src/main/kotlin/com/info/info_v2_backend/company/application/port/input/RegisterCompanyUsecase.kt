@@ -6,7 +6,6 @@ import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.regis
 interface RegisterCompanyUsecase {
 
     fun register(
-        emailCheckCode: String,
         request: RegisterCompanyRequest
     ): PresignedUrlListResponse
 

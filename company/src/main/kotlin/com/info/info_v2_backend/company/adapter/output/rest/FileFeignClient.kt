@@ -24,7 +24,7 @@ interface FileFeignClient: CompanyFilePort {
     override fun upload(@RequestParam(name = "companyNumber") companyId: String, @RequestParam(name = "classification") classification: CompanyFileClassificationType, @RequestBody request: GenerateFileRequest): PresignedUrlResponse
 
     @GetMapping("/company/{companyNumber}")
-    override fun loadCompanyFile(@PathVariable companyNumber: String): List<CompanyFileResponse>
+    override fun loadCompanyPhotoFile(@PathVariable companyNumber: String): List<CompanyFileResponse>
 
     @DeleteMapping("/company/{companyNumber}/{fileId}")
     override fun remove(@PathVariable companyNumber: String, @PathVariable fileId: String, @RequestParam classificationType: CompanyFileClassificationType)

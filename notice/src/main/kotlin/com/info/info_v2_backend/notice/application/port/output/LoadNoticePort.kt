@@ -10,6 +10,8 @@ import java.time.LocalDate
 interface LoadNoticePort {
 
     fun loadNotice(noticeId: String): Notice?
+    fun loadNoticeBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<Notice>
     fun loadNoticeByCompany(companyNumber: String): List<Notice>
+    fun countOpenNotice(): Int
 
 }

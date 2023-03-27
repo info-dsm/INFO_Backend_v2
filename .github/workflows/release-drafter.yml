@@ -5,62 +5,6 @@ on:
     types: [closed]
 
 jobs:
-  apigateway-draft-release:
-    runs-on: ubuntu-latest
-    env:
-      MODULE: apiGateway
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-apigateway
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'apigateway')
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin' # https://github.com/actions/setup-java
-
-      - name: Gradle Caching
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Build with Gradle
-        run: ./gradlew :${{ env.MODULE }}:build
-
-      - name: Docker build & push to prod
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t ${{ env.DOCKER_REPOSITORY }} .
-          docker push ${{ env.DOCKER_REPOSITORY }}
-        working-directory: ${{ env.MODULE }}
-
-      - name: Deploy
-        uses: appleboy/ssh-action@master
-        id: deploy
-        with:
-          host: ${{ secrets.INFO_HOST }}
-          username: ec2-user
-          key: ${{ secrets.PRIVATE_KEY }}
-          envs: GITHUB_SHA
-          script: |
-            cd info
-            docker system prune -f
-            docker pull ${{ env.DOCKER_REPOSITORY }}
-            docker-compose up -d
-            docker image prune -f
-
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-apigateway.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   applies-draft-release:
     runs-on: ubuntu-latest
     env:
@@ -191,7 +135,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Check gradle file existence
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "${{ env.MODULE }}/output/*.jar"
+
       - name: Build with Gradle
+        if: steps.check_files.outputs.files_exists == 'false'
         run: ./gradlew :${{ env.MODULE }}:build
 
       - name: Docker build & push to prod
@@ -515,11 +466,3 @@ jobs:
             docker pull ${{ env.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -f
-
-      - name: Release drafter
-        uses: release-drafter/release-drafter@v5
-        with:
-          config-name: release-drafter-uesr.yml
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

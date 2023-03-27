@@ -2,6 +2,8 @@ package com.info.info_v2_backend.company.adapter.input.web.rest
 
 import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.company.CompanyDto
+import com.info.info_v2_backend.common.exception.BusinessException
+import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
@@ -16,10 +18,10 @@ import com.info.info_v2_backend.company.application.port.input.businessArea.Load
 import com.info.info_v2_backend.company.application.port.input.file.AddCompanyFileUsecase
 import com.info.info_v2_backend.company.application.port.input.file.ChangeCompanyFileUsecase
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 
 
 @RestController
@@ -34,24 +36,21 @@ class CompanyController(
     private val editCompanyUsecase: EditCompanyUsecase,
     private val makeLeadingUsecase: MakeLeadingUsecase,
     private val addBusinessAreaUsecase: AddBusinessAreaUsecase,
+    private val countCompanyUsecase: CountCompanyUsecase
 ) {
 
-    @GetMapping("/{companyNumber}/contactor")
-    fun getContactorEmail(
-        @PathVariable companyNumber: String
-    ): String? {
-        return loadCompanyUsecase.loadCompanyDto(companyNumber)?.contactorEmail
+    @GetMapping("/count")
+    fun getCompanyCount(): Int {
+        return countCompanyUsecase.count()
     }
-
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     fun registerCompany(
-        @RequestParam emailCheckCode: String,
         @RequestBody(required = true) request: RegisterCompanyRequest
     ): PresignedUrlListResponse {
         return registerCompanyUsecase.register(
-            emailCheckCode, request
+            request
         )
     }
 
@@ -72,7 +71,7 @@ class CompanyController(
 
     @PutMapping("/business-area")
     fun addBusinessArea(@RequestParam name: String) {
-        return addBusinessAreaUsecase.add(name)
+        if (Auth.checkIsTeacher()) return addBusinessAreaUsecase.add(name)
     }
 
     @PatchMapping("/{companyNumber}/certificate")
@@ -174,7 +173,6 @@ class CompanyController(
         return loadCompanyUsecase.searchCompany(idx, size, name)
     }
 
-
     //회시 담당자 수정
 
     @PostMapping("/leading/{companyNumber}")
@@ -183,20 +181,27 @@ class CompanyController(
         return makeLeadingUsecase.makeLeading(companyNumber)
     }
 
+    @DeleteMapping("/leading/{companyNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun cancelLeading(@PathVariable companyNumber: String) {
+        return makeLeadingUsecase.cancelLeading(companyNumber)
+    }
+
 
 
     //Internal API
     @GetMapping("/dto/{companyNumber}")
     fun getCompanyDto(@PathVariable companyNumber: String): CompanyDto? {
-        return loadCompanyUsecase.loadCompanyDto(companyNumber)
+        if (Auth.checkIsSystem()) return loadCompanyUsecase.loadCompanyDto(companyNumber)
+        else return null
     }
 
     @GetMapping("/thumbnail/{companyNumber}")
     fun getCompanyThumbnailList(
         @PathVariable companyNumber: String
     ): MutableList<String> {
-        return loadCompanyUsecase.loadCompanyThumbnailList(companyNumber)
+        if (Auth.checkIsSystem()) return loadCompanyUsecase.loadCompanyThumbnailList(companyNumber)
+        else return ArrayList()
     }
-
 
 }

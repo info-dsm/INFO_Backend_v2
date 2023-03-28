@@ -26,7 +26,7 @@ class Student(
 ) {
     val studentKey: String = studentKey
 
-    val entranceYear: Int = Calendar.getInstance().get(Calendar.YEAR) - studentKey.substring(0, 1).toInt()
+    val entranceYear: Int = Calendar.getInstance().get(Calendar.YEAR) - studentKey.substring(0, 1).toInt() + 1
 
 //    @OneToMany(mappedBy = "student")
 //    var hiredStudentList: MutableList<HiredStudent> = ArrayList()

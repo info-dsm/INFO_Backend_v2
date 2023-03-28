@@ -40,7 +40,8 @@ class Signup(
 
     private fun authenticateCode(email: String, type: AuthenticationCodeType, code: String): Boolean {
         return ((loadAuthenticationCodePort.load(
-            email
+            email,
+            type
         ).takeIf { it.type == type })?.data == code)
     }
 

@@ -9,8 +9,7 @@ class SaveStudentDto(
     name: String,
     email: String,
     password: String,
-    val githubLink: String?,
-    val entranceYear: Int
+    val githubLink: String?
 ): SaveUserDto(
     name,
     email,
@@ -23,8 +22,7 @@ class SaveStudentDto(
             this.name,
             this.email,
             this.password,
-            this.githubLink,
-            this.entranceYear
+            this.githubLink
         )
     }
 }

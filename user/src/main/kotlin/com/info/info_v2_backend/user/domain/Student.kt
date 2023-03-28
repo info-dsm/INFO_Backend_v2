@@ -4,7 +4,8 @@ import com.info.info_v2_backend.common.user.Role
 import com.info.info_v2_backend.common.user.StudentDto
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
-import java.time.Year
+import java.time.LocalDate
+import java.util.*
 import javax.persistence.*
 
 
@@ -17,7 +18,6 @@ class Student(
     email: String,
     password: String,
     githubLink: String?,
-    entranceYear: Int
 ): User(
     name,
     email,
@@ -27,7 +27,7 @@ class Student(
 ) {
     val studentKey: String = studentKey
 
-    val entranceYear: Int = entranceYear
+    val entranceYear: Int = LocalDate.now().year - studentKey.substring(0, 1).toInt() + 1
 
 //    @OneToMany(mappedBy = "student")
 //    var hiredStudentList: MutableList<HiredStudent> = ArrayList()

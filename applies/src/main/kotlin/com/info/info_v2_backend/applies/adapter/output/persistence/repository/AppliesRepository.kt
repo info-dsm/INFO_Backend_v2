@@ -35,7 +35,7 @@ interface AppliesRepository: JpaRepository<Applies, String> {
     @Query(nativeQuery = true, value = "select * from applies where applicant_email = :studentEmail")
     fun findByApplicant(@Param(value = "studentEmail") studentEmail: String): List<Applies>
 
-    @Query(nativeQuery = true, value = "select * from applies where applicant_email = :studentEmail and applies_notice_id = :noticeId and order by created_at desc")
+    @Query(nativeQuery = true, value = "select * from applies where applicant_email = :studentEmail and applies_notice_id = :noticeId order by created_at desc")
     fun findByNoticeAndApplicant(@Param(value = "noticeId") noticeId: String, @Param(value = "studentEmail") studentEmail: String): Optional<Applies>
 
 }

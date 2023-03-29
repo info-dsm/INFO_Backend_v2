@@ -14,6 +14,7 @@ class Announcement(
 ){
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "announcement_id")
     var id: Long? = null
         protected set
 

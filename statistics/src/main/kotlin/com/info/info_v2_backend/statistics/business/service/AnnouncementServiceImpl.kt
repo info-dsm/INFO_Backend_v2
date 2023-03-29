@@ -36,7 +36,7 @@ class AnnouncementServiceImpl(
     }
 
     override fun getAnnounceList(idx: Int, size: Int): Page<MinimumAnnouncementResponse> {
-        return announcementRepository.findAll(PageRequest.of(idx, size, Sort.by("created_at").descending())).map {
+        return announcementRepository.findAll(PageRequest.of(idx, size, Sort.by("createdAt").descending())).map {
             it.toMinimumAnnouncementResponse()
         }
     }

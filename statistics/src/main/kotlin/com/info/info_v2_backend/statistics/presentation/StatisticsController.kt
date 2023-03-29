@@ -51,4 +51,8 @@ class StatisticsController(
         return announcementService.getAnnounce(announcementId)
     }
 
+    @GetMapping("/announcement/latest")
+    fun getLatestAnnouncement(): MinimumAnnouncementResponse {
+        return announcementService.getLatestAnnouncement()
+    }
 }

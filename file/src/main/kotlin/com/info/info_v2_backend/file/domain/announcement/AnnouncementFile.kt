@@ -11,7 +11,7 @@ import javax.persistence.Entity
 @Entity
 @DiscriminatorValue("attachment")
 @OnDelete(action = OnDeleteAction.CASCADE)
-class Announcement(
+class AnnouncementFile(
     id: String,
     dto: FileDto,
     announcementId: Long

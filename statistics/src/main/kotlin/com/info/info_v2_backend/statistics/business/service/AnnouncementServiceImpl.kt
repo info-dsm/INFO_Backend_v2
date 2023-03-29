@@ -26,7 +26,8 @@ class AnnouncementServiceImpl(
     override fun createAnnouncment(request: CreateAnnouncementRequest): PresignedUrlListResponse {
         val announcement = announcementRepository.save(Announcement(
             request.title,
-            request.content
+            request.content,
+            request.type
         ))
 
         return fileFeignClient.createAnnouncementFile(

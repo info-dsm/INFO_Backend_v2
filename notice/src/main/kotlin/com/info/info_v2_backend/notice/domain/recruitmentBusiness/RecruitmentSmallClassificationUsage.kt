@@ -12,7 +12,7 @@ class RecruitmentSmallClassificationUsage(
 ) {
 
     @Id
-    private val id: String = UUID.randomUUID().toString()
+    val id: String = UUID.randomUUID().toString()
 
     @ManyToOne
     @JoinColumn(name = "notice_id", nullable = false)

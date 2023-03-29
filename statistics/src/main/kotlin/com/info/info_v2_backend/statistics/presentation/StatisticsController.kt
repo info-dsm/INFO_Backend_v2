@@ -44,11 +44,11 @@ class StatisticsController(
         return announcementService.getAnnounceList(idx, size)
     }
 
-    @GetMapping("/announcement")
+    @GetMapping("/announcement/{announcementId}")
     fun getMaximumAnnouncement(
-        @RequestParam announceId: Long
+        @PathVariable announcementId: Long
     ): MaximumAnnouncementResponse {
-        return announcementService.getAnnounce(announceId)
+        return announcementService.getAnnounce(announcementId)
     }
 
 }

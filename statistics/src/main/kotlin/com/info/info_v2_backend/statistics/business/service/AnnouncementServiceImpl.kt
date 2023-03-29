@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 
 @Service
@@ -22,7 +23,7 @@ class AnnouncementServiceImpl(
     private val fileFeignClient: FileFeignClient
 ): AnnouncementService {
 
-
+    @Transactional
     override fun createAnnouncment(request: CreateAnnouncementRequest): PresignedUrlListResponse {
         val announcement = announcementRepository.save(Announcement(
             request.title,
@@ -47,6 +48,10 @@ class AnnouncementServiceImpl(
             ?.toMaximumAnnouncementResponse(
                 fileFeignClient.getAnnouncementFileList(id)
             )?: throw BusinessException(errorCode = ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+    }
+
+    override fun getLatestAnnouncement(): MinimumAnnouncementResponse {
+        return announcementRepository.findLatestAnnouncement().toMinimumAnnouncementResponse()
     }
 
 

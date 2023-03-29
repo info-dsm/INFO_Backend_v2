@@ -14,23 +14,27 @@ class Announcement(
 ){
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "announcement_id")
     var id: Long? = null
         protected set
 
+    @Column(nullable = false)
     var title: String = title
         protected set
 
+    @Column(nullable = false)
     var content: String = content
         protected set
 
+    @Column(nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     val type: AnnouncementType = type
 
     fun toMinimumAnnouncementResponse(): MinimumAnnouncementResponse{
         return MinimumAnnouncementResponse(
+            this.id!!,
             this.title,
             this.createdAt,
             this.type
@@ -39,6 +43,7 @@ class Announcement(
 
     fun toMaximumAnnouncementResponse(fileList: List<AnnouncementFileResponse>): MaximumAnnouncementResponse{
         return MaximumAnnouncementResponse(
+            this.id!!,
             this.title,
             this.content,
             fileList,

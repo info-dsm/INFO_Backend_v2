@@ -6,6 +6,7 @@ import com.info.info_v2_backend.statistics.persistance.entity.announcement.Annou
 import java.time.LocalDateTime
 
 data class MaximumAnnouncementResponse(
+    val id: Long,
     val title: String,
     val content: String,
     val fileList: List<AnnouncementFileResponse>,

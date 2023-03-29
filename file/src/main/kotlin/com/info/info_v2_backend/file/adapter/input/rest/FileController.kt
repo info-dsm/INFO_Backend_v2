@@ -162,9 +162,17 @@ class FileController(
         @PathVariable announcementId: Long,
         @RequestBody request: GenerateFileListRequest
     ): PresignedUrlListResponse {
-        return uploadAnnouncementFileUsecase.upload(
-            announcementId,
-            request
+        return PresignedUrlListResponse(
+            request.request.map {
+                    geneFileRequest: GenerateFileRequest ->
+                return@map PresignedUrlResponse(
+                    uploadAnnouncementFileUsecase.upload(
+                        announcementId,
+                        geneFileRequest
+                    ).url,
+                    geneFileRequest.fileName
+                )
+            }.toMutableList()
         )
     }
 

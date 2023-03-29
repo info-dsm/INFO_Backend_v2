@@ -12,4 +12,5 @@ interface AnnouncementService {
 
     fun getAnnounceList(idx: Int, size: Int): Page<MinimumAnnouncementResponse>
     fun getAnnounce(id: Long): MaximumAnnouncementResponse
+    fun getLatestAnnouncement(): MinimumAnnouncementResponse
 }

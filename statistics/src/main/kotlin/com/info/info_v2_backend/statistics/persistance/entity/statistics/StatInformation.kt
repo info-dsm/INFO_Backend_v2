@@ -1,8 +1,7 @@
-package com.info.info_v2_backend.statistics.persistance.entity
+package com.info.info_v2_backend.statistics.persistance.entity.statistics
 
 import java.time.LocalDate
 import javax.persistence.ElementCollection
-import javax.persistence.Embeddable
 import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.Id

@@ -172,5 +172,6 @@ project(":eureka") {
 
 project(":statistics"){
     dependencies {
+        implementation(project(":common"))
     }
 }

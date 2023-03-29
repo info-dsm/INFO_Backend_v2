@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.statistics.persistance.entity
+package com.info.info_v2_backend.statistics.persistance.entity.statistics
 
 import javax.persistence.Embeddable
 

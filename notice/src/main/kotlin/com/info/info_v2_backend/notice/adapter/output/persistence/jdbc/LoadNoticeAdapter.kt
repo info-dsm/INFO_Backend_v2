@@ -50,11 +50,9 @@ class LoadNoticeAdapter(
         )
         return PageImpl(noticeList.map {
             vo: NoticeVo ->
-            log.info("id: ${vo.id}, companyName: ${vo.company.companyName}, companyNumber: ${vo.company.companyName}, classification: ${vo}")
             return@map vo.toMinimumNoticeResponse(
                 loadSmallClassificationUsagePort.loadAllByNoticeId(vo.id).map usage@ {
                 usage: RecruitmentSmallClassificationUsage ->
-                    log.info("noticeId: ${vo.id}, classification: ${usage.smallClassification.name}, classificationId: ${usage.id}")
                     return@usage ClassificationResponse(
                         usage.smallClassification.bigClassification.toBigClassificationResponse(),
                         usage.smallClassification.name

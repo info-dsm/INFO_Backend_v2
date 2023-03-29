@@ -4,11 +4,7 @@ import com.info.info_v2_backend.common.file.dto.AnnouncementFileResponse
 import com.info.info_v2_backend.statistics.presentation.dto.response.MaximumAnnouncementResponse
 import com.info.info_v2_backend.statistics.presentation.dto.response.MinimumAnnouncementResponse
 import java.time.LocalDateTime
-import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
+import javax.persistence.*
 
 @Entity
 class Announcement(
@@ -17,7 +13,7 @@ class Announcement(
     type: AnnouncementType
 ){
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
         protected set
 

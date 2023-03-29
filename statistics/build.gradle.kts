@@ -2,22 +2,24 @@ val jar: Jar by tasks
 jar.enabled = false
 
 dependencies {
-
-    //Common
     implementation(project(":common"))
-    // Eureka Client
+    //Annotation Processor
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    //JPA
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    //MySQL driver
+    implementation("mysql:mysql-connector-java:8.0.31")
+    //Eureka Client
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.1.4")
-    //OpenFiegn
+    //OpenFeign
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.5")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
     //Hystrix
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.10.RELEASE")
     //Validation
     implementation("org.springframework.boot:spring-boot-starter-validation:2.7.4")
     //Mysql
     runtimeOnly("mysql:mysql-connector-java")
-    //data jpa
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    //actuator
     implementation("org.springframework.boot:spring-boot-starter-actuator:2.7.5")
     implementation("org.springframework.cloud:spring-cloud-starter-config:3.1.5")
 }

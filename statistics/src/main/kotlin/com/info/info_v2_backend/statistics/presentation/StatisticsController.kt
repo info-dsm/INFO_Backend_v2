@@ -3,6 +3,7 @@ package com.info.info_v2_backend.statistics.presentation
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.statistics.business.service.AnnouncementService
 import com.info.info_v2_backend.statistics.business.service.StatisticsService
+import com.info.info_v2_backend.statistics.persistance.entity.announcement.AnnouncementType
 import com.info.info_v2_backend.statistics.persistance.entity.statistics.StatInformation
 import com.info.info_v2_backend.statistics.presentation.dto.request.CreateAnnouncementRequest
 import com.info.info_v2_backend.statistics.presentation.dto.response.MaximumAnnouncementResponse
@@ -37,11 +38,12 @@ class StatisticsController(
     }
 
     @GetMapping("/announcement")
-    fun getMinimumAnnouncementList(
+    fun getMinimumAnnouncementListByType(
         @RequestParam idx: Int,
-        @RequestParam size: Int
+        @RequestParam size: Int,
+        @RequestParam type: AnnouncementType?
     ): Page<MinimumAnnouncementResponse> {
-        return announcementService.getAnnounceList(idx, size)
+        return announcementService.getAnnounceList(idx, size, type)
     }
 
     @GetMapping("/announcement/{announcementId}")

@@ -53,7 +53,6 @@ class LoadNoticeAdapter(
             return@map vo.toMinimumNoticeResponse(
                 loadSmallClassificationUsagePort.loadAllByNoticeId(vo.id).map usage@ {
                 usage: RecruitmentSmallClassificationUsage ->
-                    log.info("noticeId: ${vo.id}, classification: ${usage.smallClassification.name}")
                     return@usage ClassificationResponse(
                         usage.smallClassification.bigClassification.toBigClassificationResponse(),
                         usage.smallClassification.name

@@ -31,7 +31,7 @@ class SendAuthenticationCode(
                         targetEmail,
                         code,
                         type.timeToLive,
-                        type
+                        type.name
                     )
                 )
 

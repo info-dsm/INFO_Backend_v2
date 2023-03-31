@@ -23,7 +23,7 @@ class Code(
     val data: String = data
 
     @Indexed
-    val type: AuthenticationCodeType = type
+    val type: String = type.name
 
     @TimeToLive
     var timeToLive: Long = timeToLive

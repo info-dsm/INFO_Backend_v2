@@ -7,5 +7,5 @@ import org.springframework.boot.context.properties.ConstructorBinding
 @ConfigurationProperties("auth")
 @ConstructorBinding
 data class AuthenticationCodeProperty(
-    val teacherCode: String
+    val teacherCode: String?
 )

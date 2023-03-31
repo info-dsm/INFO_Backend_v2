@@ -1,5 +1,8 @@
 package com.info.info_v2_backend.statistics.presentation
 
+import com.info.info_v2_backend.common.auth.Auth
+import com.info.info_v2_backend.common.exception.BusinessException
+import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.statistics.business.service.AnnouncementService
 import com.info.info_v2_backend.statistics.business.service.StatisticsService
@@ -34,7 +37,9 @@ class StatisticsController(
     fun createAnnouncement(
         @RequestBody request: CreateAnnouncementRequest
     ): PresignedUrlListResponse {
-        return announcementService.createAnnouncment(request)
+        if (Auth.checkIsTeacher())
+            return announcementService.createAnnouncment(request)
+        else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
     @GetMapping("/announcement")

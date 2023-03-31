@@ -30,7 +30,7 @@ class Reissue(
                     claims.subject,
                     dto.refreshToken,
                     AuthenticationCodeType.REFRESH.timeToLive,
-                    AuthenticationCodeType.REFRESH
+                    AuthenticationCodeType.REFRESH.name
                 )
             )
             return dto

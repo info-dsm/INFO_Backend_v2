@@ -9,7 +9,7 @@ import javax.persistence.DiscriminatorValue
 import javax.persistence.Entity
 
 @Entity
-@DiscriminatorValue("attachment")
+@DiscriminatorValue("announcement_file")
 @OnDelete(action = OnDeleteAction.CASCADE)
 class AnnouncementFile(
     id: String,

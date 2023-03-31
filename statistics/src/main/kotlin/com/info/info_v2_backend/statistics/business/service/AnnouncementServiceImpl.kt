@@ -39,9 +39,10 @@ class AnnouncementServiceImpl(
     }
 
     override fun getAnnounceList(idx: Int, size: Int, type: AnnouncementType?): Page<MinimumAnnouncementResponse> {
-        type?.let {
-            return announcementRepository.findAllByType(it, PageRequest.of(idx, size, Sort.by("createdAt").descending())).map {
-                it.toMinimumAnnouncementResponse()
+        type?.let { t: AnnouncementType ->
+            return announcementRepository.findAllByType(t, PageRequest.of(idx, size, Sort.by("createdAt").descending())).map {
+                a: Announcement ->
+                a.toMinimumAnnouncementResponse()
             }
         }?: return announcementRepository.findAll(PageRequest.of(idx, size, Sort.by("createdAt").descending())).map {
             it.toMinimumAnnouncementResponse()

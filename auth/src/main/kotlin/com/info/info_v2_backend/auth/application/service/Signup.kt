@@ -42,7 +42,7 @@ class Signup(
         return ((loadAuthenticationCodePort.load(
             email,
             type
-        ).takeIf { it.type == type })?.data == code)
+        ).takeIf { it.type == type.name })?.data == code)
     }
 
 

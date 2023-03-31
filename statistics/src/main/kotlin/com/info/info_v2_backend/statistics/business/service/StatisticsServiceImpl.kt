@@ -2,7 +2,7 @@ package com.info.info_v2_backend.statistics.business.service
 
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.statistics.persistance.entity.StatInformation
+import com.info.info_v2_backend.statistics.persistance.entity.statistics.StatInformation
 import com.info.info_v2_backend.statistics.persistance.repository.StatInformationRepository
 import org.springframework.stereotype.Service
 

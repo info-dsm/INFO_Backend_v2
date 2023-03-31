@@ -31,7 +31,7 @@ class Signup(
 
     override fun teacherSignup(request: SaveTeacherDto, emailAuthenticationCode: String, teacherCode: String) {
         if (authenticateCode(request.email, AuthenticationCodeType.SIGNUP_EMAIL, emailAuthenticationCode)) {
-            if (authenticationCodeProperty.teacherCode == teacherCode) {
+            if ((authenticationCodeProperty.teacherCode ?: 1111) == teacherCode) {
                 return saveUserPort.saveTeacherPort(
                     request
                 )

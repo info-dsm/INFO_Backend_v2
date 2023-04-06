@@ -79,6 +79,17 @@ class NoticeController(
     }
 
 
+    @GetMapping("/company")
+    fun getNoticeByCompanyName(
+        @RequestParam idx: Int,
+        @RequestParam size: Int,
+        @RequestParam query: String
+    ): Page<MinimumNoticeResponse> {
+        log.info("getNoitceByCompany: $query")
+        return loadNoticeUsecase.loadNoticeByCompanyName(query, idx, size)
+    }
+
+
     //@Cacheable("memberCacheStore")
     @GetMapping("/classification")
     fun getClassification(): List<ClassificationResponse> {

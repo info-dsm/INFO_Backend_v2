@@ -58,7 +58,7 @@ class LoadNotice(
     }
 
     override fun loadCompanyMinimumNoticeList(companyNumber: String): List<MinimumNoticeResponse> {
-        return loadNoticePort.loadNoticeByCompany(companyNumber).filter {
+        return loadNoticePort.loadNoticeByCompanyNumber(companyNumber).filter {
             it.approveStatus == NoticeWaitingStatus.APPROVE
         }.map {
             it.toMinimumNoticeResponse(
@@ -68,7 +68,7 @@ class LoadNotice(
     }
 
     override fun loadCompanyMinimumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse> {
-        return loadNoticePort.loadNoticeByCompany(companyNumber).map {
+        return loadNoticePort.loadNoticeByCompanyNumber(companyNumber).map {
             it.toMinimumNoticeWithApproveStatusResponse(
                 loadCompanyPort.loadCompanyThumbnailList(companyNumber)
             )
@@ -94,6 +94,14 @@ class LoadNotice(
 
     override fun loadNoticeBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<MinimumNoticeResponse> {
         return loadNoticePort.loadNoticeBySmallClassification(smallClassification, idx, size).map {
+            it.toMinimumNoticeResponse(
+                loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+            )
+        }
+    }
+
+    override fun loadNoticeByCompanyName(query: String, idx: Int, size: Int): Page<MinimumNoticeResponse> {
+        return loadNoticePort.loadNoticeByCompanyName(query, idx, size).map {
             it.toMinimumNoticeResponse(
                 loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
             )

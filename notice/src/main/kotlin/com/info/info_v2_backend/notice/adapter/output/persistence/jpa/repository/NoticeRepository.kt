@@ -17,7 +17,7 @@ interface NoticeRepository: JpaRepository<Notice, String> {
     @Query(value = "select * from notice where notice_is_delete = false and company_number = :companyNumber", nativeQuery = true)
     fun findByCompanyNumber(@Param(value = "companyNumber") companyNumber: String): List<Notice>
 
-    @Query(value = "select n.* from notice n where b.notice_is_delete = false " +
+    @Query(value = "select n.* from notice n where n.notice_is_delete = false " +
             "and n.company_number like %:companyName% " +
             "and n.notice_is_delete = false " +
             "and curdate() between n.start_date and n.end_date " +

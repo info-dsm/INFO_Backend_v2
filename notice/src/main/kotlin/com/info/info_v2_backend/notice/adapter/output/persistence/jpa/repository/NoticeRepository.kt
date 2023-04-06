@@ -23,7 +23,7 @@ interface NoticeRepository: JpaRepository<Notice, String> {
             "and curdate() between n.start_date and n.end_date " +
             "and n.notice_is_approve = 'APPROVE'",
         countQuery = "select count(n.*) from notice n " +
-                "where n.company_name like %:companyName% ",
+                "where n.company_name like %:companyName% " +
                 "and notice_is_delete = false " +
                 "and curdate() between start_date and end_date " +
                 "and notice_is_approve = 'APPROVE'",

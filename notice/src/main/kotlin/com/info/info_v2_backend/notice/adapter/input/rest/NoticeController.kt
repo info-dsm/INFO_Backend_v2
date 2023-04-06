@@ -85,7 +85,7 @@ class NoticeController(
         @RequestParam(defaultValue = "10") size: Int,
         @RequestParam(required = true) query: String
     ): Page<MinimumNoticeResponse> {
-        log.info("getNoitceByCompany: $query")
+        log.info("getNoitceByCompanyName: $query")
         return loadNoticeUsecase.loadNoticeByCompanyName(query, idx, size)
     }
 

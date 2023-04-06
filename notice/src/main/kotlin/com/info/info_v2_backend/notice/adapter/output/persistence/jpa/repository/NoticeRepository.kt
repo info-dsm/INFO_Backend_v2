@@ -17,13 +17,16 @@ interface NoticeRepository: JpaRepository<Notice, String> {
     @Query(value = "select * from notice where notice_is_delete = false and company_number = :companyNumber", nativeQuery = true)
     fun findByCompanyNumber(@Param(value = "companyNumber") companyNumber: String): List<Notice>
 
-    @Query(
-        value = "select * from notice " +
-                "where company_name like '%:companyName%' " +
+    @Query(value = "select * from notice where notice_is_delete = false " +
+            "and company_number like %:companyName% " +
+            "and n.notice_is_delete = false " +
+            "and curdate() between n.start_date and n.end_date " +
+            "and n.notice_is_approve = 'APPROVE'",
+        countQuery = "select count(n.*) from notice n " +
+                "where n.company_name like %:companyName% ",
                 "and notice_is_delete = false " +
                 "and curdate() between start_date and end_date " +
-                "and notice_is_approve = 'APPROVE' and notice_is_delete = false",
-        countQuery = "select count(*) from notice and notice_is_approve = 'APPROVE' and notice_is_delete = false",
+                "and notice_is_approve = 'APPROVE'",
         nativeQuery = true
     )
     fun findByCompanyName(@Param(value = "companyName") companyName: String, pageable: Pageable): Page<Notice>

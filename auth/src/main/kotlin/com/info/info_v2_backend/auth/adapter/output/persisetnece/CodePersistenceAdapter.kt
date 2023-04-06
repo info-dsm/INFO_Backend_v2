@@ -24,7 +24,7 @@ class CodePersistenceAdapter(
     }
 
     override fun load(email: String, type: AuthenticationCodeType): Code {
-        return codeRepository.findByTargetEmailAndType(email, type)
+        return codeRepository.findByTargetEmailAndType(email, type.name)
             .orElse(null)?: throw BusinessException(
             "데이터를 조회할 수 없습니다. -> ${email}",
             ErrorCode.NO_DATA_FOUND_ERROR

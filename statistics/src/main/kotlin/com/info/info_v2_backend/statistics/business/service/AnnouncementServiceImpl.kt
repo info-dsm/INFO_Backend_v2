@@ -5,6 +5,7 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.statistics.infra.feign.FileFeignClient
 import com.info.info_v2_backend.statistics.persistance.entity.announcement.Announcement
+import com.info.info_v2_backend.statistics.persistance.entity.announcement.AnnouncementType
 import com.info.info_v2_backend.statistics.persistance.repository.AnnouncementRepository
 import com.info.info_v2_backend.statistics.presentation.dto.request.CreateAnnouncementRequest
 import com.info.info_v2_backend.statistics.presentation.dto.response.MaximumAnnouncementResponse
@@ -37,8 +38,13 @@ class AnnouncementServiceImpl(
         )
     }
 
-    override fun getAnnounceList(idx: Int, size: Int): Page<MinimumAnnouncementResponse> {
-        return announcementRepository.findAll(PageRequest.of(idx, size, Sort.by("createdAt").descending())).map {
+    override fun getAnnounceList(idx: Int, size: Int, type: AnnouncementType?): Page<MinimumAnnouncementResponse> {
+        type?.let { t: AnnouncementType ->
+            return announcementRepository.findAllByType(t, PageRequest.of(idx, size, Sort.by("createdAt").descending())).map {
+                a: Announcement ->
+                a.toMinimumAnnouncementResponse()
+            }
+        }?: return announcementRepository.findAll(PageRequest.of(idx, size, Sort.by("createdAt").descending())).map {
             it.toMinimumAnnouncementResponse()
         }
     }

@@ -9,5 +9,5 @@ interface CodeRepository: CrudRepository<Code, String> {
 
     fun deleteByTargetEmail(email: String)
 
-    fun findByTargetEmailAndType(email: String, type: AuthenticationCodeType): Optional<Code>
+    fun findByTargetEmailAndType(email: String, type: String): Optional<Code>
 }

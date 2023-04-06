@@ -4,6 +4,8 @@ import com.info.info_v2_backend.common.file.dto.AnnouncementFileResponse
 import com.info.info_v2_backend.statistics.presentation.dto.response.MaximumAnnouncementResponse
 import com.info.info_v2_backend.statistics.presentation.dto.response.MinimumAnnouncementResponse
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.persistence.*
 
 @Entity
@@ -26,7 +28,7 @@ class Announcement(
         protected set
 
     @Column(nullable = false)
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    val createdAt: LocalDateTime = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime()
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

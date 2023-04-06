@@ -66,7 +66,7 @@ class NoticeController(
 
     @GetMapping("/classification/small")
     fun getNoticeBySmallClassification(
-        @RequestParam smallClassification: String,
+        @RequestParam(required = true) smallClassification: String,
         @RequestParam(defaultValue = "0") idx: Int,
         @RequestParam(defaultValue = "10") size: Int
     ): Page<MinimumNoticeResponse> {
@@ -81,9 +81,9 @@ class NoticeController(
 
     @GetMapping("/company")
     fun getNoticeByCompanyName(
-        @RequestParam idx: Int,
-        @RequestParam size: Int,
-        @RequestParam query: String
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @RequestParam(required = true) query: String
     ): Page<MinimumNoticeResponse> {
         log.info("getNoitceByCompany: $query")
         return loadNoticeUsecase.loadNoticeByCompanyName(query, idx, size)

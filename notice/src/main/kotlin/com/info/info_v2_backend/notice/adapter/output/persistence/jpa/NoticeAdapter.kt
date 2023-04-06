@@ -37,9 +37,16 @@ class NoticeAdapter(
         )
     }
 
-    override fun loadNoticeByCompany(companyNumber: String): List<Notice> {
-        return noticeRepository.findByCompany(
+    override fun loadNoticeByCompanyNumber(companyNumber: String): List<Notice> {
+        return noticeRepository.findByCompanyNumber(
             companyNumber
+        )
+    }
+
+    override fun loadNoticeByCompanyName(companyName: String, idx: Int, size: Int): Page<Notice> {
+        return noticeRepository.findByCompanyName(
+            companyName,
+            PageRequest.of(idx, size)
         )
     }
 

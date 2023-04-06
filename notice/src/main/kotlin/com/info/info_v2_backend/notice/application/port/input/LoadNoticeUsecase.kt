@@ -22,5 +22,6 @@ interface LoadNoticeUsecase {
     fun loadNoticeDto(noticeId: String): NoticeDto?
 
     fun loadNoticeBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<MinimumNoticeResponse>
+    fun loadNoticeByCompanyName(query: String, idx: Int, size: Int): Page<MinimumNoticeResponse>
 
 }

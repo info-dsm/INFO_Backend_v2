@@ -38,7 +38,7 @@ interface NoticeRepository: JpaRepository<Notice, String> {
             "and n.notice_is_approve = 'APPROVE' " +
             "and n.id = b.notice_id " +
             "and b.small_classification_id = :smallClassification " +
-            "order by a.created_at desc",
+            "order by n.created_at desc",
         countQuery = "select count(n.*) from notice n, recruitment_small_classification_usage b " +
                 "where n.company_name like %:companyName% " +
                 "and n.notice_is_delete = false " +
@@ -46,7 +46,7 @@ interface NoticeRepository: JpaRepository<Notice, String> {
                 "and n.notice_is_approve = 'APPROVE' " +
                 "and n.id = b.notice_id " +
                 "and b.small_classification_id = :smallClassification " +
-                "order by a.created_at desc",
+                "order by n.created_at desc",
         nativeQuery = true
     )
     fun findByCompanyNameAndSmallClassification(

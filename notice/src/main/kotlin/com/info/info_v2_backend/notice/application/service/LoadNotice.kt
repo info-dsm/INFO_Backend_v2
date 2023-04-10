@@ -92,20 +92,29 @@ class LoadNotice(
         return loadNoticePort.loadNotice(noticeId)?.toNoticeDto()
     }
 
-    override fun loadNoticeBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<MinimumNoticeResponse> {
-        return loadNoticePort.loadNoticeBySmallClassification(smallClassification, idx, size).map {
-            it.toMinimumNoticeResponse(
-                loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
-            )
-        }
-    }
-
-    override fun loadNoticeByCompanyName(query: String, idx: Int, size: Int): Page<MinimumNoticeResponse> {
-        return loadNoticePort.loadNoticeByCompanyName(query, idx, size).map {
-            it.toMinimumNoticeResponse(
-                loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
-            )
-        }
+    override fun searchNotice(
+        companyName: String?,
+        smallClassification: String?,
+        idx: Int,
+        size: Int
+    ): Page<MinimumNoticeResponse> {
+        companyName?.let {
+            name: String ->
+            smallClassification?.let {
+                classification: String ->
+                return loadNoticePort.loadNoticeByCompanyNameAndSmallClassification(name, classification, idx, size).map {
+                    it.toMinimumNoticeResponse(
+                        loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                    )
+                }
+            }?:let {
+                return loadNoticePort.loadNoticeByCompanyName(name, idx, size).map {
+                    it.toMinimumNoticeResponse(
+                        loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                    )
+                }
+            }
+        }?: return loadWithConditionPort.loadBeforeEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
     }
 
     override fun count(): Int {

@@ -50,6 +50,19 @@ class NoticeAdapter(
         )
     }
 
+    override fun loadNoticeByCompanyNameAndSmallClassification(
+        companyName: String,
+        smallClassification: String,
+        idx: Int,
+        size: Int
+    ): Page<Notice> {
+        return noticeRepository.findByCompanyNameAndSmallClassification(
+            companyName,
+            smallClassification,
+            PageRequest.of(idx, size)
+        )
+    }
+
     override fun countOpenNotice(): Int {
         return noticeRepository.countOpenNotice()
     }

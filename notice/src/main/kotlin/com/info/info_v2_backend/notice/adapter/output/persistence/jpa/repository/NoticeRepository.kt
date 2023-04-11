@@ -17,12 +17,12 @@ interface NoticeRepository: JpaRepository<Notice, String> {
     @Query(value = "select * from notice where notice_is_delete = false and company_number = :companyNumber", nativeQuery = true)
     fun findByCompanyNumber(@Param(value = "companyNumber") companyNumber: String): List<Notice>
 
-    @Query(value = "select n.* from notice n, recruitment_small_classification_usage b " +
+    @Query(value = "select * from notice n " +
             "where n.company_name like %:companyName% " +
             "and n.notice_is_delete = false " +
             "and curdate() between n.start_date and n.end_date " +
             "and n.notice_is_approve = 'APPROVE'",
-        countQuery = "select count(n.*) from notice n, recruitment_small_classification_usage b " +
+        countQuery = "select count(*) from notice n " +
                 "where n.company_name like %:companyName% " +
                 "and n.notice_is_delete = false " +
                 "and curdate() between n.start_date and n.end_date " +

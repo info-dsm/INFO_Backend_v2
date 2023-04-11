@@ -15,6 +15,7 @@ import com.info.info_v2_backend.notice.domain.Notice
 import com.info.info_v2_backend.notice.domain.interview.InterviewProcess
 import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassificationUsage
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
+import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -32,6 +33,8 @@ class LoadNoticeAdapter(
     private val loadCompanyPort: LoadCompanyPort
 ): LoadWithConditionPort {
 
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
     override fun loadBeforeEndDateAndStatusNoticeList(
         idx: Int,
         size: Int,
@@ -46,15 +49,16 @@ class LoadNoticeAdapter(
             JdbcNoticeVoMapper()
         )
         return PageImpl(noticeList.map {
-            return@map it.toMinimumNoticeResponse(
-                loadSmallClassificationUsagePort.loadAllByNoticeId(it.id).map usage@ {
+            vo: NoticeVo ->
+            return@map vo.toMinimumNoticeResponse(
+                loadSmallClassificationUsagePort.loadAllByNoticeId(vo.id).map usage@ {
                 usage: RecruitmentSmallClassificationUsage ->
                     return@usage ClassificationResponse(
                         usage.smallClassification.bigClassification.toBigClassificationResponse(),
                         usage.smallClassification.name
                     )
                 }.toMutableList(),
-                loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                loadCompanyPort.loadCompanyThumbnailList(vo.company.companyNumber)
             )
         }, page, count(NoticeQueryBlocks.selectNoticeByDateIsBeforeEndDateAndNoticeWaitingStatusOrderByCreatedAtDescendingPagingCount(date, status)))
     }
@@ -84,53 +88,6 @@ class LoadNoticeAdapter(
                 loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
             )
         }, page, count(NoticeQueryBlocks.selectNoticeByDateIsAfterEndDateAndNoticeWaitingStatusOrderByCreatedAtDescendingPagingCount(date, status)))
-    }
-
-    private fun loadLanguageList(noticeId: String): MutableList<LanguageResponse> {
-        val query = "select * from language_usage where notice_id = \"$noticeId\""
-        val languageResponseList: MutableList<LanguageResponse> = jdbcTemplate.query(
-            query,
-            JdbcLanguageResponseDtoMapper()
-        )
-        return languageResponseList
-    }
-
-    private fun loadTechnologyUsageList(noticeId: String): MutableList<TechnologyResponse> {
-        val query = "select * from technology_usage where notice_id = \"$noticeId\""
-        val technologyResponseList: MutableList<TechnologyResponse> = jdbcTemplate.query(
-            query,
-            JdbcTechnologyResponseMapper()
-        )
-        return technologyResponseList
-    }
-
-    private fun loadCertificateUsage(noticeId: String): MutableList<CertificateResponse> {
-        val query = "select * from certificate_usage where notice_id = \"$noticeId\""
-        val certificateResponseList: MutableList<CertificateResponse> = jdbcTemplate.query(
-            query,
-            JdbcCertificateResponseMapper()
-        )
-        return certificateResponseList
-    }
-
-    private fun loadInterviewProcessMap(noticeId: String): Map<Int, InterviewProcess> {
-        val query = "select * from notice_interview_process_map where notice_id = \"$noticeId\""
-        val interviewProcessMap: List<Map<Int, InterviewProcess>> = jdbcTemplate.query(
-            query,
-            JdbcInterviewProcessMapMapper()
-        )
-        val results: MutableMap<Int, InterviewProcess> = HashMap()
-        interviewProcessMap.map {
-            map: Map<Int, InterviewProcess> ->
-            {
-                map.keys.map {
-                    results.put(it, map.getValue(it))
-                }
-            }
-        }
-        println(results)
-
-        return results
     }
 
     fun count(query: String?): Long {

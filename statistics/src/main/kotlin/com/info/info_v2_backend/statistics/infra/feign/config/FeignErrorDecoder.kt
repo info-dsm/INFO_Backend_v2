@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.statistics.config
+package com.info.info_v2_backend.statistics.infra.feign.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.info.info_v2_backend.common.exception.BusinessException
@@ -8,7 +8,6 @@ import feign.Response
 import feign.codec.ErrorDecoder
 import feign.codec.StringDecoder
 import org.slf4j.LoggerFactory
-
 
 class FeignErrorDecoder(
 ): ErrorDecoder {

@@ -114,7 +114,15 @@ class LoadNotice(
                     )
                 }
             }
-        }?: return loadWithConditionPort.loadBeforeEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
+        }?:let {
+            smallClassification?.let {
+                return loadNoticePort.loadNoticeBySmallClassification(smallClassification, idx, size).map {
+                    it.toMinimumNoticeResponse(
+                        loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                    )
+                }
+            }?: return loadWithConditionPort.loadBeforeEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
+        }
     }
 
     override fun count(): Int {

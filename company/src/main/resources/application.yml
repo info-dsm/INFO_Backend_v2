@@ -4,7 +4,7 @@ spring:
   cloud:
     config:
       name: company
-      profile: demo
+      profile: default
 management:
   endpoints:
     web:

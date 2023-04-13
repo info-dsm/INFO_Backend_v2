@@ -4,10 +4,9 @@ spring:
   cloud:
     config:
       name: user
-      profile: demo
+      profile: default
 management:
   endpoints:
     web:
       exposure:
         include: refresh
-        

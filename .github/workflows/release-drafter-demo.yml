@@ -1,0 +1,468 @@
+name: demo-Deployer
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  applies-draft-release:
+    runs-on: ubuntu-latest
+    env:
+      MODULE: applies
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-applies/demo
+    if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'applies')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew :${{ env.MODULE }}:build
+
+      - name: Docker build & push to prod
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
+        working-directory: ${{ env.MODULE }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ec2-user
+          key: ${{ secrets.TEST_KEY_PRIVATE_PEM }}
+          envs: GITHUB_SHA
+          script: |
+            cd info
+            docker system prune -f
+            docker pull ${{ env.DOCKER_REPOSITORY }}
+            docker-compose up -d
+            docker image prune -f
+
+      - name: Release drafter
+        uses: release-drafter/release-drafter@v5
+        with:
+          config-name: release-drafter-applies.yml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  auth-draft-release:
+    runs-on: ubuntu-latest
+    env:
+      MODULE: auth
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-auth/demo
+    if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'auth')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew :${{ env.MODULE }}:build
+
+      - name: Docker build & push to prod
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
+        working-directory: ${{ env.MODULE }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ec2-user
+          key: ${{ secrets.TEST_KEY_PRIVATE_PEM }}
+          envs: GITHUB_SHA
+          script: |
+            cd info
+            docker system prune -f
+            docker pull ${{ env.DOCKER_REPOSITORY }}
+            docker-compose up -d
+            docker image prune -f
+
+
+  company-draft-release:
+    runs-on: ubuntu-latest
+    env:
+      MODULE: company
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-company/demo
+    if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'company')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Check gradle file existence
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: "${{ env.MODULE }}/output/*.jar"
+
+      - name: Build with Gradle
+        if: steps.check_files.outputs.files_exists == 'false'
+        run: ./gradlew :${{ env.MODULE }}:build
+
+      - name: Docker build & push to prod
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
+        working-directory: ${{ env.MODULE }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ec2-user
+          key: ${{ secrets.TEST_KEY_PRIVATE_PEM }}
+          envs: GITHUB_SHA
+          script: |
+            cd info
+            docker system prune -f
+            docker pull ${{ env.DOCKER_REPOSITORY }}
+            docker-compose up -d
+            docker image prune -f
+
+
+  email-draft-release:
+    runs-on: ubuntu-latest
+    env:
+      MODULE: email
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-email/demo
+    if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'email')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew :${{ env.MODULE }}:build
+
+      - name: Docker build & push to prod
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
+        working-directory: ${{ env.MODULE }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ec2-user
+          key: ${{ secrets.TEST_KEY_PRIVATE_PEM }}
+          envs: GITHUB_SHA
+          script: |
+            cd info
+            docker system prune -f
+            docker pull ${{ env.DOCKER_REPOSITORY }}
+            docker-compose up -d
+            docker image prune -f
+
+
+  employment-draft-release:
+    runs-on: ubuntu-latest
+    env:
+      MODULE: employment
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-employment/demo
+    if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'employment')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew :${{ env.MODULE }}:build
+
+      - name: Docker build & push to prod
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
+        working-directory: ${{ env.MODULE }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ec2-user
+          key: ${{ secrets.TEST_KEY_PRIVATE_PEM }}
+          envs: GITHUB_SHA
+          script: |
+            cd info
+            docker system prune -f
+            docker pull ${{ env.DOCKER_REPOSITORY }}
+            docker-compose up -d
+            docker image prune -f
+
+
+  file-draft-release:
+    runs-on: ubuntu-latest
+    env:
+      MODULE: file
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-file/demo
+    if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'file')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew :${{ env.MODULE }}:build
+
+      - name: Docker build & push to prod
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t $DOCKER_REPOSITORY .
+          docker push $DOCKER_REPOSITORY
+        working-directory: ./${{ env.MODULE }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ec2-user
+          key: ${{ secrets.TEST_KEY_PRIVATE_PEM }}
+          envs: GITHUB_SHA
+          script: |
+            cd info
+            docker system prune -f
+            docker pull ${{ env.DOCKER_REPOSITORY }}
+            docker-compose up -d
+            docker image prune -f
+
+
+  notice-draft-release:
+    runs-on: ubuntu-latest
+    env:
+      MODULE: notice
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-notice/demo
+    if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'notice')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew :${{ env.MODULE }}:build
+
+      - name: Docker build & push to prod
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
+        working-directory: ${{ env.MODULE }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ec2-user
+          key: ${{ secrets.TEST_KEY_PRIVATE_PEM }}
+          envs: GITHUB_SHA
+          script: |
+            cd info
+            docker system prune -f
+            docker pull ${{ env.DOCKER_REPOSITORY }}
+            docker-compose up -d
+            docker image prune -f
+
+
+  statistics-draft-release:
+    runs-on: ubuntu-latest
+    env:
+      MODULE: statistics
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-statistics/demo
+    if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'statistics')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew :${{ env.MODULE }}:build
+
+      - name: Docker build & push to prod
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
+        working-directory: ${{ env.MODULE }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ec2-user
+          key: ${{ secrets.TEST_KEY_PRIVATE_PEM }}
+          envs: GITHUB_SHA
+          script: |
+            cd info
+            docker system prune -f
+            docker pull ${{ env.DOCKER_REPOSITORY }}
+            docker-compose up -d
+            docker image prune -f
+
+
+  user-draft-release:
+    runs-on: ubuntu-latest
+    env:
+      MODULE: user
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-user/demo
+    if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'user')
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin' # https://github.com/actions/setup-java
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew :${{ env.MODULE }}:build
+
+      - name: Docker build & push to prod
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ env.DOCKER_REPOSITORY }}
+        working-directory: ${{ env.MODULE }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        id: deploy
+        with:
+          host: ${{ secrets.TEST_SERVER_HOST }}
+          username: ec2-user
+          key: ${{ secrets.TEST_KEY_PRIVATE_PEM }}
+          envs: GITHUB_SHA
+          script: |
+            cd info
+            docker system prune -f
+            docker pull ${{ env.DOCKER_REPOSITORY }}
+            docker-compose up -d
+            docker image prune -f

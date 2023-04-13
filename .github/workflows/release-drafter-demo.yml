@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODULE: applies
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-applies/demo
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-applies:demo
     if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'applies')
     steps:
       - uses: actions/checkout@v3
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODULE: auth
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-auth/demo
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-auth:demo
     if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'auth')
     steps:
       - uses: actions/checkout@v3
@@ -115,7 +115,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODULE: company
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-company/demo
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-company:demo
     if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'company')
     steps:
       - uses: actions/checkout@v3
@@ -172,7 +172,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODULE: email
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-email/demo
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-email:demo
     if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'email')
     steps:
       - uses: actions/checkout@v3
@@ -222,7 +222,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODULE: employment
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-employment/demo
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-employment:demo
     if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'employment')
     steps:
       - uses: actions/checkout@v3
@@ -272,7 +272,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODULE: file
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-file/demo
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-file:demo
     if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'file')
     steps:
       - uses: actions/checkout@v3
@@ -322,7 +322,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODULE: notice
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-notice/demo
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-notice:demo
     if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'notice')
     steps:
       - uses: actions/checkout@v3
@@ -372,7 +372,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODULE: statistics
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-statistics/demo
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-statistics:demo
     if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'statistics')
     steps:
       - uses: actions/checkout@v3
@@ -422,7 +422,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MODULE: user
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-user/demo
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-user:demo
     if: github.event.pull_request.merged == true && github.base_ref == 'demo' && contains(github.event.pull_request.labels.*.name, 'user')
     steps:
       - uses: actions/checkout@v3

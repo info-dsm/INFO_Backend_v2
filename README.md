@@ -46,7 +46,7 @@
 
 
 
- INFO Project Backend 서버입니다. 기존, 모놀리식 아키텍처를 채택하여 빠르게 구성한 INFO_v1_Backend 서버를 MSA, Hexagornal, DDD로 설계하려 노력했습니다. 
+ INFO Project Backend 서버입니다. 기존, 모놀리식 아키텍처를 채택하여 빠르게 구성한 INFO_v1_Backend 서버를 MSA, Hexagonal, DDD로 설계하려 노력했습니다. 
 
 
 
@@ -72,7 +72,7 @@
 # Hexagonal(포트 및 어댑터 아키텍처)
 ---
 
-<img width="873" alt="Hexagornal Architecture" src="https://user-images.githubusercontent.com/59428479/202425478-fe91b4d3-a83e-4668-b6fe-b7ff4ab3756b.png">
+<img width="873" alt="Hexagonal Architecture" src="https://user-images.githubusercontent.com/59428479/202425478-fe91b4d3-a83e-4668-b6fe-b7ff4ab3756b.png">
 
 
 

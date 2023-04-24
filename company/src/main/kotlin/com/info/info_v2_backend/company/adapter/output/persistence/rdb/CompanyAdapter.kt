@@ -49,7 +49,7 @@ class CompanyAdapter(
     }
 
     override fun search(idx: Int, size: Int, query: String): Page<Company> {
-        return companyRepository.findByCompanyNumber()
+        return companyRepository.findByCompanyName(query, PageRequest.of(idx, size))
     }
 
 }

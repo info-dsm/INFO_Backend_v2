@@ -33,16 +33,20 @@
         1. 취업이 눈앞에 다가온 3학년 재학생 분들이 신규 기업체를 확인하기 위하여, 또는 본인의 적성에 부합하는 회사를 찾기 위하여 매번 산학 협력부 공고를 확인하러 다른 층을 방문하는 비효율 제거.
     3. 채용 의뢰 희망 기업체
         1. 채용 의뢰를 위하여 직접 연락을 하고, 필요한 정보가 무엇인지 등 사람 대 사람으로써 이루어지는 작업을 시스템화 하여 프로그램으로 처리하도록 함으로써 사람에 의해 발생할 수 있는 문제에 대한 부담을 제거하고, 학교 업무시간에 대한 제약 없이 언제든지 채용 의뢰 관련 작업을 수행할 수 있도록 함.
-![INFO 메인](https://user-images.githubusercontent.com/59428479/202425751-3967bee2-46b5-4c88-9760-bd953cf09740.png)
+        
+        
+        
+<img width="1728" alt="info_main_4" src="https://user-images.githubusercontent.com/59428479/227166346-ccb45b9f-bd60-40e0-9b39-1b229bbbed6d.png">
+<img width="1727" alt="info_main_1" src="https://user-images.githubusercontent.com/59428479/227166209-7eb04518-7cbc-40fa-bf8c-e86ff620cae6.png">
+<img width="1728" alt="info_main_2" src="https://user-images.githubusercontent.com/59428479/227166267-b222d401-14ba-4bd9-9a2e-f46e7c94f274.png">
+<img width="1728" alt="info_main_3" src="https://user-images.githubusercontent.com/59428479/227166291-72b93231-163e-4478-996c-038d112f0bd8.png">
 
 
-![INFO 채용 공고 정보](https://user-images.githubusercontent.com/59428479/202425793-a0e16f1d-e9d5-444b-97f2-1cae99baed67.png)
 
 
 
 
-
- INFO Project Backend 서버입니다. 기존, 모놀리식 아키텍처를 채택하여 빠르게 구성한 INFO_v1_Backend 서버를 MSA, Hexagornal, DDD로 설계하려 노력했습니다. 
+ INFO Project Backend 서버입니다. 기존, 모놀리식 아키텍처를 채택하여 빠르게 구성한 INFO_v1_Backend 서버를 MSA, Hexagonal, DDD로 설계하려 노력했습니다. 
 
 
 
@@ -68,7 +72,7 @@
 # Hexagonal(포트 및 어댑터 아키텍처)
 ---
 
-<img width="873" alt="Hexagornal Architecture" src="https://user-images.githubusercontent.com/59428479/202425478-fe91b4d3-a83e-4668-b6fe-b7ff4ab3756b.png">
+<img width="873" alt="Hexagonal Architecture" src="https://user-images.githubusercontent.com/59428479/202425478-fe91b4d3-a83e-4668-b6fe-b7ff4ab3756b.png">
 
 
 

@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.statistics.config
+package com.info.info_v2_backend.statistics.infra.feign.config
 
 import com.info.info_v2_backend.common.auth.HeaderProperty
 import com.info.info_v2_backend.common.user.Role

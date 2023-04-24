@@ -64,20 +64,15 @@ class NoticeController(
         return countOpenNoticeUsecase.count()
     }
 
-    @GetMapping("/classification/small")
-    fun getNoticeBySmallClassification(
-        @RequestParam smallClassification: String,
+    @GetMapping("/search")
+    fun searchNotice(
+        @RequestParam(required = false) companyName: String?,
+        @RequestParam(required = false) smallClassification: String?,
         @RequestParam(defaultValue = "0") idx: Int,
         @RequestParam(defaultValue = "10") size: Int
     ): Page<MinimumNoticeResponse> {
-        log.info("getNoticeBySmallClassification: $smallClassification")
-        return loadNoticeUsecase.loadNoticeBySmallClassification(
-            smallClassification,
-            idx,
-            size
-        )
+        return loadNoticeUsecase.searchNotice(companyName, smallClassification, idx, size)
     }
-
 
     //@Cacheable("memberCacheStore")
     @GetMapping("/classification")

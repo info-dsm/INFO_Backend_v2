@@ -11,8 +11,7 @@ import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.Mini
 import com.info.info_v2_backend.company.domain.document.CompanyDocument
 import com.info.info_v2_backend.company.application.port.input.LoadCompanyUsecase
 import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
-import com.info.info_v2_backend.company.application.port.output.document.RemoveCompanyDocumentPort
-import com.info.info_v2_backend.company.application.port.output.document.SearchCompanyDocumentPort
+import com.info.info_v2_backend.company.application.port.output.company.SearchCompanyPort
 import com.info.info_v2_backend.company.application.port.output.employment.LoadEmploymentPort
 import com.info.info_v2_backend.company.application.port.output.file.CompanyFilePort
 import com.info.info_v2_backend.company.application.port.output.user.LoadContactorPort
@@ -26,8 +25,7 @@ class LoadCompany(
     private val companyFilePort: CompanyFilePort,
     private val loadContactorPort: LoadContactorPort,
     private val loadEmploymentPort: LoadEmploymentPort,
-    private val searchCompanyDocumentPort: SearchCompanyDocumentPort,
-    private val removeCompanyDocumentPort: RemoveCompanyDocumentPort
+    private val searchCompanyDocumentPort: SearchCompanyPort,
 ): LoadCompanyUsecase {
 
     override fun loadMinimumCompanyList(idx: Int, size: Int): Page<MinimumCompanyResponse> {
@@ -71,9 +69,8 @@ class LoadCompany(
         return searchCompanyDocumentPort.search(
             idx, size, query
         ).map {
-            document: CompanyDocument ->
-            val company = loadCompanyPort.loadCompany(document.companyNumber)?: let {
-                removeCompanyDocumentPort.remove(document.companyNumber)
+            company: Company ->
+            val company = loadCompanyPort.loadCompany(company.companyNumber)?: let {
                 throw BusinessException(errorCode = ErrorCode.BAD_GATEWAY_ERROR)
             }
             return@map company.toMinimumCompanyResponse(

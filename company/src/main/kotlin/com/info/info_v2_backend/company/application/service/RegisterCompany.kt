@@ -1,8 +1,5 @@
 package com.info.info_v2_backend.company.application.service
 
-import com.info.info_v2_backend.common.auth.Auth
-import com.info.info_v2_backend.common.auth.AuthenticationCodeDto
-import com.info.info_v2_backend.common.auth.AuthenticationCodeType
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
@@ -17,7 +14,6 @@ import com.info.info_v2_backend.company.application.port.output.businessArea.Sav
 import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SaveCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SaveContactorPort
-import com.info.info_v2_backend.company.application.port.output.document.SaveCompanyDocumentPort
 import com.info.info_v2_backend.company.application.port.output.file.CompanyFilePort
 import com.info.info_v2_backend.company.domain.Company
 import com.info.info_v2_backend.company.domain.businessArea.BusinessAreaTagged
@@ -41,7 +37,7 @@ class RegisterCompany(
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    
+
     override fun register(
         request: RegisterCompanyRequest
     ): PresignedUrlListResponse {
@@ -118,7 +114,7 @@ class RegisterCompany(
                     )
                 )
             }
-            
+
             saveCompanyPort.save(company)
             saveCompanyDocumentPort.save(
                 CompanyDocument(
@@ -140,7 +136,7 @@ class RegisterCompany(
                     it
                 )
             }
-        
+
             companyPhotoFileList?.let {
                 list.addAll(
                     it

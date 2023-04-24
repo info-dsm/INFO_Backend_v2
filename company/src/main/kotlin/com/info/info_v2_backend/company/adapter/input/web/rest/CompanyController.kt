@@ -148,13 +148,6 @@ class CompanyController(
         return loadCompanyUsecase.loadMaximumCompany(companyNumber)
     }
 
-//    @GetMapping("/{userEmail}/company")
-//    fun getMaximumCompanyListByUserEmail(
-//        @PathVariable userEmail: String
-//    ){
-//
-//    }
-
     @GetMapping("/list/{year}")
     fun getRegisteredNoticeCompanyListByYear(
         @PathVariable year: Int,

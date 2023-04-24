@@ -17,4 +17,14 @@ interface CompanyRepository: JpaRepository<Company, String> {
     @Query("select count(*) from company where company_is_delete = false and company_creation_status = 'CREATED'", nativeQuery = true)
     fun countAll(): Int
 
+    @Query(value = "select * from company " +
+            "where company_name like %:companyName% " +
+            "and company_is_delete = false",
+        countQuery = "select count(*) from company " +
+                "where company_name like %:companyName% " +
+                "and company_is_delete = false",
+        nativeQuery = true
+    )
+    fun findByCompanyName(@Param(value = "companyName") companyName: String, pageable: Pageable): Page<Company>
+
 }

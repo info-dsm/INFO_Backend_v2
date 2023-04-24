@@ -32,7 +32,6 @@ class RegisterCompany(
     private val saveBusinessAreaTaggedPort: SaveBusinessAreaTaggedPort,
     private val loadBusinessAreaPort: LoadBusinessAreaPort,
     private val loadCompanyPort: LoadCompanyPort,
-    private val saveCompanyDocumentPort: SaveCompanyDocumentPort
 ): RegisterCompanyUsecase {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -116,12 +115,6 @@ class RegisterCompany(
             }
 
             saveCompanyPort.save(company)
-            saveCompanyDocumentPort.save(
-                CompanyDocument(
-                    company.companyName.companyName,
-                    company.companyNumber
-                )
-            )
             list.add(
                 businessCertificateFile
             )

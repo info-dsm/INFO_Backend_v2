@@ -12,6 +12,6 @@ class LoadMyCompanyPreferenceInfo(
     override fun load(userEmail: String): String? {
         return loadCompanyClassificationPort.loadByUseremail(
                 userEmail
-            )?.userEmail
+            )?.companyClassification?.meaning
     }
 }

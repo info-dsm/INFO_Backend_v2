@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page
 interface LoadCompanyUsecase {
 
     fun loadMinimumCompanyList(idx: Int, size: Int): Page<MinimumCompanyResponse>
+    fun loadCustomizedMinimumCompanyList(idx: Int, size: Int, userEmail: String): Page<MinimumCompanyResponse>
     fun loadMinimumCompanyListByYear(idx: Int, size: Int, year: Int): Page<MinimumCompanyResponse>
     fun loadMaximumCompany(companyNumber: String): MaximumCompanyResponse
     fun loadCompanyDto(companyNumber: String): CompanyDto?

@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.company.adapter.output.persistence.query.configuration
+package com.info.info_v2_backend.company.adapter.output.persistence.mongo.configuration
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings

@@ -10,12 +10,14 @@ import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.Maxi
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
 import com.info.info_v2_backend.company.domain.document.CompanyDocument
 import com.info.info_v2_backend.company.application.port.input.LoadCompanyUsecase
+import com.info.info_v2_backend.company.application.port.output.classifiction.LoadCompanyClassificationPort
 import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SearchCompanyPort
 import com.info.info_v2_backend.company.application.port.output.employment.LoadEmploymentPort
 import com.info.info_v2_backend.company.application.port.output.file.CompanyFilePort
 import com.info.info_v2_backend.company.application.port.output.user.LoadContactorPort
 import com.info.info_v2_backend.company.domain.Company
+import com.info.info_v2_backend.company.domain.classification.CompanyClassification
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
 
@@ -26,6 +28,7 @@ class LoadCompany(
     private val loadContactorPort: LoadContactorPort,
     private val loadEmploymentPort: LoadEmploymentPort,
     private val searchCompanyDocumentPort: SearchCompanyPort,
+    private val loadCompanyClassificationPort: LoadCompanyClassificationPort
 ): LoadCompanyUsecase {
 
     override fun loadMinimumCompanyList(idx: Int, size: Int): Page<MinimumCompanyResponse> {
@@ -39,6 +42,21 @@ class LoadCompany(
 
         }
         return companyList
+    }
+
+    override fun loadCustomizedMinimumCompanyList(
+        idx: Int,
+        size: Int,
+        userEmail: String
+    ): Page<MinimumCompanyResponse> {
+        return loadCompanyPort.loadCompanyListByCompanyClassification(idx, size,
+            loadCompanyClassificationPort.loadByUseremail(userEmail)?.companyClassification?: CompanyClassification.values()[(0..1).random()]
+        ).map {
+            it.toMinimumCompanyResponse(
+                getCompanyIntroductionResponse(it),
+                loadEmploymentPort.loadEmploymentList(it.companyNumber).size?: 0
+            )
+        }
     }
 
     override fun loadMinimumCompanyListByYear(idx: Int, size: Int, year: Int): Page<MinimumCompanyResponse> {

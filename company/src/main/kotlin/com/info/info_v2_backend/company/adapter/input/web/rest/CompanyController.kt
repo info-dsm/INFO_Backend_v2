@@ -15,9 +15,11 @@ import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.Mini
 import com.info.info_v2_backend.company.application.port.input.*
 import com.info.info_v2_backend.company.application.port.input.businessArea.AddBusinessAreaUsecase
 import com.info.info_v2_backend.company.application.port.input.businessArea.LoadBusinessAreaUsecase
+import com.info.info_v2_backend.company.application.port.input.classification.SetCompanyClassificationPreferenceUsecase
 import com.info.info_v2_backend.company.application.port.input.file.AddCompanyFileUsecase
 import com.info.info_v2_backend.company.application.port.input.file.ChangeCompanyFileUsecase
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
+import com.info.info_v2_backend.company.domain.classification.CompanyClassification
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
@@ -36,7 +38,8 @@ class CompanyController(
     private val editCompanyUsecase: EditCompanyUsecase,
     private val makeLeadingUsecase: MakeLeadingUsecase,
     private val addBusinessAreaUsecase: AddBusinessAreaUsecase,
-    private val countCompanyUsecase: CountCompanyUsecase
+    private val countCompanyUsecase: CountCompanyUsecase,
+    private val setCompanyClassificationPreferenceUsecase: SetCompanyClassificationPreferenceUsecase
 ) {
 
     @GetMapping("/count")
@@ -133,6 +136,25 @@ class CompanyController(
     fun makeAssociated(@PathVariable companyNumber: String) {
         if (!Auth.checkIsTeacher()) println("Is Not Teacher")
         makeAssociatedUsecase.makeAssociated(companyNumber)
+    }
+
+    @PostMapping("/custom")
+    fun setCustomizedCompanyClassification(
+        @RequestParam classification: CompanyClassification
+    ) {
+        Auth.getUserEmail()?.let {
+            return setCompanyClassificationPreferenceUsecase.set(it, classification)
+        }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
+    }
+
+    @GetMapping("/custom")
+    fun getCustomizedMinimumCompanyList(
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): Page<MinimumCompanyResponse> {
+        Auth.getUserEmail()?.let {
+            return loadCompanyUsecase.loadCustomizedMinimumCompanyList(idx, size, it)
+        }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
     }
 
     @GetMapping("/list")

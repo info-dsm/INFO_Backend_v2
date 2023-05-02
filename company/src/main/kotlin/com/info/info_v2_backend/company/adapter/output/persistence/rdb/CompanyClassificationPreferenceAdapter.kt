@@ -1,8 +1,8 @@
 package com.info.info_v2_backend.company.adapter.output.persistence.rdb
 
 import com.info.info_v2_backend.company.adapter.output.persistence.rdb.repository.CompanyClassificationPreferenceRepository
-import com.info.info_v2_backend.company.application.port.output.classifiction.LoadCompanyClassificationPort
-import com.info.info_v2_backend.company.application.port.output.classifiction.SaveCompanyClassificationPreferencePort
+import com.info.info_v2_backend.company.application.port.output.preference.LoadCompanyClassificationPort
+import com.info.info_v2_backend.company.application.port.output.preference.SaveCompanyClassificationPreferencePort
 import com.info.info_v2_backend.company.domain.classification.CompanyClassificationPreference
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.company.application.port.input.classification
+package com.info.info_v2_backend.company.application.port.input.preference
 
 import com.info.info_v2_backend.company.domain.classification.CompanyClassification
 

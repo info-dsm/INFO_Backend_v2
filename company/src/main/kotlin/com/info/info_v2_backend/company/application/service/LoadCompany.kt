@@ -8,9 +8,8 @@ import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.CompanyIntroductionResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
-import com.info.info_v2_backend.company.domain.document.CompanyDocument
 import com.info.info_v2_backend.company.application.port.input.LoadCompanyUsecase
-import com.info.info_v2_backend.company.application.port.output.classifiction.LoadCompanyClassificationPort
+import com.info.info_v2_backend.company.application.port.output.preference.LoadCompanyClassificationPort
 import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SearchCompanyPort
 import com.info.info_v2_backend.company.application.port.output.employment.LoadEmploymentPort

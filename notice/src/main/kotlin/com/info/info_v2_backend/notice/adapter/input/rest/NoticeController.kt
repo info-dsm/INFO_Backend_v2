@@ -286,6 +286,7 @@ class NoticeController(
     }
 
     @PostMapping("/custom")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     fun setCustomNoticePreference(
         @RequestParam classification: String
     ) {

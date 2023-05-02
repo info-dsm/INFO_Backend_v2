@@ -15,12 +15,11 @@ import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.Mini
 import com.info.info_v2_backend.company.application.port.input.*
 import com.info.info_v2_backend.company.application.port.input.businessArea.AddBusinessAreaUsecase
 import com.info.info_v2_backend.company.application.port.input.businessArea.LoadBusinessAreaUsecase
-import com.info.info_v2_backend.company.application.port.input.classification.SetCompanyClassificationPreferenceUsecase
+import com.info.info_v2_backend.company.application.port.input.preference.SetCompanyClassificationPreferenceUsecase
 import com.info.info_v2_backend.company.application.port.input.file.AddCompanyFileUsecase
 import com.info.info_v2_backend.company.application.port.input.file.ChangeCompanyFileUsecase
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
 import com.info.info_v2_backend.company.domain.classification.CompanyClassification
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -39,7 +38,8 @@ class CompanyController(
     private val makeLeadingUsecase: MakeLeadingUsecase,
     private val addBusinessAreaUsecase: AddBusinessAreaUsecase,
     private val countCompanyUsecase: CountCompanyUsecase,
-    private val setCompanyClassificationPreferenceUsecase: SetCompanyClassificationPreferenceUsecase
+    private val setCompanyClassificationPreferenceUsecase: SetCompanyClassificationPreferenceUsecase,
+    private val loadMyNoticePreferenceInfoUsecase
 ) {
 
     @GetMapping("/count")
@@ -136,6 +136,13 @@ class CompanyController(
     fun makeAssociated(@PathVariable companyNumber: String) {
         if (!Auth.checkIsTeacher()) println("Is Not Teacher")
         makeAssociatedUsecase.makeAssociated(companyNumber)
+    }
+
+    @GetMapping("/custom/preference")
+    fun getMyNoticePreference(): String? {
+        Auth.getUserEmail()?.let {
+            return
+        }?: return null
     }
 
     @PostMapping("/custom")

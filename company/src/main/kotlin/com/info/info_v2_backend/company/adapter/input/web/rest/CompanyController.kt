@@ -9,15 +9,23 @@ import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.edit.EditCompanyRequest
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.interviewReview.WriteInterviewReviewRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.register.RegisterCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
-import com.info.info_v2_backend.company.application.port.input.*
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MaximumInterviewReviewResponse
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MinimumInterviewReviewRespone
 import com.info.info_v2_backend.company.application.port.input.businessArea.AddBusinessAreaUsecase
 import com.info.info_v2_backend.company.application.port.input.businessArea.LoadBusinessAreaUsecase
+import com.info.info_v2_backend.company.application.port.input.company.*
 import com.info.info_v2_backend.company.application.port.input.preference.SetCompanyClassificationPreferenceUsecase
 import com.info.info_v2_backend.company.application.port.input.file.AddCompanyFileUsecase
 import com.info.info_v2_backend.company.application.port.input.file.ChangeCompanyFileUsecase
+import com.info.info_v2_backend.company.application.port.input.file.RemoveCompanyFileUsecase
+import com.info.info_v2_backend.company.application.port.input.interviewReview.DeleteInterviewReviewUsecase
+import com.info.info_v2_backend.company.application.port.input.interviewReview.EditInterviewReviewUsecase
+import com.info.info_v2_backend.company.application.port.input.interviewReview.LoadInterviewReviewUsecase
+import com.info.info_v2_backend.company.application.port.input.interviewReview.WriteInterviewReviewUsecase
 import com.info.info_v2_backend.company.application.port.input.preference.LoadMyCompanyPreferenceInfoUsecase
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
 import com.info.info_v2_backend.company.domain.classification.CompanyClassification
@@ -40,8 +48,51 @@ class CompanyController(
     private val addBusinessAreaUsecase: AddBusinessAreaUsecase,
     private val countCompanyUsecase: CountCompanyUsecase,
     private val setCompanyClassificationPreferenceUsecase: SetCompanyClassificationPreferenceUsecase,
-    private val loadMyCompanyPreferenceInfoUsecase: LoadMyCompanyPreferenceInfoUsecase
+    private val loadMyCompanyPreferenceInfoUsecase: LoadMyCompanyPreferenceInfoUsecase,
+    private val loadInterviewReviewUsecase: LoadInterviewReviewUsecase,
+    private val writeInterviewReviewUsecase: WriteInterviewReviewUsecase,
+    private val deleteInterviewReviewUsecase: DeleteInterviewReviewUsecase,
+    private val editInterviewReviewUsecase: EditInterviewReviewUsecase
 ) {
+
+    @GetMapping("/{companyNumber}/interview")
+    fun getMinimumInterviewReviewListByCompany(@PathVariable companyNumber: String): List<MinimumInterviewReviewRespone> {
+        return loadInterviewReviewUsecase.loadMinimumInterviewListByCompany(companyNumber)
+    }
+
+    @GetMapping("/interview")
+    fun getMaximumInterviewReviewById(@RequestParam id: Long): MaximumInterviewReviewResponse {
+        return loadInterviewReviewUsecase.loadMaximumInterviewById(id)
+    }
+
+    @PostMapping("/{companyNumber}/interview")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun writeInterviewReview(@PathVariable companyNumber: String, @RequestBody request: WriteInterviewReviewRequest) {
+        Auth.getUserEmail()?.let {
+            writeInterviewReviewUsecase.write(request, it, companyNumber)
+        }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
+    }
+
+    @PatchMapping("/{companyNumber}/interview")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    fun editInterviewReview(
+        @PathVariable companyNumber: String,
+        @RequestParam id: Long,
+        @RequestBody request: WriteInterviewReviewRequest
+    ) {
+        Auth.getUserEmail()?.let {
+            editInterviewReviewUsecase.edit(id, it, request, companyNumber)
+        }
+    }
+
+    @DeleteMapping("/{companyNumber}/interview")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteInterviewReview(@PathVariable companyNumber: String,
+                              @RequestParam id: Long) {
+        Auth.getUserEmail()?.let {
+            deleteInterviewReviewUsecase.delete(id, it, companyNumber)
+        }
+    }
 
     @GetMapping("/count")
     fun getCompanyCount(): Int {

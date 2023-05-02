@@ -29,4 +29,5 @@ interface CompanyRepository: JpaRepository<Company, String> {
     fun findByCompanyName(@Param(value = "companyName") companyName: String, pageable: Pageable): Page<Company>
 
     fun findByCompanyClassification(classification: CompanyClassification, pageable: Pageable): Page<Company>
+
 }

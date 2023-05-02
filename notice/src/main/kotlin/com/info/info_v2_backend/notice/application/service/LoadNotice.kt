@@ -13,6 +13,7 @@ import com.info.info_v2_backend.notice.application.port.output.LoadCompanyPort
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
 import com.info.info_v2_backend.notice.application.port.output.LoadWithConditionPort
 import com.info.info_v2_backend.notice.application.port.output.file.FilePort
+import com.info.info_v2_backend.notice.application.port.output.noticePreference.LoadNoticePreferencePort
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -25,6 +26,7 @@ class LoadNotice(
     private val loadWithConditionPort: LoadWithConditionPort,
     private val filePort: FilePort,
     private val loadCompanyPort: LoadCompanyPort,
+    private val loadNoticePreferencePort: LoadNoticePreferencePort
 ): LoadNoticeUsecase, CountOpenNoticeUsecase {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -73,6 +75,20 @@ class LoadNotice(
                 loadCompanyPort.loadCompanyThumbnailList(companyNumber)
             )
         }
+    }
+
+    override fun loadCustomNoticeList(userEmail: String, idx: Int, size: Int): Page<MinimumNoticeResponse> {
+        loadNoticePreferencePort.loadNoticePreference(
+            userEmail
+        )?.let {
+            return loadNoticePort.loadNoticeBySmallClassification(
+                it.smallClassification.name, idx, size
+            ).map {
+                it.toMinimumNoticeResponse(
+                    loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                )
+            }
+        }?: return loadWithConditionPort.loadBeforeEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
     }
 
 

@@ -1,4 +1,4 @@
-package com.info.info_v2_backend.company.adapter.output.persistence.query.configuration
+package com.info.info_v2_backend.company.adapter.output.persistence.mongo.configuration
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

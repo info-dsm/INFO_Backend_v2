@@ -1,6 +1,7 @@
 package com.info.info_v2_backend.company.adapter.output.persistence.rdb.repository
 
 import com.info.info_v2_backend.company.domain.Company
+import com.info.info_v2_backend.company.domain.classification.CompanyClassification
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -27,4 +28,5 @@ interface CompanyRepository: JpaRepository<Company, String> {
     )
     fun findByCompanyName(@Param(value = "companyName") companyName: String, pageable: Pageable): Page<Company>
 
+    fun findByCompanyClassification(classification: CompanyClassification, pageable: Pageable): Page<Company>
 }

@@ -1,6 +1,6 @@
-package com.info.info_v2_backend.company.adapter.output.persistence.query
+package com.info.info_v2_backend.company.adapter.output.persistence.mongo
 
-import com.info.info_v2_backend.company.adapter.output.persistence.query.repository.CompanyDocumentRepository
+import com.info.info_v2_backend.company.adapter.output.persistence.mongo.repository.CompanyDocumentRepository
 import org.springframework.stereotype.Service
 
 

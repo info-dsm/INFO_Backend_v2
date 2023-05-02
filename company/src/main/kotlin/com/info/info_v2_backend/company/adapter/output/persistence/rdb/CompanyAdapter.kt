@@ -7,6 +7,7 @@ import com.info.info_v2_backend.company.application.port.output.company.LoadComp
 import com.info.info_v2_backend.company.application.port.output.company.SaveCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SearchCompanyPort
 import com.info.info_v2_backend.company.domain.Company
+import com.info.info_v2_backend.company.domain.classification.CompanyClassification
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -42,6 +43,10 @@ class CompanyAdapter(
 
     override fun loadAllCompanyListByYear(idx: Int, size: Int, year: Int): Page<Company> {
         return companyRepository.findByIsNoticeRegisteredYearListContaining(year, PageRequest.of(idx, size, Sort.by("createdAt").descending()))
+    }
+
+    override fun loadCompanyListByCompanyClassification(idx: Int, size: Int, companyClassification: CompanyClassification): Page<Company> {
+        return companyRepository.findByCompanyClassification(companyClassification, PageRequest.of(idx, size))
     }
 
     override fun count(): Int {

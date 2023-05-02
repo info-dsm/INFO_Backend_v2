@@ -18,6 +18,7 @@ import com.info.info_v2_backend.company.application.port.input.businessArea.Load
 import com.info.info_v2_backend.company.application.port.input.preference.SetCompanyClassificationPreferenceUsecase
 import com.info.info_v2_backend.company.application.port.input.file.AddCompanyFileUsecase
 import com.info.info_v2_backend.company.application.port.input.file.ChangeCompanyFileUsecase
+import com.info.info_v2_backend.company.application.port.input.preference.LoadMyCompanyPreferenceInfoUsecase
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
 import com.info.info_v2_backend.company.domain.classification.CompanyClassification
 import org.springframework.data.domain.Page
@@ -39,7 +40,7 @@ class CompanyController(
     private val addBusinessAreaUsecase: AddBusinessAreaUsecase,
     private val countCompanyUsecase: CountCompanyUsecase,
     private val setCompanyClassificationPreferenceUsecase: SetCompanyClassificationPreferenceUsecase,
-    private val loadMyNoticePreferenceInfoUsecase
+    private val loadMyCompanyPreferenceInfoUsecase: LoadMyCompanyPreferenceInfoUsecase
 ) {
 
     @GetMapping("/count")
@@ -141,7 +142,7 @@ class CompanyController(
     @GetMapping("/custom/preference")
     fun getMyNoticePreference(): String? {
         Auth.getUserEmail()?.let {
-            return
+            return loadMyCompanyPreferenceInfoUsecase.load(it)
         }?: return null
     }
 

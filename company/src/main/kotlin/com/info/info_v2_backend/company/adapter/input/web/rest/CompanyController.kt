@@ -140,13 +140,14 @@ class CompanyController(
     }
 
     @GetMapping("/custom/preference")
-    fun getMyNoticePreference(): String? {
+    fun getMyCompanyPreference(): String? {
         Auth.getUserEmail()?.let {
             return loadMyCompanyPreferenceInfoUsecase.load(it)
         }?: return null
     }
 
     @PostMapping("/custom")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     fun setCustomizedCompanyClassification(
         @RequestParam classification: CompanyClassification
     ) {

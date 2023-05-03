@@ -1,6 +1,6 @@
 package com.info.info_v2_backend.company.domain.interview
 
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.interviewReview.WriteInterviewReviewRequest
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.interviewReview.EditInterviewReviewRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MaximumInterviewReviewResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MinimumInterviewReviewRespone
 import com.info.info_v2_backend.company.domain.Company
@@ -70,14 +70,28 @@ class InterviewReview(
         protected set
 
 
-    fun edit(request: WriteInterviewReviewRequest) {
-        this.appliedJobPart = request.appliedJobPart
-        this.interviewDate = request.interviewDate
-        this.directorCount = request.directorCount
-        this.interviewPlace = request.interviewPlace
-        this.interviewType = request.interviewType
-        this.questionContent = request.interviewImpression
-        this.interviewCaution = request.interviewCaution
+    fun edit(request: EditInterviewReviewRequest) {
+        request.appliedJobPart?.let {
+            this.appliedJobPart = it
+        }
+        request.interviewDate?.let {
+            this.interviewDate = it
+        }
+        request.directorCount?.let {
+            this.directorCount = it
+        }
+        request.interviewPlace?.let {
+            this.interviewPlace = it
+        }
+        request.interviewType?.let {
+            this.interviewType = it
+        }
+        request.interviewImpression?.let {
+            this.questionContent = it
+        }
+        request.interviewCaution?.let {
+            this.interviewCaution = it
+        }
     }
 
     fun toMaximumInterviewReview(): MaximumInterviewReviewResponse {

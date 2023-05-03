@@ -9,6 +9,7 @@ import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.edit.EditCompanyRequest
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.interviewReview.EditInterviewReviewRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.interviewReview.WriteInterviewReviewRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.register.RegisterCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
@@ -78,7 +79,7 @@ class CompanyController(
     fun editInterviewReview(
         @PathVariable companyNumber: String,
         @RequestParam id: Long,
-        @RequestBody request: WriteInterviewReviewRequest
+        @RequestBody request: EditInterviewReviewRequest
     ) {
         Auth.getUserEmail()?.let {
             editInterviewReviewUsecase.edit(id, it, request, companyNumber)

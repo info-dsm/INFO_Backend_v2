@@ -20,11 +20,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class AnnouncementController(
-    private val statisticsService: StatisticsService,
     private val announcementService: AnnouncementService
 ) {
 
-    @PostMapping("/announcement")
+    @PostMapping
     fun createAnnouncement(
         @RequestBody request: CreateAnnouncementRequest
     ): PresignedUrlListResponse {
@@ -33,7 +32,7 @@ class AnnouncementController(
         else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
-    @GetMapping("/announcement")
+    @GetMapping
     fun getMinimumAnnouncementListByType(
         @RequestParam idx: Int,
         @RequestParam size: Int,
@@ -42,14 +41,14 @@ class AnnouncementController(
         return announcementService.getAnnounceList(idx, size, type)
     }
 
-    @GetMapping("/announcement/{announcementId}")
+    @GetMapping("/{announcementId}")
     fun getMaximumAnnouncement(
         @PathVariable announcementId: Long
     ): MaximumAnnouncementResponse {
         return announcementService.getAnnounce(announcementId)
     }
 
-    @GetMapping("/announcement/latest")
+    @GetMapping("/latest")
     fun getLatestAnnouncement(): MinimumAnnouncementResponse {
         return announcementService.getLatestAnnouncement()
     }

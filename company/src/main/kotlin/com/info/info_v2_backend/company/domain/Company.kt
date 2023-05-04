@@ -68,7 +68,7 @@ class Company(
         protected set
 
     @Column(name = "company_is_delete")
-    var isDeleted: Boolean = false
+    var isDelete: Boolean = false
         protected set
 
     @Column(name = "company_creation_status", nullable = false)

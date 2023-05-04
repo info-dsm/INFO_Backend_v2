@@ -22,9 +22,9 @@ file:
 notice:
   - "common/**/*"
   - "notice/**/*"
-statistics:
+announcement:
   - "common/**/*"
-  - "statistics/**/*"
+  - "announcement/**/*"
 user:
   - "common/**/*"
   - "user/**/*"

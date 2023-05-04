@@ -170,7 +170,7 @@ project(":eureka") {
     }
 }
 
-project(":statistics"){
+project(":announcement"){
     dependencies {
         implementation(project(":common"))
     }

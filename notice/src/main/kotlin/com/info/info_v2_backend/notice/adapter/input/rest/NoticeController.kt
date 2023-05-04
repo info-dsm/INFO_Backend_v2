@@ -312,4 +312,10 @@ class NoticeController(
         throw BusinessException("Not system request", ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
+    @GetMapping("/any")
+    fun loadAnyNotice(@RequestParam noticeId: String): NoticeDto? {
+        if (Auth.checkIsSystem()) return loadNoticeUsecase.loadNoticeDto(noticeId)
+        throw BusinessException("Not system request", ErrorCode.NO_AUTHORIZATION_ERROR)
+    }
+
 }

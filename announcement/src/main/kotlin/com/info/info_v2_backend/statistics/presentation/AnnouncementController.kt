@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class AnnouncementController(
-    private val statisticsService: StatisticsService,
     private val announcementService: AnnouncementService
 ) {
 

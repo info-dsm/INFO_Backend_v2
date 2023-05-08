@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page
 interface LoadNoticeUsecase {
 
     fun loadMaximumNotice(noticeId: String): MaximumNoticeResponse
-    fun loadAdminMaximunNotice(noticeId: String): AdminMaximumNoticeResponse
+    fun loadAdminMaximumNotice(noticeId: String): AdminMaximumNoticeResponse
 
     fun loadNotEndedMinimumNoticeList(idx: Int, size: Int): Page<MinimumNoticeResponse>
     fun loadEndedMinimumNoticeList(idx: Int, size: Int): Page<MinimumNoticeResponse>

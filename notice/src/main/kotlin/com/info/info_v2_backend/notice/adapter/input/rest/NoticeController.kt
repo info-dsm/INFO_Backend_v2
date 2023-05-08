@@ -5,7 +5,6 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
-import com.info.info_v2_backend.common.logs.LogFormat
 import com.info.info_v2_backend.common.notice.NoticeDto
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.CreateNoticeRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.EditNoticeRequest
@@ -27,7 +26,6 @@ import com.info.info_v2_backend.notice.application.port.input.noticePreference.L
 import com.info.info_v2_backend.notice.application.port.input.noticePreference.SetNoticePreferenceUsecase
 import com.info.info_v2_backend.notice.application.port.input.technology.AddTechnologyUsecase
 import com.info.info_v2_backend.notice.application.port.input.technology.LoadTechnologyUsecase
-import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassification
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
@@ -315,6 +313,12 @@ class NoticeController(
     @GetMapping("/any")
     fun loadAnyNotice(@RequestParam noticeId: String): NoticeDto? {
         if (Auth.checkIsSystem()) return loadNoticeUsecase.loadNoticeDto(noticeId)
+        throw BusinessException("Not system request", ErrorCode.NO_AUTHORIZATION_ERROR)
+    }
+
+    @GetMapping("/company")
+    fun loadAvailableNoticeByCompanyNumber(@RequestParam companyNumber: String): List<NoticeDto> {
+        if (Auth.checkIsSystem()) return loadNoticeUsecase.loadAvailableNoticeByCompanyNumber(companyNumber)
         throw BusinessException("Not system request", ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 

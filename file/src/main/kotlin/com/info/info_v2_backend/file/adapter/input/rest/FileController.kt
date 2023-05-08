@@ -199,7 +199,7 @@ class FileController(
     @GetMapping("/user/{userEmail}")
     fun loadUserProfilePhoto(
         @PathVariable userEmail: String
-    ): UserFileResponse {
+    ): UserFileResponse? {
         return loadUserFileUsecase.load(userEmail)
     }
 

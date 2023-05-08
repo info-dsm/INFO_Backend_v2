@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component
 class NoticeFeignClientFallbackFactory: FallbackFactory<NoticeFeignClient> {
     override fun create(cause: Throwable?): NoticeFeignClient {
         return object : NoticeFeignClient {
-            override fun loadNoticeByCompanyNumber(companyNumber: String): NoticeDto? {
-                return null
+            override fun loadAvailableNoticeByCompanyNumber(companyNumber: String): List<NoticeDto> {
+                return ArrayList()
             }
         }
     }

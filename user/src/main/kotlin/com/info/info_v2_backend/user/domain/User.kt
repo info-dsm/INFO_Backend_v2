@@ -1,6 +1,7 @@
 package com.info.info_v2_backend.user.domain
 
 import com.info.info_v2_backend.common.user.Role
+import com.info.info_v2_backend.common.user.TeacherDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CommonUserDetails
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CustomGrantedAuthority
 import com.info.info_v2_backend.user.domain.time.TimeEntity
@@ -86,6 +87,13 @@ abstract class User(
         this.password = password
     }
 
+    fun toTeacherDto(profilePhoto: String?): TeacherDto {
+        return TeacherDto(
+            this.name,
+            this.email,
+            profilePhoto
+        )
+    }
 
     fun toCommonUserDetails(): CommonUserDetails {
         val authorityList: MutableList<CustomGrantedAuthority> = ArrayList()

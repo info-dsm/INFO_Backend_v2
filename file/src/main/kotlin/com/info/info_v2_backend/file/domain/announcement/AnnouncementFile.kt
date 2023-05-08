@@ -1,6 +1,6 @@
 package com.info.info_v2_backend.file.domain.announcement
 
-import com.info.info_v2_backend.common.file.dto.AnnouncementFileResponse
+import com.info.info_v2_backend.common.file.dto.response.AnnouncementFileResponse
 import com.info.info_v2_backend.common.file.dto.FileDto
 import com.info.info_v2_backend.file.domain.File
 import org.hibernate.annotations.OnDelete
@@ -12,11 +12,10 @@ import javax.persistence.Entity
 @DiscriminatorValue("announcement_file")
 @OnDelete(action = OnDeleteAction.CASCADE)
 class AnnouncementFile(
-    id: String,
     dto: FileDto,
     announcementId: Long
 ): File(
-    id,
+    dto.fileId,
     dto.fileUrl,
     dto.fileType,
     dto.extension,

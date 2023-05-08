@@ -2,7 +2,6 @@ package com.info.info_v2_backend.user.adapter.output.persistence
 
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
-import com.info.info_v2_backend.common.user.StudentDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveContactorDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveStudentDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveTeacherDto
@@ -10,15 +9,12 @@ import com.info.info_v2_backend.user.adapter.output.persistence.repository.Conta
 import com.info.info_v2_backend.user.adapter.output.persistence.repository.StudentRepository
 import com.info.info_v2_backend.user.adapter.output.persistence.repository.TeacherRepository
 import com.info.info_v2_backend.user.adapter.output.persistence.repository.UserRepository
-import com.info.info_v2_backend.user.application.port.output.LoadContactorPort
-import com.info.info_v2_backend.user.application.port.output.LoadStudentPort
-import com.info.info_v2_backend.user.application.port.output.LoadUserPort
-import com.info.info_v2_backend.user.application.port.output.SaveUserPort
+import com.info.info_v2_backend.user.application.port.output.*
 import com.info.info_v2_backend.user.domain.Contactor
 import com.info.info_v2_backend.user.domain.Student
+import com.info.info_v2_backend.user.domain.Teacher
 import com.info.info_v2_backend.user.domain.User
 import org.springframework.stereotype.Service
-import java.time.Year
 
 @Service
 class UserPersistenceAdapter(
@@ -26,7 +22,7 @@ class UserPersistenceAdapter(
     private val studentRepository: StudentRepository,
     private val userRepository: UserRepository,
     private val contactorRepository: ContactorRepository,
-): SaveUserPort, LoadUserPort, LoadContactorPort, LoadStudentPort {
+): SaveUserPort, LoadUserPort, LoadContactorPort, LoadStudentPort, LoadTeacherPort {
     override fun saveTeacher(dto: SaveTeacherDto) {
         teacherRepository.save(
             dto.toTeacher()
@@ -59,10 +55,12 @@ class UserPersistenceAdapter(
         return studentRepository.findByEmail(studentEmail).orElse(null)
     }
 
-    override fun loadStudentListByGeneration(generation: Int): List<StudentDto> {
-        return studentRepository.findByEntranceYear(2014 + generation).map {
-            it.toStudentDto()
-        }
+    override fun loadStudentListByGeneration(generation: Int): List<Student> {
+        return studentRepository.findByEntranceYear(2015 + generation - 1)
+    }
+
+    override fun load(userEmail: String): Teacher? {
+        return teacherRepository.findByEmail(userEmail).orElse(null)
     }
 
 

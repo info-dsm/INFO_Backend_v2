@@ -11,12 +11,11 @@ import javax.persistence.*
 @DiscriminatorValue("reporter")
 @OnDelete(action = OnDeleteAction.CASCADE)
 class Reporter(
-    id: String,
     dto: FileDto,
     studentEmail: String,
     noticeId: String
 ): File(
-    id,
+    dto.fileId,
     dto.fileUrl,
     dto.fileType,
     dto.extension,

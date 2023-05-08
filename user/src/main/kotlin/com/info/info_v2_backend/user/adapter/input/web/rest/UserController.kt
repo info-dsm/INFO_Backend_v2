@@ -3,14 +3,18 @@ package com.info.info_v2_backend.user.adapter.input.web.rest
 import com.info.info_v2_backend.common.auth.Auth
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
+import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
+import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.common.user.StudentDto
 import com.info.info_v2_backend.common.user.UserDto
 import com.info.info_v2_backend.user.adapter.input.web.rest.dto.response.CommonUserDetails
 import com.info.info_v2_backend.common.user.ContactorDto
 import com.info.info_v2_backend.user.application.port.input.*
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
@@ -20,8 +24,17 @@ class UserController(
     private val loadPasswordHintUsecase: LoadPasswordHintUsecase,
     private val loadContactorUsecase: LoadContactorUsecase,
     private val loadStudentUsecase: LoadStudentUsecase,
-    private val changePasswordUsecase: ChangePasswordUsecase
+    private val loadTeacherUsecase: LoadTeacherUsecase,
+    private val changePasswordUsecase: ChangePasswordUsecase,
+    private val changeUserProfilePhotoUsecase: ChangeUserProfilePhotoUsecase
 ) {
+
+    @PatchMapping("/photo")
+    fun changePhoto(
+        @RequestBody request: GenerateFileRequest
+    ): PresignedUrlResponse {
+        return changeUserProfilePhotoUsecase.upload(request, Auth.getUserEmail()?: throw BusinessException(null, ErrorCode.TOKEN_NEED_ERROR))
+    }
 
     @GetMapping
     fun loadCommonUserDetails(@RequestParam userEmail: String): CommonUserDetails? {
@@ -51,10 +64,10 @@ class UserController(
     @GetMapping("/info")
     fun getMyInformation(): UserDto {
         Auth.getUserEmail()?.let {
-            try {
+            if (Auth.checkIsTeacher()) {
+                return loadTeacherUsecase.loadTeacher(it)
+            } else {
                 return loadStudentUsecase.loadStudent(it)
-            } catch (e: BusinessException) {
-                return loadContactorUsecase.loadContactor(it)
             }
         }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
     }

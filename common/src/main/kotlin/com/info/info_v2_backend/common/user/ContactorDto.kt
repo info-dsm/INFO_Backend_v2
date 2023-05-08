@@ -6,8 +6,11 @@ class ContactorDto(
     val rank: String,
     val phoneNumber: String?,
     val passwordHint: String?,
-    val companyNumber: String
+    val companyNumber: String,
+    profilePhotoLink: String?
 ): UserDto(
     name,
-    email
+    email,
+    profilePhotoLink,
+    Role.CONTACTOR
 )

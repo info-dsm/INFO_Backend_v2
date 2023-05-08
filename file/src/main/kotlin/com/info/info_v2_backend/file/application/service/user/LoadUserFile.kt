@@ -12,9 +12,7 @@ class LoadUserFile(
     private val loadUserFilePort: LoadUserFilePort
 ): LoadUserFileUsecase {
 
-    override fun load(userEmail: String): UserFileResponse {
-        return loadUserFilePort.load(userEmail)?.let {
-            it.toUserFileResponse()
-        }?: throw BusinessException(errorCode = ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
+    override fun load(userEmail: String): UserFileResponse? {
+        return loadUserFilePort.load(userEmail)?.toUserFileResponse()
     }
 }

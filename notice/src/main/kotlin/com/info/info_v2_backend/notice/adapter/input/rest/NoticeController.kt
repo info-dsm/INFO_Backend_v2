@@ -23,6 +23,8 @@ import com.info.info_v2_backend.notice.application.port.input.classification.Loa
 import com.info.info_v2_backend.notice.application.port.input.interview.LoadInterviewProcessUsecase
 import com.info.info_v2_backend.notice.application.port.input.language.AddLanguageUsecase
 import com.info.info_v2_backend.notice.application.port.input.language.LoadLanguageUsecase
+import com.info.info_v2_backend.notice.application.port.input.noticePreference.LoadMyNoticePreferenceInfoUsecase
+import com.info.info_v2_backend.notice.application.port.input.noticePreference.SetNoticePreferenceUsecase
 import com.info.info_v2_backend.notice.application.port.input.technology.AddTechnologyUsecase
 import com.info.info_v2_backend.notice.application.port.input.technology.LoadTechnologyUsecase
 import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassification
@@ -52,7 +54,9 @@ class NoticeController(
     private val addLanguageUsecase: AddLanguageUsecase,
     private val loadInterviewProcessUsecase: LoadInterviewProcessUsecase,
     private val loadCertificateUsecase: LoadCertificateUsecase,
-    private val countOpenNoticeUsecase: CountOpenNoticeUsecase
+    private val countOpenNoticeUsecase: CountOpenNoticeUsecase,
+    private val setNoticePreferenceUsecase: SetNoticePreferenceUsecase,
+    private val loadMyNoticePreferenceInfoUsecase: LoadMyNoticePreferenceInfoUsecase
 ){
     private val log = LoggerFactory.getLogger(this.javaClass)
 
@@ -274,10 +278,43 @@ class NoticeController(
         )
     }
 
+    @GetMapping("/custom/preference")
+    fun getMyNoticePreference(): String? {
+        Auth.getUserEmail()?.let {
+            return loadMyNoticePreferenceInfoUsecase.load(it)
+        }?: return null
+    }
+
+    @PostMapping("/custom")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    fun setCustomNoticePreference(
+        @RequestParam classification: String
+    ) {
+        Auth.getUserEmail()?.let {
+            setNoticePreferenceUsecase.setNoticePreference(classification, it)
+        }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
+    }
+
+    @GetMapping("/custom")
+    fun getCustomMinimumNoticeList(
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): Page<MinimumNoticeResponse> {
+        Auth.getUserEmail()?.let {
+            return loadNoticeUsecase.loadCustomNoticeList(it, idx, size)
+        }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
+    }
+
     //internal
     @GetMapping("/available")
     fun loadAvailableNotice(@RequestParam noticeId: String): NoticeDto? {
         if (Auth.checkIsSystem()) return loadNoticeUsecase.loadAvailableNotice(noticeId)
+        throw BusinessException("Not system request", ErrorCode.NO_AUTHORIZATION_ERROR)
+    }
+
+    @GetMapping("/any")
+    fun loadAnyNotice(@RequestParam noticeId: String): NoticeDto? {
+        if (Auth.checkIsSystem()) return loadNoticeUsecase.loadNoticeDto(noticeId)
         throw BusinessException("Not system request", ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 

@@ -9,16 +9,27 @@ import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListResponse
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.edit.EditCompanyRequest
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.interviewReview.EditInterviewReviewRequest
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.interviewReview.WriteInterviewReviewRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.register.RegisterCompanyRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
-import com.info.info_v2_backend.company.application.port.input.*
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MaximumInterviewReviewResponse
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MinimumInterviewReviewRespone
 import com.info.info_v2_backend.company.application.port.input.businessArea.AddBusinessAreaUsecase
 import com.info.info_v2_backend.company.application.port.input.businessArea.LoadBusinessAreaUsecase
+import com.info.info_v2_backend.company.application.port.input.company.*
+import com.info.info_v2_backend.company.application.port.input.preference.SetCompanyClassificationPreferenceUsecase
 import com.info.info_v2_backend.company.application.port.input.file.AddCompanyFileUsecase
 import com.info.info_v2_backend.company.application.port.input.file.ChangeCompanyFileUsecase
+import com.info.info_v2_backend.company.application.port.input.file.RemoveCompanyFileUsecase
+import com.info.info_v2_backend.company.application.port.input.interviewReview.DeleteInterviewReviewUsecase
+import com.info.info_v2_backend.company.application.port.input.interviewReview.EditInterviewReviewUsecase
+import com.info.info_v2_backend.company.application.port.input.interviewReview.LoadInterviewReviewUsecase
+import com.info.info_v2_backend.company.application.port.input.interviewReview.WriteInterviewReviewUsecase
+import com.info.info_v2_backend.company.application.port.input.preference.LoadMyCompanyPreferenceInfoUsecase
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
-import org.springframework.cache.annotation.Cacheable
+import com.info.info_v2_backend.company.domain.classification.CompanyClassification
 import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -36,8 +47,53 @@ class CompanyController(
     private val editCompanyUsecase: EditCompanyUsecase,
     private val makeLeadingUsecase: MakeLeadingUsecase,
     private val addBusinessAreaUsecase: AddBusinessAreaUsecase,
-    private val countCompanyUsecase: CountCompanyUsecase
+    private val countCompanyUsecase: CountCompanyUsecase,
+    private val setCompanyClassificationPreferenceUsecase: SetCompanyClassificationPreferenceUsecase,
+    private val loadMyCompanyPreferenceInfoUsecase: LoadMyCompanyPreferenceInfoUsecase,
+    private val loadInterviewReviewUsecase: LoadInterviewReviewUsecase,
+    private val writeInterviewReviewUsecase: WriteInterviewReviewUsecase,
+    private val deleteInterviewReviewUsecase: DeleteInterviewReviewUsecase,
+    private val editInterviewReviewUsecase: EditInterviewReviewUsecase
 ) {
+
+    @GetMapping("/{companyNumber}/interview")
+    fun getMinimumInterviewReviewListByCompany(@PathVariable companyNumber: String): List<MinimumInterviewReviewRespone> {
+        return loadInterviewReviewUsecase.loadMinimumInterviewListByCompany(companyNumber)
+    }
+
+    @GetMapping("/interview")
+    fun getMaximumInterviewReviewById(@RequestParam id: Long): MaximumInterviewReviewResponse {
+        return loadInterviewReviewUsecase.loadMaximumInterviewById(id)
+    }
+
+    @PostMapping("/{companyNumber}/interview")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun writeInterviewReview(@PathVariable companyNumber: String, @RequestBody request: WriteInterviewReviewRequest) {
+        Auth.getUserEmail()?.let {
+            writeInterviewReviewUsecase.write(request, it, companyNumber)
+        }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
+    }
+
+    @PatchMapping("/{companyNumber}/interview")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    fun editInterviewReview(
+        @PathVariable companyNumber: String,
+        @RequestParam id: Long,
+        @RequestBody request: EditInterviewReviewRequest
+    ) {
+        Auth.getUserEmail()?.let {
+            editInterviewReviewUsecase.edit(id, it, request, companyNumber)
+        }
+    }
+
+    @DeleteMapping("/{companyNumber}/interview")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteInterviewReview(@PathVariable companyNumber: String,
+                              @RequestParam id: Long) {
+        Auth.getUserEmail()?.let {
+            deleteInterviewReviewUsecase.delete(id, it, companyNumber)
+        }
+    }
 
     @GetMapping("/count")
     fun getCompanyCount(): Int {
@@ -135,6 +191,33 @@ class CompanyController(
         makeAssociatedUsecase.makeAssociated(companyNumber)
     }
 
+    @GetMapping("/custom/preference")
+    fun getMyCompanyPreference(): String? {
+        Auth.getUserEmail()?.let {
+            return loadMyCompanyPreferenceInfoUsecase.load(it)
+        }?: return null
+    }
+
+    @PostMapping("/custom")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    fun setCustomizedCompanyClassification(
+        @RequestParam classification: CompanyClassification
+    ) {
+        Auth.getUserEmail()?.let {
+            return setCompanyClassificationPreferenceUsecase.set(it, classification)
+        }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
+    }
+
+    @GetMapping("/custom")
+    fun getCustomizedMinimumCompanyList(
+        @RequestParam(defaultValue = "0") idx: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): Page<MinimumCompanyResponse> {
+        Auth.getUserEmail()?.let {
+            return loadCompanyUsecase.loadCustomizedMinimumCompanyList(idx, size, it)
+        }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
+    }
+
     @GetMapping("/list")
     fun getMinimumCompanyList(
         @RequestParam(defaultValue = "0") idx: Int,
@@ -147,13 +230,6 @@ class CompanyController(
     fun getMaximumCompany(@PathVariable companyNumber: String): MaximumCompanyResponse {
         return loadCompanyUsecase.loadMaximumCompany(companyNumber)
     }
-
-//    @GetMapping("/{userEmail}/company")
-//    fun getMaximumCompanyListByUserEmail(
-//        @PathVariable userEmail: String
-//    ){
-//
-//    }
 
     @GetMapping("/list/{year}")
     fun getRegisteredNoticeCompanyListByYear(

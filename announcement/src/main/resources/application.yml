@@ -1,0 +1,12 @@
+spring:
+  config:
+    import: ${SPRING_CONFIG_IMPORT}
+  cloud:
+    config:
+      name: announcement
+      profile: default
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh

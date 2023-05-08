@@ -6,8 +6,10 @@ class StudentDto(
     email: String,
     val entranceYear: Int,
     val githubLink: String?,
-    val profilePhotoLink: String
+    profilePhotoLink: String?
 ): UserDto(
     name,
-    email
+    email,
+    profilePhotoLink,
+    Role.STUDENT
 )

@@ -51,14 +51,14 @@ class Student(
     var githubLink: String? = githubLink
         protected set
 
-    fun toStudentDto(): StudentDto {
+    fun toStudentDto(profilePhoto: String?): StudentDto {
         return StudentDto(
             this.studentKey,
             this.name,
             this.email,
             this.entranceYear,
             this.githubLink,
-            this.profilePhoto.url
+            profilePhoto
         )
     }
 

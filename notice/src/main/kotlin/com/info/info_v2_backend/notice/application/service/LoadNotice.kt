@@ -41,7 +41,7 @@ class LoadNotice(
         return maximumNoticeResponse
     }
 
-    override fun loadAdminMaximunNotice(noticeId: String): AdminMaximumNoticeResponse {
+    override fun loadAdminMaximumNotice(noticeId: String): AdminMaximumNoticeResponse {
         val maximumNoticeResponse = (loadNoticePort.loadNotice(noticeId)
             ?: throw BusinessException(
                 "Notice를 조회하지 못했습니다.",

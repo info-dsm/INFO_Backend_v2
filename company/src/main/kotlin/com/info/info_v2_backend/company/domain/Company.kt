@@ -12,6 +12,7 @@ import com.info.info_v2_backend.company.domain.name.CompanyName
 import com.info.info_v2_backend.company.domain.status.CompanyCreationStatus
 import com.info.info_v2_backend.company.domain.time.TimeEntity
 import com.info.info_v2_backend.common.user.ContactorDto
+import com.info.info_v2_backend.company.domain.classification.CompanyClassification
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import org.springframework.data.domain.Persistable
@@ -67,7 +68,7 @@ class Company(
         protected set
 
     @Column(name = "company_is_delete")
-    var isDeleted: Boolean = false
+    var isDelete: Boolean = false
         protected set
 
     @Column(name = "company_creation_status", nullable = false)
@@ -75,6 +76,10 @@ class Company(
     var creationStatus: CompanyCreationStatus = CompanyCreationStatus.CREATED
         protected set
 
+    @Column(name = "company_classification", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    var companyClassification: CompanyClassification? = null
+        protected set
 
     fun updateLastNoticeYear() {
         if (!this.isNoticeRegisteredYearList.contains(
@@ -111,6 +116,10 @@ class Company(
         this.isLeading = true
     }
 
+    fun cancelLeading() {
+        this.isLeading = false
+    }
+
     fun toCompanyDto(logoUrl: String): CompanyDto {
         return CompanyDto(
             this.companyNumber,
@@ -119,7 +128,7 @@ class Company(
             this.companyContact.contactorEmail,
             this.companyIntroduction.introduction,
             this.isLeading,
-            logoUrl 
+            logoUrl
         )
     }
     fun toMinimumCompanyResponse(

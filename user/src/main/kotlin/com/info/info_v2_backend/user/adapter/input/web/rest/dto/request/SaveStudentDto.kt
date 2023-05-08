@@ -2,6 +2,7 @@ package com.info.info_v2_backend.user.adapter.input.web.rest.dto.request
 
 import com.info.info_v2_backend.user.domain.Student
 import com.info.info_v2_backend.user.domain.User
+import java.util.Random
 
 
 class SaveStudentDto(
@@ -9,13 +10,13 @@ class SaveStudentDto(
     name: String,
     email: String,
     password: String,
-    val githubLink: String?,
-    val entranceYear: Int
+    val githubLink: String?
 ): SaveUserDto(
     name,
     email,
     password
 ) {
+    private val random = Random()
 
     fun toStudent(): Student {
         return Student(
@@ -24,7 +25,7 @@ class SaveStudentDto(
             this.email,
             this.password,
             this.githubLink,
-            this.entranceYear
+            random.nextInt(6)
         )
     }
 }

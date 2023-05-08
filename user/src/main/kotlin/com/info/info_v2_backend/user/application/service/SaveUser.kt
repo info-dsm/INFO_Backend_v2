@@ -7,6 +7,7 @@ import com.info.info_v2_backend.user.adapter.input.web.rest.dto.request.SaveUser
 import com.info.info_v2_backend.user.application.port.input.ChangePasswordUsecase
 import com.info.info_v2_backend.user.application.port.input.SaveUserUsecase
 import com.info.info_v2_backend.user.application.port.output.SaveUserPort
+import org.slf4j.LoggerFactory
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -15,7 +16,10 @@ class SaveUser(
     private val saveUserPort: SaveUserPort,
     private val encoder: PasswordEncoder
 ): SaveUserUsecase {
+    private val log = LoggerFactory.getLogger(this.javaClass);
+
     override fun saveStudent(student: SaveStudentDto) {
+        log.info(student.email, student.githubLink)
         saveUserPort.saveStudent(hashPassword(student) as SaveStudentDto)
     }
 

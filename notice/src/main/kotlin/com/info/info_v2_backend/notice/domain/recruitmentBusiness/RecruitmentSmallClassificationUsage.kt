@@ -2,10 +2,7 @@ package com.info.info_v2_backend.notice.domain.recruitmentBusiness
 
 import com.info.info_v2_backend.notice.domain.Notice
 import java.util.UUID
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
+import javax.persistence.*
 
 
 @Entity
@@ -15,13 +12,13 @@ class RecruitmentSmallClassificationUsage(
 ) {
 
     @Id
-    private val id: String = UUID.randomUUID().toString()
+    val id: String = UUID.randomUUID().toString()
 
     @ManyToOne
     @JoinColumn(name = "notice_id", nullable = false)
     val notice = notice
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "small_classification_id", nullable = false)
     val smallClassification = smallClassification
 

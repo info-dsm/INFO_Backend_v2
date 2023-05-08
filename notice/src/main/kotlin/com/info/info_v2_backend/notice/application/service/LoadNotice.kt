@@ -13,6 +13,7 @@ import com.info.info_v2_backend.notice.application.port.output.LoadCompanyPort
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
 import com.info.info_v2_backend.notice.application.port.output.LoadWithConditionPort
 import com.info.info_v2_backend.notice.application.port.output.file.FilePort
+import com.info.info_v2_backend.notice.application.port.output.noticePreference.LoadNoticePreferencePort
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -25,6 +26,7 @@ class LoadNotice(
     private val loadWithConditionPort: LoadWithConditionPort,
     private val filePort: FilePort,
     private val loadCompanyPort: LoadCompanyPort,
+    private val loadNoticePreferencePort: LoadNoticePreferencePort
 ): LoadNoticeUsecase, CountOpenNoticeUsecase {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -58,7 +60,7 @@ class LoadNotice(
     }
 
     override fun loadCompanyMinimumNoticeList(companyNumber: String): List<MinimumNoticeResponse> {
-        return loadNoticePort.loadNoticeByCompany(companyNumber).filter {
+        return loadNoticePort.loadNoticeByCompanyNumber(companyNumber).filter {
             it.approveStatus == NoticeWaitingStatus.APPROVE
         }.map {
             it.toMinimumNoticeResponse(
@@ -68,11 +70,25 @@ class LoadNotice(
     }
 
     override fun loadCompanyMinimumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse> {
-        return loadNoticePort.loadNoticeByCompany(companyNumber).map {
+        return loadNoticePort.loadNoticeByCompanyNumber(companyNumber).map {
             it.toMinimumNoticeWithApproveStatusResponse(
                 loadCompanyPort.loadCompanyThumbnailList(companyNumber)
             )
         }
+    }
+
+    override fun loadCustomNoticeList(userEmail: String, idx: Int, size: Int): Page<MinimumNoticeResponse> {
+        loadNoticePreferencePort.loadNoticePreference(
+            userEmail
+        )?.let {
+            return loadNoticePort.loadNoticeBySmallClassification(
+                it.smallClassification.name, idx, size
+            ).map {
+                it.toMinimumNoticeResponse(
+                    loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                )
+            }
+        }?: return loadWithConditionPort.loadBeforeEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
     }
 
 
@@ -90,6 +106,39 @@ class LoadNotice(
 
     override fun loadNoticeDto(noticeId: String): NoticeDto? {
         return loadNoticePort.loadNotice(noticeId)?.toNoticeDto()
+    }
+
+    override fun searchNotice(
+        companyName: String?,
+        smallClassification: String?,
+        idx: Int,
+        size: Int
+    ): Page<MinimumNoticeResponse> {
+        companyName?.let {
+            name: String ->
+            smallClassification?.let {
+                classification: String ->
+                return loadNoticePort.loadNoticeByCompanyNameAndSmallClassification(name, classification, idx, size).map {
+                    it.toMinimumNoticeResponse(
+                        loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                    )
+                }
+            }?:let {
+                return loadNoticePort.loadNoticeByCompanyName(name, idx, size).map {
+                    it.toMinimumNoticeResponse(
+                        loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                    )
+                }
+            }
+        }?:let {
+            smallClassification?.let {
+                return loadNoticePort.loadNoticeBySmallClassification(smallClassification, idx, size).map {
+                    it.toMinimumNoticeResponse(
+                        loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                    )
+                }
+            }?: return loadWithConditionPort.loadBeforeEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
+        }
     }
 
     override fun count(): Int {

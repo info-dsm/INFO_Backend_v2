@@ -368,12 +368,12 @@ jobs:
             docker image prune -f
 
 
-  statistics-draft-release:
+  announcement-draft-release:
     runs-on: ubuntu-latest
     env:
-      MODULE: statistics
-      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-statistics
-    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'statistics')
+      MODULE: announcement
+      DOCKER_REPOSITORY: ${{ secrets.DOCKER_USERNAME }}/infov2-announcement
+    if: github.event.pull_request.merged == true && github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'announcement')
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17

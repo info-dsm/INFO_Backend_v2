@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.file.adapter.input.rest
 
+import com.info.info_v2_backend.common.file.dto.AnnouncementFileResponse
 import com.info.info_v2_backend.common.file.dto.AttachmentResponse
 import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
@@ -8,6 +9,8 @@ import com.info.info_v2_backend.common.file.dto.response.PresignedUrlListRespons
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileListRequest
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
+import com.info.info_v2_backend.file.application.port.input.announce.LoadAnnouncementFileUsecase
+import com.info.info_v2_backend.file.application.port.input.announce.UploadAnnouncementFileUsecase
 import com.info.info_v2_backend.file.application.port.input.applies.LoadResumeUsecase
 import com.info.info_v2_backend.file.application.port.input.applies.RemoveResumeUsecase
 import com.info.info_v2_backend.file.application.port.input.notice.UploadAttachmentUsecase
@@ -22,6 +25,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
@@ -38,7 +42,9 @@ class FileController(
     private val loadAttachmentUsecase: LoadAttachmentUsecase,
     private val loadResumeUsecase: LoadResumeUsecase,
     private val removeResumeUsecase: RemoveResumeUsecase,
-    private val removeAttachmentUsecase: RemoveAttachmentUsecase
+    private val removeAttachmentUsecase: RemoveAttachmentUsecase,
+    private val uploadAnnouncementFileUsecase: UploadAnnouncementFileUsecase,
+    private val loadAnnouncementFileUsecase: LoadAnnouncementFileUsecase
 ) {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
@@ -148,6 +154,33 @@ class FileController(
         @PathVariable noticeId: String
     ) {
         return removeAttachmentUsecase.remove(noticeId)
+    }
+
+
+    @PostMapping("/announcement/{announcementId}")
+    fun uploadAnnouncementFileList(
+        @PathVariable announcementId: Long,
+        @RequestBody request: GenerateFileListRequest
+    ): PresignedUrlListResponse {
+        return PresignedUrlListResponse(
+            request.request.map {
+                    geneFileRequest: GenerateFileRequest ->
+                return@map PresignedUrlResponse(
+                    uploadAnnouncementFileUsecase.upload(
+                        announcementId,
+                        geneFileRequest
+                    ).url,
+                    geneFileRequest.fileName
+                )
+            }.toMutableList()
+        )
+    }
+
+    @GetMapping("/announcement/{announcementId}")
+    fun loadAnnouncementFileList(
+        @PathVariable announcementId: Long
+    ): List<AnnouncementFileResponse> {
+        return loadAnnouncementFileUsecase.load(announcementId)
     }
 
 

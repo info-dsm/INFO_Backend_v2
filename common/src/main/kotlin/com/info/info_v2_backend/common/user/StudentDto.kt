@@ -5,8 +5,8 @@ class StudentDto(
     name: String,
     email: String,
     val entranceYear: Int,
-    val githubLink: String?
-
+    val githubLink: String?,
+    val profilePhotoLink: String
 ): UserDto(
     name,
     email

@@ -40,7 +40,9 @@ class LoadCompany(
                     it
                 ),
                 loadEmploymentPort.loadEmploymentList(it.companyNumber).size,
-                StringUtils.commaDelimitedListToStringArray(noticePort.loadNoticeByCompanyNumber(it.companyNumber)?.classificationList).toList()
+                noticePort.loadAvailableNoticeByCompanyNumber(it.companyNumber).map {
+                    StringUtils.commaDelimitedListToStringArray(it.classificationList).toList()
+                }.flatten().toSet().toList()
             )
 
         }
@@ -58,7 +60,9 @@ class LoadCompany(
             it.toMinimumCompanyResponse(
                 getCompanyIntroductionResponse(it),
                 loadEmploymentPort.loadEmploymentList(it.companyNumber).size?: 0,
-                StringUtils.commaDelimitedListToStringArray(noticePort.loadNoticeByCompanyNumber(it.companyNumber)?.classificationList).toList()
+                noticePort.loadAvailableNoticeByCompanyNumber(it.companyNumber).map {
+                    StringUtils.commaDelimitedListToStringArray(it.classificationList).toList()
+                }.flatten().toSet().toList()
             )
         }
     }
@@ -68,7 +72,9 @@ class LoadCompany(
             it.toMinimumCompanyResponse(
                 getCompanyIntroductionResponse(it),
                 loadEmploymentPort.loadEmploymentList(it.companyNumber).size?:0,
-                StringUtils.commaDelimitedListToStringArray(noticePort.loadNoticeByCompanyNumber(it.companyNumber)?.classificationList).toList()
+                noticePort.loadAvailableNoticeByCompanyNumber(it.companyNumber).map {
+                    StringUtils.commaDelimitedListToStringArray(it.classificationList).toList()
+                }.flatten().toSet().toList()
             )
         }
     }
@@ -79,7 +85,9 @@ class LoadCompany(
             ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
         return company.toMaximumCompanyResponse(
             contactor, getCompanyIntroductionResponse(company),
-            StringUtils.commaDelimitedListToStringArray(noticePort.loadNoticeByCompanyNumber(companyNumber)?.classificationList).toList())
+            noticePort.loadAvailableNoticeByCompanyNumber(company.companyNumber).map {
+                StringUtils.commaDelimitedListToStringArray(it.classificationList).toList()
+            }.flatten().toSet().toList())
     }
 
     override fun loadCompanyDto(companyNumber: String): CompanyDto? {
@@ -101,7 +109,9 @@ class LoadCompany(
             return@map company.toMinimumCompanyResponse(
                 getCompanyIntroductionResponse(company),
                 loadEmploymentPort.loadEmploymentList(company.companyNumber).size?:0,
-                StringUtils.commaDelimitedListToStringArray(noticePort.loadNoticeByCompanyNumber(company.companyNumber)?.classificationList).toList()
+                noticePort.loadAvailableNoticeByCompanyNumber(company.companyNumber).map {
+                    StringUtils.commaDelimitedListToStringArray(it.classificationList).toList()
+                }.flatten().toSet().toList()
             )
         }
     }

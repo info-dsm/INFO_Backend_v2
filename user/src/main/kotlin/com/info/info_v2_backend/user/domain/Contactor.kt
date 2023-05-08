@@ -45,7 +45,8 @@ class Contactor(
             this.rank,
             this.phoneNumber,
             this.passwordHint,
-            this.companyNumber
+            this.companyNumber,
+            null
         )
     }
 

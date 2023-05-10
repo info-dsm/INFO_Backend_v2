@@ -26,7 +26,7 @@ class TokenProvider(
                 .claim("type", "access")
                 .claim(HeaderProperty.COMPANY_NUMBER, companyNumber)
                 .setIssuedAt(Date())
-                .setExpiration(Date(Instant.now().plusMillis(jwtProperty.refreshExpiredAt * 1000).toEpochMilli()))
+                .setExpiration(Date(Instant.now().plusMillis(jwtProperty.accessExpiredAt * 1000).toEpochMilli()))
                 .compact()
             ,
             Jwts.builder()

@@ -14,8 +14,6 @@ buildscript {
 }
 
 
-
-
 plugins {
     kotlin("jvm") version("1.7.20")
     id("org.springframework.boot") version("2.7.5")
@@ -170,7 +168,7 @@ project(":eureka") {
     }
 }
 
-project(":statistics"){
+project(":announcement"){
     dependencies {
         implementation(project(":common"))
     }

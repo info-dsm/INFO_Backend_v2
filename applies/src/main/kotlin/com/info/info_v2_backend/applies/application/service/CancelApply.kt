@@ -9,6 +9,7 @@ import com.info.info_v2_backend.common.applies.AppliesStatus
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CancelApply(
@@ -18,6 +19,7 @@ class CancelApply(
     private val resumePort: ResumePort
 ): CancelApplyUsecase {
 
+    @Transactional
     override fun cancelApply(noticeId: String, studentEmail: String) {
         val applies = loadAppliesPort.loadAppliesByNoticeAndStudentEmail(noticeId, studentEmail)
             ?: throw BusinessException(

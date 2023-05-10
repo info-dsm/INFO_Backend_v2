@@ -1,6 +1,6 @@
 package com.info.info_v2_backend.notice.adapter.input.rest.dto.response
 
-import com.info.info_v2_backend.common.file.dto.AttachmentResponse
+import com.info.info_v2_backend.common.file.dto.response.AttachmentResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.NoticeOpenPeriodRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.support.MealSupportRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.support.WelfareRequest
@@ -10,7 +10,6 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.certifica
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.ClassificationResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.technology.TechnologyResponse
 import com.info.info_v2_backend.notice.domain.company.NoticeCompany
-import com.info.info_v2_backend.notice.domain.interview.InterviewProcess
 
 data class MaximumNoticeResponse(
     val noticeId: String,

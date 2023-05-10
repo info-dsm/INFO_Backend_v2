@@ -5,14 +5,15 @@ import com.info.info_v2_backend.employment.adapter.output.persistence.repository
 import com.info.info_v2_backend.employment.application.port.output.LoadEmploymentPort
 import com.info.info_v2_backend.employment.application.port.output.SaveEmploymentPort
 import com.info.info_v2_backend.employment.domain.Employment
-import com.info.info_v2_backend.employment.domain.company.EmploymentCompany
-import com.info.info_v2_backend.employment.domain.student.EmployedStudent
 import org.springframework.stereotype.Service
 
 @Service
 class EmploymentAdapter(
     private val employmentRepository: EmploymentRepository
 ): SaveEmploymentPort, LoadEmploymentPort {
+    override fun loadEmploymentByClassNumAndYear(classNum: Int, year: Int): List<Employment> {
+        return employmentRepository.findByClassNumAndYear(classNum, year)
+    }
 
     override fun loadEmploymentByCompanyAndStudent(companyNumber: String, studentEmail: String): Employment? {
         return employmentRepository.findByCompanyAndStudent(companyNumber, studentEmail).orElse(null)

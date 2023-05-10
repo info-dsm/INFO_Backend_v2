@@ -30,16 +30,36 @@ class NoticeAdapter(
         return noticeRepository.findByIdOrNull(noticeId)
     }
 
-    override fun loadNoticeBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<Notice> {
+    override fun loadNoticePageBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<Notice> {
         return noticeRepository.findBySmallClassification(
             smallClassification,
             PageRequest.of(idx, size)
         )
     }
 
-    override fun loadNoticeByCompany(companyNumber: String): List<Notice> {
-        return noticeRepository.findByCompany(
+    override fun loadNoticeListByCompanyNumber(companyNumber: String): List<Notice> {
+        return noticeRepository.findByCompanyNumber(
             companyNumber
+        )
+    }
+
+    override fun loadNoticePageByCompanyName(companyName: String, idx: Int, size: Int): Page<Notice> {
+        return noticeRepository.findByCompanyName(
+            companyName,
+            PageRequest.of(idx, size)
+        )
+    }
+
+    override fun loadNoticePageByCompanyNameAndSmallClassification(
+        companyName: String,
+        smallClassification: String,
+        idx: Int,
+        size: Int
+    ): Page<Notice> {
+        return noticeRepository.findByCompanyNameAndSmallClassification(
+            companyName,
+            smallClassification,
+            PageRequest.of(idx, size)
         )
     }
 

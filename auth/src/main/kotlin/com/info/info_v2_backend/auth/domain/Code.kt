@@ -11,11 +11,11 @@ class Code(
     identifyKey: String,
     data: String,
     timeToLive: Long,
-    type: AuthenticationCodeType
+    type: String
 ) {
 
     @Id
-    var identifyKey: String = identifyKey.plus(type.name)
+    var identifyKey: String = identifyKey.plus(type)
 
     @Indexed
     var targetEmail: String = identifyKey
@@ -23,9 +23,10 @@ class Code(
     val data: String = data
 
     @Indexed
-    val type: AuthenticationCodeType = type
+    val type: String = type
 
     @TimeToLive
     var timeToLive: Long = timeToLive
+
 
 }

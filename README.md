@@ -1,6 +1,13 @@
 # INFO_v2_Backend
 
+| 서버 개발 & 데브옵스 | [안진우](http://github.com/qj0r9j0vc2) |
+| --- | --- |
 
+<br/>
+<br/>
+
+
+It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-server)
 > **INFO 프로젝트**는 기존 **직접 담당자와 연락하여** 이루어지던 
 *대덕sw마이스터고 현장 실습생 채용 의뢰를 전산화하여* 
 소통 과정에서 발생하는 불필요한 연락을 제거하고, **웹 어플리케이션**으로 전환하여 **학교 산학부 담당자** 부재 시에도 **원활한 채용 프로세스 진행**이 가능하게 하기 위해 구상되었으며, `가용성` 및 `안정성` 확보를 기대할 수 있습니다.
@@ -46,7 +53,7 @@
 
 
 
- INFO Project Backend 서버입니다. 기존, 모놀리식 아키텍처를 채택하여 빠르게 구성한 INFO_v1_Backend 서버를 MSA, Hexagornal, DDD로 설계하려 노력했습니다. 
+ INFO Project Backend 서버입니다. 기존, 모놀리식 아키텍처를 채택하여 빠르게 구성한 INFO_v1_Backend 서버를 MSA, Hexagonal, DDD로 설계하려 노력했습니다. 
 
 
 
@@ -72,7 +79,7 @@
 # Hexagonal(포트 및 어댑터 아키텍처)
 ---
 
-<img width="873" alt="Hexagornal Architecture" src="https://user-images.githubusercontent.com/59428479/202425478-fe91b4d3-a83e-4668-b6fe-b7ff4ab3756b.png">
+<img width="873" alt="Hexagonal Architecture" src="https://user-images.githubusercontent.com/59428479/202425478-fe91b4d3-a83e-4668-b6fe-b7ff4ab3756b.png">
 
 
 

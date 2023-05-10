@@ -45,7 +45,7 @@ class Login(
                     userDetails.username,
                     dto.refreshToken,
                     AuthenticationCodeType.REFRESH.timeToLive,
-                    AuthenticationCodeType.REFRESH
+                    AuthenticationCodeType.REFRESH.name
                 )
             )
 

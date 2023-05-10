@@ -16,6 +16,7 @@ data class AnonymousEmploymentListResponse(
         val classNum: Int
     ) {
         data class AnonymousEmploymentCompanyResponse(
+            val companyNumber: String,
             val companyName: String,
             val companyLogo: String
         )

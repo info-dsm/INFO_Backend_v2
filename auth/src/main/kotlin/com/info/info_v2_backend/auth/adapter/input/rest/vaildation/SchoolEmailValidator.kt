@@ -9,6 +9,7 @@ class SchoolEmailValidator : ConstraintValidator<SchoolEmail, String> {
     private val possibleDomain: List<String> = listOf("@dsm.hs.kr", "@info-dsm.info")
 
     override fun isValid(value: String?, context: ConstraintValidatorContext?): Boolean {
+
         value?.let {
             str: String ->
             return possibleDomain.any {

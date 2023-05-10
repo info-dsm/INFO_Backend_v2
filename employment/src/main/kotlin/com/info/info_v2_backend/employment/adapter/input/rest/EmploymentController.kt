@@ -25,7 +25,6 @@ class EmploymentController(
     private val loadEmploymentUsecase: LoadEmploymentUsecase,
     private val confirmEmploymentUsecase: ConfirmEmploymentUsecase,
     private val failEmploymentUsecase: FailEmploymentUsecase,
-    private val loadGenerationUsecase: LoadGenerationUsecase,
     private val createGenerationUsecase: CreateGenerationUsecase
 ) {
 
@@ -99,13 +98,6 @@ class EmploymentController(
     ){
         if (Auth.checkIsTeacher()) createGenerationUsecase.createGenerationGrade(request)
         else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
-    }
-
-    @GetMapping("/generation/{generation}")
-    fun getTotalGradeInfoByGeneration(
-        @PathVariable generation: Int
-    ): GenerationGrade {
-        return loadGenerationUsecase.load(generation)
     }
 
 }

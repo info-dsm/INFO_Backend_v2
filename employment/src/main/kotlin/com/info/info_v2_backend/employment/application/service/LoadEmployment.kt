@@ -35,7 +35,7 @@ class LoadEmployment(
         }.distinctBy {
             it.student.studentEmail
         }
-        val generationClass = loadGenerationPort.loadClass(classNum, year - FIRST_GENERATION_YEAR + 1)
+        val generationClass = loadGenerationPort.loadClass(classNum, year - FIRST_GENERATION_YEAR - 1)
             ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
 
         return AnonymousEmploymentListResponse(

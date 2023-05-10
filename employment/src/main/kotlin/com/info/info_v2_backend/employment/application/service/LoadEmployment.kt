@@ -41,6 +41,7 @@ class LoadEmployment(
         return AnonymousEmploymentListResponse(
             classNum,
             generationClass.totalClassStudent,
+            generationClass,
             employedStudentList.size,
             generationClass.generationGrade.generationClassList.map(GenerationClass::totalClassStudent).sum(),
             generationClass.generationGrade.generationClassList.map {

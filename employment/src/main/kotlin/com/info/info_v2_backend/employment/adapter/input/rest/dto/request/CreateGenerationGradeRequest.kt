@@ -10,6 +10,7 @@ data class CreateGenerationGradeRequest(
         val classNum: Int,
         val totalClassStudent: Int,
         val major: String,
-        val description: String
+        val description: String,
+        val homeroomTeacherName: String
     )
 }

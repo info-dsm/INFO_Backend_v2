@@ -27,7 +27,8 @@ class CreateGeneration(
                 generationGrade,
                 request.totalClassStudent,
                 request.major,
-                request.description
+                request.description,
+                request.homeroomTeacherName
             )
         )
     }
@@ -41,7 +42,8 @@ class CreateGeneration(
                     generationGrade,
                     it.totalClassStudent,
                     it.major,
-                    it.description
+                    it.description,
+                    it.homeroomTeacherName
                 )
             )
         }

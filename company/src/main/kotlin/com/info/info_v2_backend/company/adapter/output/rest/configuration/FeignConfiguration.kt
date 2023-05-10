@@ -2,6 +2,7 @@ package com.info.info_v2_backend.company.adapter.output.rest.configuration
 
 import com.info.info_v2_backend.common.auth.HeaderProperty
 import com.info.info_v2_backend.common.user.Role
+import com.info.info_v2_backend.user.adapter.output.rest.configuration.FeignErrorDecoder
 import feign.RequestInterceptor
 import feign.RequestTemplate
 import feign.codec.ErrorDecoder

@@ -21,13 +21,14 @@ class S3Uploader (
 
     private val log = LoggerFactory.getLogger(this.javaClass)
 
-    override fun getPresignedUrl(originalFileName: String, contentType: String, rootPathName: String, middlePathName: String): FileDto {
-        val fileName = getFileName(rootPathName, middlePathName, originalFileName)
+    override fun getPresignedUrl(originalFileName: String, contentType: String, rootPathName: String, middlePathName: String, fileId: String): FileDto {
+        val fileName = getFileName(rootPathName, "$middlePathName/$fileId", originalFileName)
         val ext = getExt(originalFileName)
 
         val presignedURL = getGeneratePreSignedUrlRequest(fileName, contentType)
 
         return FileDto(
+            fileId,
             presignedURL,
             getFileType(contentType, ext),
             ext,

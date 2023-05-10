@@ -16,6 +16,7 @@ data class MinimumCompanyResponse (
     val isAssociated: Boolean,
     val latestNoticeYear: Int?,
     val totalEmployedCount: Int,
-    val companyIntroductionResponse: CompanyIntroductionResponse
+    val companyIntroductionResponse: CompanyIntroductionResponse,
+    val hiringClassificationList: List<String>
 
 )

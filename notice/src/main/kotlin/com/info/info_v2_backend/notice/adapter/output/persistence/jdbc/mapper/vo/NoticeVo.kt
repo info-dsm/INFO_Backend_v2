@@ -1,6 +1,6 @@
 package com.info.info_v2_backend.notice.adapter.output.persistence.jdbc.mapper.vo
 
-import com.info.info_v2_backend.common.file.dto.AttachmentResponse
+import com.info.info_v2_backend.common.file.dto.response.AttachmentResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.request.workPlace.WorkPlaceRequest
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.LanguageResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MaximumNoticeResponse
@@ -8,22 +8,16 @@ import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.MinimumNo
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.certificate.CertificateResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.classification.ClassificationResponse
 import com.info.info_v2_backend.notice.adapter.input.rest.dto.response.technology.TechnologyResponse
-import com.info.info_v2_backend.notice.domain.certificate.CertificateUsage
 import com.info.info_v2_backend.notice.domain.company.NoticeCompany
 import com.info.info_v2_backend.notice.domain.interview.InterviewProcess
-import com.info.info_v2_backend.notice.domain.language.LanguageUsage
 import com.info.info_v2_backend.notice.domain.openPeriod.NoticeOpenPeriod
-import com.info.info_v2_backend.notice.domain.recruitmentBusiness.RecruitmentSmallClassificationUsage
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import com.info.info_v2_backend.notice.domain.support.MealSupport
 import com.info.info_v2_backend.notice.domain.support.Pay
 import com.info.info_v2_backend.notice.domain.support.Welfare
 import com.info.info_v2_backend.notice.domain.support.WorkTime
-import com.info.info_v2_backend.notice.domain.technology.TechnologyUsage
 import com.info.info_v2_backend.notice.domain.workPlace.WorkPlace
 import java.time.LocalDate
-import javax.persistence.CascadeType
-import javax.persistence.OneToMany
 
 class NoticeVo(
     id: String,

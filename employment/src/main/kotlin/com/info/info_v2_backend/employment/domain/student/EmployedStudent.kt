@@ -1,15 +1,19 @@
 package com.info.info_v2_backend.employment.domain.student
 
 import com.info.info_v2_backend.common.employment.EmploymentDto
+import com.info.info_v2_backend.employment.domain.generation.GenerationClass
 import javax.persistence.Column
 import javax.persistence.Embeddable
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 
 
+const val FIRST_GENERATION_YEAR = 2015
 @Embeddable
 class EmployedStudent(
     studentEmail:String,
     name: String,
-    generation: Int
+    entranceYear: Int,
 ) {
     @Column(name = "employed_student_email", nullable = false)
     var studentEmail: String = studentEmail
@@ -19,19 +23,15 @@ class EmployedStudent(
     var name: String = name
         protected set
 
-    @Column(name = "employed_student_generation", nullable = false)
-    var generation: Int = generation
+    @Column(name = "employed_student_entrance_year", nullable = false)
+    var entranceYear: Int = entranceYear
         protected set
-
-    constructor(
-        studentEmail: String
-    ) : this(studentEmail, "system", 1)
 
     fun toEmploymentStudentResponse(): EmploymentDto.EmploymentStudentResponse {
         return EmploymentDto.EmploymentStudentResponse(
             this.studentEmail,
             this.name,
-            this.generation
+            this.entranceYear - FIRST_GENERATION_YEAR + 1
         )
     }
 

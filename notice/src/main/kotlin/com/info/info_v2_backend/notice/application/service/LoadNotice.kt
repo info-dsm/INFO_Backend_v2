@@ -13,6 +13,7 @@ import com.info.info_v2_backend.notice.application.port.output.LoadCompanyPort
 import com.info.info_v2_backend.notice.application.port.output.LoadNoticePort
 import com.info.info_v2_backend.notice.application.port.output.LoadWithConditionPort
 import com.info.info_v2_backend.notice.application.port.output.file.FilePort
+import com.info.info_v2_backend.notice.application.port.output.noticePreference.LoadNoticePreferencePort
 import com.info.info_v2_backend.notice.domain.status.NoticeWaitingStatus
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
@@ -25,6 +26,7 @@ class LoadNotice(
     private val loadWithConditionPort: LoadWithConditionPort,
     private val filePort: FilePort,
     private val loadCompanyPort: LoadCompanyPort,
+    private val loadNoticePreferencePort: LoadNoticePreferencePort
 ): LoadNoticeUsecase, CountOpenNoticeUsecase {
 
     private val log = LoggerFactory.getLogger(this.javaClass)
@@ -39,7 +41,7 @@ class LoadNotice(
         return maximumNoticeResponse
     }
 
-    override fun loadAdminMaximunNotice(noticeId: String): AdminMaximumNoticeResponse {
+    override fun loadAdminMaximumNotice(noticeId: String): AdminMaximumNoticeResponse {
         val maximumNoticeResponse = (loadNoticePort.loadNotice(noticeId)
             ?: throw BusinessException(
                 "Notice를 조회하지 못했습니다.",
@@ -58,7 +60,7 @@ class LoadNotice(
     }
 
     override fun loadCompanyMinimumNoticeList(companyNumber: String): List<MinimumNoticeResponse> {
-        return loadNoticePort.loadNoticeByCompany(companyNumber).filter {
+        return loadNoticePort.loadNoticeListByCompanyNumber(companyNumber).filter {
             it.approveStatus == NoticeWaitingStatus.APPROVE
         }.map {
             it.toMinimumNoticeResponse(
@@ -68,11 +70,25 @@ class LoadNotice(
     }
 
     override fun loadCompanyMinimumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse> {
-        return loadNoticePort.loadNoticeByCompany(companyNumber).map {
+        return loadNoticePort.loadNoticeListByCompanyNumber(companyNumber).map {
             it.toMinimumNoticeWithApproveStatusResponse(
                 loadCompanyPort.loadCompanyThumbnailList(companyNumber)
             )
         }
+    }
+
+    override fun loadCustomNoticeList(userEmail: String, idx: Int, size: Int): Page<MinimumNoticeResponse> {
+        loadNoticePreferencePort.loadNoticePreference(
+            userEmail
+        )?.let {
+            return loadNoticePort.loadNoticePageBySmallClassification(
+                it.smallClassification.name, idx, size
+            ).map {
+                it.toMinimumNoticeResponse(
+                    loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                )
+            }
+        }?: return loadWithConditionPort.loadBeforeEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
     }
 
 
@@ -92,11 +108,42 @@ class LoadNotice(
         return loadNoticePort.loadNotice(noticeId)?.toNoticeDto()
     }
 
-    override fun loadNoticeBySmallClassification(smallClassification: String, idx: Int, size: Int): Page<MinimumNoticeResponse> {
-        return loadNoticePort.loadNoticeBySmallClassification(smallClassification, idx, size).map {
-            it.toMinimumNoticeResponse(
-                loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
-            )
+    override fun loadAvailableNoticeByCompanyNumber(companyNumber: String): List<NoticeDto> {
+        return loadNoticePort.loadNoticeListByCompanyNumber(companyNumber).map {
+            it.toNoticeDto()
+        }
+    }
+
+    override fun searchNotice(
+        companyName: String?,
+        smallClassification: String?,
+        idx: Int,
+        size: Int
+    ): Page<MinimumNoticeResponse> {
+        companyName?.let {
+            name: String ->
+            smallClassification?.let {
+                classification: String ->
+                return loadNoticePort.loadNoticePageByCompanyNameAndSmallClassification(name, classification, idx, size).map {
+                    it.toMinimumNoticeResponse(
+                        loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                    )
+                }
+            }?:let {
+                return loadNoticePort.loadNoticePageByCompanyName(name, idx, size).map {
+                    it.toMinimumNoticeResponse(
+                        loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                    )
+                }
+            }
+        }?:let {
+            smallClassification?.let {
+                return loadNoticePort.loadNoticePageBySmallClassification(smallClassification, idx, size).map {
+                    it.toMinimumNoticeResponse(
+                        loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
+                    )
+                }
+            }?: return loadWithConditionPort.loadBeforeEndDateAndStatusNoticeList(idx, size, LocalDate.now(), NoticeWaitingStatus.APPROVE)
         }
     }
 

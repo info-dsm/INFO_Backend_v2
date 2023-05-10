@@ -6,10 +6,9 @@ import com.info.info_v2_backend.common.file.dto.CompanyFileClassificationType
 import com.info.info_v2_backend.common.file.dto.request.GenerateFileRequest
 import com.info.info_v2_backend.common.file.dto.response.CompanyFileResponse
 import com.info.info_v2_backend.common.file.dto.response.PresignedUrlResponse
-import com.info.info_v2_backend.company.application.port.input.FailCompanyUsecase
+import com.info.info_v2_backend.company.application.port.input.company.FailCompanyUsecase
 import org.springframework.cloud.openfeign.FallbackFactory
 import org.springframework.stereotype.Component
-import org.springframework.web.multipart.MultipartFile
 
 @Component
 class FileFeignClientFallbackFactory(

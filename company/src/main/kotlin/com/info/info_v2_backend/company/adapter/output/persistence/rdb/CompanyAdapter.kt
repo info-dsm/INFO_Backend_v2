@@ -5,20 +5,18 @@ import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.company.adapter.output.persistence.rdb.repository.CompanyRepository
 import com.info.info_v2_backend.company.application.port.output.company.LoadCompanyPort
 import com.info.info_v2_backend.company.application.port.output.company.SaveCompanyPort
+import com.info.info_v2_backend.company.application.port.output.company.SearchCompanyPort
 import com.info.info_v2_backend.company.domain.Company
-import org.hibernate.JDBCException
+import com.info.info_v2_backend.company.domain.classification.CompanyClassification
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Propagation
-import org.springframework.transaction.annotation.Transactional
-import java.sql.SQLException
 
 @Service
 class CompanyAdapter(
     private val companyRepository: CompanyRepository
-): SaveCompanyPort, LoadCompanyPort {
+): SaveCompanyPort, LoadCompanyPort, SearchCompanyPort {
 
     override fun save(company: Company) {
         try {
@@ -47,8 +45,16 @@ class CompanyAdapter(
         return companyRepository.findByIsNoticeRegisteredYearListContaining(year, PageRequest.of(idx, size, Sort.by("createdAt").descending()))
     }
 
+    override fun loadCompanyListByCompanyClassification(idx: Int, size: Int, companyClassification: CompanyClassification): Page<Company> {
+        return companyRepository.findByCompanyClassification(companyClassification, PageRequest.of(idx, size))
+    }
+
     override fun count(): Int {
         return companyRepository.countAll()
+    }
+
+    override fun search(idx: Int, size: Int, query: String): Page<Company> {
+        return companyRepository.findByCompanyName(query, PageRequest.of(idx, size))
     }
 
 }

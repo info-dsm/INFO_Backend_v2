@@ -1,5 +1,6 @@
 package com.info.info_v2_backend.auth.application.service
 
+import com.info.info_v2_backend.auth.application.env.AuthenticationCodeProperty
 import com.info.info_v2_backend.auth.application.port.input.StudentSignupUsecase
 import com.info.info_v2_backend.auth.application.port.input.TeacherSignupUsecase
 import com.info.info_v2_backend.auth.application.port.output.LoadCodePort
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Service
 @Service
 class Signup(
     private val saveUserPort: SaveUserPort,
-    private val loadAuthenticationCodePort: LoadCodePort
+    private val loadAuthenticationCodePort: LoadCodePort,
+    private val authenticationCodeProperty: AuthenticationCodeProperty
 ): StudentSignupUsecase, TeacherSignupUsecase {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
@@ -29,7 +31,7 @@ class Signup(
 
     override fun teacherSignup(request: SaveTeacherDto, emailAuthenticationCode: String, teacherCode: String) {
         if (authenticateCode(request.email, AuthenticationCodeType.SIGNUP_EMAIL, emailAuthenticationCode)) {
-            if (authenticateCode(request.email, AuthenticationCodeType.TEACHER, teacherCode) || teacherCode == "1111") {
+            if ((authenticationCodeProperty.teacherCode ?: 1111) == teacherCode) {
                 return saveUserPort.saveTeacherPort(
                     request
                 )
@@ -40,8 +42,9 @@ class Signup(
 
     private fun authenticateCode(email: String, type: AuthenticationCodeType, code: String): Boolean {
         return ((loadAuthenticationCodePort.load(
-            email
-        ).takeIf { it.type == type })?.data == code)
+            email,
+            type
+        ).takeIf { it.type == type.name })?.data == code)
     }
 
 

@@ -7,6 +7,7 @@ import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.Anony
 import com.info.info_v2_backend.employment.application.port.input.LoadEmploymentUsecase
 import com.info.info_v2_backend.employment.application.port.output.LoadEmploymentPort
 import com.info.info_v2_backend.employment.application.port.output.generation.LoadGenerationPort
+import com.info.info_v2_backend.employment.domain.generation.GenerationClass
 import com.info.info_v2_backend.employment.domain.student.FIRST_GENERATION_YEAR
 import org.springframework.stereotype.Service
 
@@ -41,7 +42,7 @@ class LoadEmployment(
             classNum,
             generationClass.totalClassStudent,
             employedStudentList.size,
-            generationClass.generationGrade.totalGradeStudent,
+            generationClass.generationGrade.generationClassList.map(GenerationClass::totalClassStudent).sum(),
             generationClass.generationGrade.generationClassList.map {
                 c ->
                 c.employmentList.map {

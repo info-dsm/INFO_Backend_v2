@@ -29,6 +29,7 @@ class EmploymentCompany(
 
     fun toAnonymousEmploymentCompanyResponse(): AnonymousEmploymentListResponse.AnonymousEmploymentResponse.AnonymousEmploymentCompanyResponse{
         return AnonymousEmploymentListResponse.AnonymousEmploymentResponse.AnonymousEmploymentCompanyResponse(
+            this.companyNumber,
             this.companyName,
             this.companyLogo
         )

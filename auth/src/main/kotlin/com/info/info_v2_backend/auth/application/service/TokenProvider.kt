@@ -10,6 +10,7 @@ import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.stereotype.Component
+import java.time.Instant
 import java.util.*
 
 @Component
@@ -25,14 +26,14 @@ class TokenProvider(
                 .claim("type", "access")
                 .claim(HeaderProperty.COMPANY_NUMBER, companyNumber)
                 .setIssuedAt(Date())
-                .setExpiration(Date(Date().time + (jwtProperty.accessExpiredAt * 1000)))
+                .setExpiration(Date(Instant.now().plusMillis(jwtProperty.accessExpiredAt * 1000).toEpochMilli()))
                 .compact()
             ,
             Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, jwtProperty.secretKey)
                 .claim("type", "refresh")
                 .setIssuedAt(Date())
-                .setExpiration(Date(Date().time + (jwtProperty.refreshExpiredAt * 1000)))
+                .setExpiration(Date(Instant.now().plusMillis(jwtProperty.refreshExpiredAt * 1000).toEpochMilli()))
                 .compact()
         )
     }

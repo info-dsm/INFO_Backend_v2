@@ -41,7 +41,7 @@ class LoadNotice(
         return maximumNoticeResponse
     }
 
-    override fun loadAdminMaximunNotice(noticeId: String): AdminMaximumNoticeResponse {
+    override fun loadAdminMaximumNotice(noticeId: String): AdminMaximumNoticeResponse {
         val maximumNoticeResponse = (loadNoticePort.loadNotice(noticeId)
             ?: throw BusinessException(
                 "Notice를 조회하지 못했습니다.",
@@ -60,7 +60,7 @@ class LoadNotice(
     }
 
     override fun loadCompanyMinimumNoticeList(companyNumber: String): List<MinimumNoticeResponse> {
-        return loadNoticePort.loadNoticeByCompanyNumber(companyNumber).filter {
+        return loadNoticePort.loadNoticeListByCompanyNumber(companyNumber).filter {
             it.approveStatus == NoticeWaitingStatus.APPROVE
         }.map {
             it.toMinimumNoticeResponse(
@@ -70,7 +70,7 @@ class LoadNotice(
     }
 
     override fun loadCompanyMinimumNoticeWithApproveStatusList(companyNumber: String): List<MinimumNoticeWithApproveStatusResponse> {
-        return loadNoticePort.loadNoticeByCompanyNumber(companyNumber).map {
+        return loadNoticePort.loadNoticeListByCompanyNumber(companyNumber).map {
             it.toMinimumNoticeWithApproveStatusResponse(
                 loadCompanyPort.loadCompanyThumbnailList(companyNumber)
             )
@@ -81,7 +81,7 @@ class LoadNotice(
         loadNoticePreferencePort.loadNoticePreference(
             userEmail
         )?.let {
-            return loadNoticePort.loadNoticeBySmallClassification(
+            return loadNoticePort.loadNoticePageBySmallClassification(
                 it.smallClassification.name, idx, size
             ).map {
                 it.toMinimumNoticeResponse(
@@ -108,6 +108,12 @@ class LoadNotice(
         return loadNoticePort.loadNotice(noticeId)?.toNoticeDto()
     }
 
+    override fun loadAvailableNoticeByCompanyNumber(companyNumber: String): List<NoticeDto> {
+        return loadNoticePort.loadNoticeListByCompanyNumber(companyNumber).map {
+            it.toNoticeDto()
+        }
+    }
+
     override fun searchNotice(
         companyName: String?,
         smallClassification: String?,
@@ -118,13 +124,13 @@ class LoadNotice(
             name: String ->
             smallClassification?.let {
                 classification: String ->
-                return loadNoticePort.loadNoticeByCompanyNameAndSmallClassification(name, classification, idx, size).map {
+                return loadNoticePort.loadNoticePageByCompanyNameAndSmallClassification(name, classification, idx, size).map {
                     it.toMinimumNoticeResponse(
                         loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
                     )
                 }
             }?:let {
-                return loadNoticePort.loadNoticeByCompanyName(name, idx, size).map {
+                return loadNoticePort.loadNoticePageByCompanyName(name, idx, size).map {
                     it.toMinimumNoticeResponse(
                         loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
                     )
@@ -132,7 +138,7 @@ class LoadNotice(
             }
         }?:let {
             smallClassification?.let {
-                return loadNoticePort.loadNoticeBySmallClassification(smallClassification, idx, size).map {
+                return loadNoticePort.loadNoticePageBySmallClassification(smallClassification, idx, size).map {
                     it.toMinimumNoticeResponse(
                         loadCompanyPort.loadCompanyThumbnailList(it.company.companyNumber)
                     )

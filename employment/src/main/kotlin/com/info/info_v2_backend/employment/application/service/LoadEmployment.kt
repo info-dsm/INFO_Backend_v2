@@ -7,6 +7,7 @@ import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.Anony
 import com.info.info_v2_backend.employment.application.port.input.LoadEmploymentUsecase
 import com.info.info_v2_backend.employment.application.port.output.LoadEmploymentPort
 import com.info.info_v2_backend.employment.application.port.output.generation.LoadGenerationPort
+import com.info.info_v2_backend.employment.domain.generation.GenerationClass
 import com.info.info_v2_backend.employment.domain.student.FIRST_GENERATION_YEAR
 import org.springframework.stereotype.Service
 
@@ -34,15 +35,15 @@ class LoadEmployment(
         }.distinctBy {
             it.student.studentEmail
         }
-
-        val generationClass = loadGenerationPort.loadClass(classNum, year - FIRST_GENERATION_YEAR + 1)
+        val generationClass = loadGenerationPort.loadClass(classNum, year - FIRST_GENERATION_YEAR - 1)
             ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
 
         return AnonymousEmploymentListResponse(
             classNum,
             generationClass.totalClassStudent,
+            generationClass,
             employedStudentList.size,
-            generationClass.generationGrade.totalGradeStudent,
+            generationClass.generationGrade.generationClassList.map(GenerationClass::totalClassStudent).sum(),
             generationClass.generationGrade.generationClassList.map {
                 c ->
                 c.employmentList.map {

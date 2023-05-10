@@ -23,10 +23,10 @@ class EmploymentExceptionHandler: ResponseEntityExceptionHandler() {
     @ExceptionHandler(BusinessException::class)
     private fun businessExceptionHandler(ex: BusinessException, request: WebRequest) : ResponseEntity<*> {
         var parsedMessage: String? = null
-        ex.message?.let { 
-            parsedMessage = messageParser(it) 
+        ex.message?.let {
+            parsedMessage = messageParser(it)
         }
-        log.warn(parsedMessage)
+        log.warn(parsedMessage?:ex.errorCode.message)
         return handleExceptionInternal(ex, ErrorResponse(
             parsedMessage?:ex.errorCode.message,
             ex.errorCode

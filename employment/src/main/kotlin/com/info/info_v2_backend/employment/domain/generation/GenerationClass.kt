@@ -21,7 +21,8 @@ class GenerationClass(
     generationGrade: GenerationGrade,
     totalClassStudent: Int,
     major: String,
-    description: String
+    description: String,
+    homeroomTeacherName: String
 ) {
     @Id
     @Column(name = "generation_class", nullable = false)
@@ -45,4 +46,7 @@ class GenerationClass(
     @OneToMany(mappedBy = "generationClass")
     @JsonIgnore
     val employmentList: MutableList<Employment> = ArrayList()
+
+    @Column(name = "homeroom_teacher_name", nullable = false, length = 10)
+    val homeroomTeacherName: String = homeroomTeacherName
 }

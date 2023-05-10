@@ -15,4 +15,5 @@ data class MaximumCompanyResponse(
     val latestNoticeYear: Int?,
 //    val totalHiredStudentList: List<HiredStudentResponse>,
     val companyIntroductionResponse: CompanyIntroductionResponse,
+    val hiringClassificationList: List<String>
 )

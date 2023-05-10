@@ -56,6 +56,7 @@ abstract class File(
 
     fun toFileDto(): FileDto {
         return FileDto(
+            this.id,
             this.fileUrl,
             this.fileContentType,
             this.extension,

@@ -49,7 +49,10 @@ class GatewayExceptionHandler(
                 ErrorResponse(code = ErrorCode.UNDEFINED_ERROR)
             }
         }
-        response.statusCode = HttpStatus.valueOf(errorResponse.status)
+        errorResponse.status?.let {
+            response.statusCode = HttpStatus.valueOf(it)
+        }
+
         return response.writeWith(
             Jackson2JsonEncoder(objectMapper).encode(
                 Mono.just(errorResponse),

@@ -22,4 +22,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-sleuth:3.1.5")
     //Zipkin
     implementation("org.springframework.cloud:spring-cloud-sleuth-zipkin:3.1.5")
+    //OpenFiegn
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.5")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
 }

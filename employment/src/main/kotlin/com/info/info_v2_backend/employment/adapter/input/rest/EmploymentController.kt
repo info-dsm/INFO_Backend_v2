@@ -84,7 +84,7 @@ class EmploymentController(
     }
 
     @PatchMapping("/generation/class")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.CREATED)
     fun editGenerationClass(
         @RequestBody request: CreateGenerationGradeRequest.CreateGenerationClassRequest
     ){

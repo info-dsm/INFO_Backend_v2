@@ -63,6 +63,12 @@ class LoadEmployment(
             ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
         return EveryGenerationClassInformationResponse(
             generationGrade.generationClassList.map {
+                it.totalClassStudent
+            }.sum(),
+            generationGrade.generationClassList.map {
+                it.employmentList.size
+            }.sum(),
+            generationGrade.generationClassList.map {
                 EveryGenerationClassInformationResponse.GenerationClassInformationResponse(
                     it.classNum,
                     it,

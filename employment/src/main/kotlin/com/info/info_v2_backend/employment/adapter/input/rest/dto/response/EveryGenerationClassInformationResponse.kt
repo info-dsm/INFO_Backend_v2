@@ -3,6 +3,8 @@ package com.info.info_v2_backend.employment.adapter.input.rest.dto.response
 import com.info.info_v2_backend.employment.domain.generation.GenerationClass
 
 data class EveryGenerationClassInformationResponse(
+    val totalGradeStudent: Int,
+    val totalEmployedGradeStudent: Int,
     val classList: List<GenerationClassInformationResponse>
 ) {
 

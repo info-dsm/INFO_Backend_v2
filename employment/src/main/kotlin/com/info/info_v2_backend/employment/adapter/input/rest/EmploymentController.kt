@@ -6,6 +6,7 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.employment.adapter.input.rest.dto.request.CreateGenerationGradeRequest
 import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.AnonymousEmploymentListResponse
+import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.EveryGenerationClassInformationResponse
 import com.info.info_v2_backend.employment.application.port.input.*
 import com.info.info_v2_backend.employment.domain.generation.GenerationGrade
 import org.springframework.http.HttpStatus
@@ -81,6 +82,14 @@ class EmploymentController(
     ): AnonymousEmploymentListResponse {
         return loadEmploymentUsecase.loadAnonymousEmploymentListResponse(classNum, year)
     }
+
+    @GetMapping("/{year}/class/")
+    fun getEmploymentList(
+        @PathVariable year: Int
+    ): EveryGenerationClassInformationResponse {
+        return loadEmploymentUsecase.loadEveryGenerationClassInformationResponse(year)
+    }
+
 
     @PatchMapping("/generation/class")
     @ResponseStatus(HttpStatus.ACCEPTED)

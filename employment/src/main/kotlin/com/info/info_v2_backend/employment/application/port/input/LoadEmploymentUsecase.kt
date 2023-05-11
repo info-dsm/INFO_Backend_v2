@@ -2,6 +2,7 @@ package com.info.info_v2_backend.employment.application.port.input
 
 import com.info.info_v2_backend.common.employment.EmploymentDto
 import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.AnonymousEmploymentListResponse
+import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.EveryGenerationClassInformationResponse
 
 interface LoadEmploymentUsecase {
 
@@ -9,4 +10,5 @@ interface LoadEmploymentUsecase {
     fun loadCompanyConfirmedEmploymentLine(companyNumber: String): List<EmploymentDto>
 
     fun loadAnonymousEmploymentListResponse(classNum: Int, year: Int): AnonymousEmploymentListResponse
+    fun loadEveryGenerationClassInformationResponse(year: Int): EveryGenerationClassInformationResponse
 }

@@ -12,7 +12,7 @@ data class AnonymousEmploymentListResponse(
     val employmentList: List<AnonymousEmploymentResponse>
 ) {
     data class AnonymousEmploymentResponse(
-        val comapny: AnonymousEmploymentCompanyResponse,
+        val company: AnonymousEmploymentCompanyResponse,
         val classNum: Int
     ) {
         data class AnonymousEmploymentCompanyResponse(

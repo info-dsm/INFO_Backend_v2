@@ -4,6 +4,7 @@ import com.info.info_v2_backend.common.employment.EmploymentDto
 import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.AnonymousEmploymentListResponse
+import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.EveryGenerationClassInformationResponse
 import com.info.info_v2_backend.employment.application.port.input.LoadEmploymentUsecase
 import com.info.info_v2_backend.employment.application.port.output.LoadEmploymentPort
 import com.info.info_v2_backend.employment.application.port.output.generation.LoadGenerationPort
@@ -40,8 +41,8 @@ class LoadEmployment(
 
         return AnonymousEmploymentListResponse(
             classNum,
-            generationClass.totalClassStudent,
             generationClass,
+            generationClass.totalClassStudent,
             employedStudentList.size,
             generationClass.generationGrade.generationClassList.map(GenerationClass::totalClassStudent).sum(),
             generationClass.generationGrade.generationClassList.map {
@@ -53,6 +54,21 @@ class LoadEmployment(
             }.flatten().distinctBy { it }.size,
             employedStudentList.map {
                 it.toAnonymousEmploymentResponse()
+            }
+        )
+    }
+
+    override fun loadEveryGenerationClassInformationResponse(year: Int): EveryGenerationClassInformationResponse {
+        val generationGrade = loadGenerationPort.loadGrade(year - FIRST_GENERATION_YEAR - 1)
+            ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
+        return EveryGenerationClassInformationResponse(
+            generationGrade.generationClassList.map {
+                EveryGenerationClassInformationResponse.GenerationClassInformationResponse(
+                    it.classNum,
+                    it,
+                    it.totalClassStudent,
+                    it.employmentList.size
+                )
             }
         )
     }

@@ -22,6 +22,7 @@ class GlobalFilter(
     private val jwtProperty: JwtProperty
 ) : AbstractGatewayFilterFactory<Any>() {
     private val log = LoggerFactory.getLogger(this.javaClass)
+    private val ALLOW_PATH_LIST = arrayListOf("/employment", "/auth")
 
     override fun apply(config: Any): GatewayFilter {
         return GatewayFilter { exchange, chain ->
@@ -40,9 +41,14 @@ class GlobalFilter(
             }
 
             if (!request.headers.containsKey(HttpHeaders.AUTHORIZATION)) {
-                chain.filter(exchange).then(Mono.fromRunnable(Runnable {
-                    log.info("Global Filter End: response code -> {}", response.getStatusCode())
-                }))
+                if (!ALLOW_PATH_LIST.any { request.path.toString().startsWith(it) }) {
+                    log.info("Token cannot found.")
+                    throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
+                } else {
+                    chain.filter(exchange).then(Mono.fromRunnable(Runnable {
+                        log.info("Global Filter End: response code -> {}", response.getStatusCode())
+                    }))
+                }
             } else {
                 val authorizationHeader = (request.headers[HttpHeaders.AUTHORIZATION]?: throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR))[0]
                 val jwt = authorizationHeader.replace("Bearer ", "")
@@ -58,9 +64,8 @@ class GlobalFilter(
                 body[HeaderProperty.AUTH_LEVEL]?.let {
                     request.mutate().header(HeaderProperty.AUTH_LEVEL, it as String)
                 }
-
                 chain.filter(exchange).then(Mono.fromRunnable(Runnable {
-                    log.info("Global Filter End: response code -> {}", response.statusCode)
+                    log.info("Global Filter End: response code -> {}", response.getStatusCode())
                 }))
             }
         }

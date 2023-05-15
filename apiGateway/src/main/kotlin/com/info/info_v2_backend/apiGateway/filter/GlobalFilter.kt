@@ -5,6 +5,7 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.auth.HeaderProperty
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.gateway.filter.GatewayFilter
@@ -52,6 +53,7 @@ class GlobalFilter(
             } else {
                 val authorizationHeader = (request.headers[HttpHeaders.AUTHORIZATION]?: throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR))[0]
                 val jwt = authorizationHeader.replace("Bearer ", "")
+                println("jwt: $jwt")
                 val body = getTokenBody(jwt)
                 body?: let {
                     throw BusinessException("Invalid token -> $jwt", ErrorCode.INVALID_TOKEN_ERROR)
@@ -77,9 +79,11 @@ class GlobalFilter(
             claims = Jwts.parser().setSigningKey(jwtProperty.secretKey)
                 .parseClaimsJws(jwt).body
             val now = Date()
-            if (now.after(Date(claims.expiration.time))) throw BusinessException(null, ErrorCode.EXPIRED_TOKEN_ERROR)
             return claims
+        } catch (e: ExpiredJwtException) {
+            throw BusinessException(null, ErrorCode.EXPIRED_TOKEN_ERROR)
         } catch (e: Exception) {
+            println(e)
             return null
         }
     }

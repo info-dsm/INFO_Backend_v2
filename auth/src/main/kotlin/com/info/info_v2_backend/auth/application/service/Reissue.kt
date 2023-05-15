@@ -19,7 +19,7 @@ class Reissue(
     private val loadCodePort: LoadCodePort
 ): ReissueUsecase {
     override fun reissue(request: TokenReissueRequest): TokenResponse {
-        val claims = tokenProvider.getClaims(request.accessToken)
+        val claims = tokenProvider.getClaims(request.refreshToken)
         val refreshToken = loadCodePort.load(claims.subject, AuthenticationCodeType.REFRESH).takeIf {
             it.type == AuthenticationCodeType.REFRESH.name
         }?: throw BusinessException("RefreshToken을 찾지 못했습니다.", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)

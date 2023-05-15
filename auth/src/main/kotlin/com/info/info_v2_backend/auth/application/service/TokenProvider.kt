@@ -40,7 +40,8 @@ class TokenProvider(
 
     fun decodeBody(token: String): Claims {
         try {
-            return Jwts.parser().setSigningKey(jwtProperty.secretKey).parseClaimsJws(token).body
+//            return Jwts.parser().setSigningKey(jwtProperty.secretKey).parseClaimsJws(token).body
+            return Jwts.claims()
         } catch (e: JwtException) {
             throw BusinessException(
                 e.message.toString(),

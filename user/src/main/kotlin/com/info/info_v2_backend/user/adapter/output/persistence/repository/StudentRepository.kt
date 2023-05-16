@@ -15,5 +15,5 @@ interface StudentRepository: JpaRepository<Student, String> {
                 "where student_key like ':studentKeyPrefix%' " +
                 "and a.email = b.email " +
                 "and a.user_is_delete = false ")
-    fun findByStudentKeyStartsWith(@Param("studentKeyPrefix") studentKeyPrefix: String): List<Student>
+    fun findByStudentKeyStartsWith(@Param(value = "studentKeyPrefix") studentKeyPrefix: String): List<Student>
 }

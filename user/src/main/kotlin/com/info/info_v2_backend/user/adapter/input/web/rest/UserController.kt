@@ -77,7 +77,8 @@ class UserController(
         @PathVariable grade: Int,
         @RequestParam classNum: Int?
     ): List<StudentDto> {
-        return loadStudentUsecase.loadStudentListByGenerationAndClassNum(grade, classNum)
+        if (Auth.checkIsTeacher()) return loadStudentUsecase.loadStudentListByGenerationAndClassNum(grade, classNum)
+        else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
     //Internal

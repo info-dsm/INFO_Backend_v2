@@ -5,5 +5,5 @@ import com.info.info_v2_backend.user.domain.Student
 interface LoadStudentPort {
 
     fun loadStudent(studentEmail: String): Student?
-    fun loadStudentListByGenerationAndClassNum(generation: Int, classNum: Int?): List<Student>
+    fun loadStudentListByGenerationAndClassNum(grade: Int, classNum: Int?): List<Student>
 }

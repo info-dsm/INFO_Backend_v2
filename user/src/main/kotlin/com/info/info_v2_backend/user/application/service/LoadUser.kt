@@ -33,8 +33,8 @@ class LoadUser(
             .toStudentDto(userFilePort.loadProfilePhoto(studentEmail)?.fileUrl)
     }
 
-    override fun loadStudentListByGenerationAndClassNum(generation: Int, classNum: Int?): List<StudentDto> {
-        return loadStudentPort.loadStudentListByGenerationAndClassNum(generation, classNum).map {
+    override fun loadStudentListByGenerationAndClassNum(grade: Int, classNum: Int?): List<StudentDto> {
+        return loadStudentPort.loadStudentListByGenerationAndClassNum(grade, classNum).map {
             it.toStudentDto(userFilePort.loadProfilePhoto(it.email)?.fileUrl)
         }
     }

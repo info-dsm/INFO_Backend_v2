@@ -72,11 +72,12 @@ class UserController(
         }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
     }
 
-    @GetMapping("/user/{generation}")
+    @GetMapping("/generation/{generation}")
     fun getGenerationStudentList(
-        @PathVariable generation: Int
+        @PathVariable generation: Int,
+        @RequestParam classNum: Int?
     ): List<StudentDto> {
-        return loadStudentUsecase.loadStudentListByGeneration(generation)
+        return loadStudentUsecase.loadStudentListByGenerationAndClassNum(generation, classNum)
     }
 
     //Internal

@@ -55,8 +55,8 @@ class UserPersistenceAdapter(
         return studentRepository.findByEmail(studentEmail).orElse(null)
     }
 
-    override fun loadStudentListByGeneration(generation: Int): List<Student> {
-        return studentRepository.findByEntranceYear(2015 + generation - 1)
+    override fun loadStudentListByGenerationAndClassNum(generation: Int, classNum: Int?): List<Student> {
+        return studentRepository.findByStudentKeyStartsWith(generation.toString() + classNum.toString())
     }
 
     override fun load(userEmail: String): Teacher? {

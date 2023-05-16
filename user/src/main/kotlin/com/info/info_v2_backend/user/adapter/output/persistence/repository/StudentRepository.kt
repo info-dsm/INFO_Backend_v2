@@ -9,11 +9,5 @@ import java.util.Optional
 interface StudentRepository: JpaRepository<Student, String> {
 
     fun findByEmail(email: String): Optional<Student>
-    @Query(
-        nativeQuery = true,
-        value = "select * from user a, student b " +
-                "where student_key like ':studentKeyPrefix%' " +
-                "and a.email = b.email " +
-                "and a.user_is_delete = false ")
-    fun findByStudentKeyStartsWith(@Param(value = "studentKeyPrefix") studentKeyPrefix: String): List<Student>
+    fun findByStudentKeyStartsWith(studentKeyPrefix: String): List<Student>
 }

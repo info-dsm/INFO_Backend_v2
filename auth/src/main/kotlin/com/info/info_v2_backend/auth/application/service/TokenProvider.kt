@@ -6,10 +6,12 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.auth.HeaderProperty
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.stereotype.Component
+import java.time.Instant
 import java.util.*
 
 @Component
@@ -25,14 +27,14 @@ class TokenProvider(
                 .claim("type", "access")
                 .claim(HeaderProperty.COMPANY_NUMBER, companyNumber)
                 .setIssuedAt(Date())
-                .setExpiration(Date(Date().time + (jwtProperty.accessExpiredAt * 1000)))
+                .setExpiration(Date(Instant.now().plusMillis(jwtProperty.accessExpiredAt * 1000).toEpochMilli()))
                 .compact()
             ,
             Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, jwtProperty.secretKey)
                 .claim("type", "refresh")
                 .setIssuedAt(Date())
-                .setExpiration(Date(Date().time + (jwtProperty.refreshExpiredAt * 1000)))
+                .setExpiration(Date(Instant.now().plusMillis(jwtProperty.refreshExpiredAt * 1000).toEpochMilli()))
                 .compact()
         )
     }
@@ -40,6 +42,8 @@ class TokenProvider(
     fun decodeBody(token: String): Claims {
         try {
             return Jwts.parser().setSigningKey(jwtProperty.secretKey).parseClaimsJws(token).body
+        } catch (e: ExpiredJwtException) {
+            return e.claims
         } catch (e: JwtException) {
             throw BusinessException(
                 e.message.toString(),

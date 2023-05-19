@@ -5,6 +5,7 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.auth.HeaderProperty
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.gateway.filter.GatewayFilter
@@ -22,6 +23,7 @@ class GlobalFilter(
     private val jwtProperty: JwtProperty
 ) : AbstractGatewayFilterFactory<Any>() {
     private val log = LoggerFactory.getLogger(this.javaClass)
+    private val ALLOW_PATH_LIST = arrayListOf("/employment", "/auth")
 
     override fun apply(config: Any): GatewayFilter {
         return GatewayFilter { exchange, chain ->
@@ -40,12 +42,18 @@ class GlobalFilter(
             }
 
             if (!request.headers.containsKey(HttpHeaders.AUTHORIZATION)) {
-                chain.filter(exchange).then(Mono.fromRunnable(Runnable {
-                    log.info("Global Filter End: response code -> {}", response.getStatusCode())
-                }))
+                if (!ALLOW_PATH_LIST.any { request.path.toString().startsWith(it) }) {
+                    log.info("Token cannot found.")
+                    throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
+                } else {
+                    chain.filter(exchange).then(Mono.fromRunnable(Runnable {
+                        log.info("Global Filter End: response code -> {}", response.getStatusCode())
+                    }))
+                }
             } else {
                 val authorizationHeader = (request.headers[HttpHeaders.AUTHORIZATION]?: throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR))[0]
                 val jwt = authorizationHeader.replace("Bearer ", "")
+                println("jwt: $jwt")
                 val body = getTokenBody(jwt)
                 body?: let {
                     throw BusinessException("Invalid token -> $jwt", ErrorCode.INVALID_TOKEN_ERROR)
@@ -58,9 +66,8 @@ class GlobalFilter(
                 body[HeaderProperty.AUTH_LEVEL]?.let {
                     request.mutate().header(HeaderProperty.AUTH_LEVEL, it as String)
                 }
-
                 chain.filter(exchange).then(Mono.fromRunnable(Runnable {
-                    log.info("Global Filter End: response code -> {}", response.statusCode)
+                    log.info("Global Filter End: response code -> {}", response.getStatusCode())
                 }))
             }
         }
@@ -72,9 +79,11 @@ class GlobalFilter(
             claims = Jwts.parser().setSigningKey(jwtProperty.secretKey)
                 .parseClaimsJws(jwt).body
             val now = Date()
-            if (now.after(Date(claims.expiration.time))) throw BusinessException(null, ErrorCode.EXPIRED_TOKEN_ERROR)
             return claims
+        } catch (e: ExpiredJwtException) {
+            throw BusinessException(null, ErrorCode.EXPIRED_TOKEN_ERROR)
         } catch (e: Exception) {
+            println(e)
             return null
         }
     }

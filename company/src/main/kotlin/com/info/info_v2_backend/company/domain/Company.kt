@@ -76,7 +76,7 @@ class Company(
     var creationStatus: CompanyCreationStatus = CompanyCreationStatus.CREATED
         protected set
 
-    @Column(name = "company_classification", nullable = false)
+    @Column(name = "company_classification", nullable = true)
     @Enumerated(value = EnumType.STRING)
     var companyClassification: CompanyClassification? = null
         protected set

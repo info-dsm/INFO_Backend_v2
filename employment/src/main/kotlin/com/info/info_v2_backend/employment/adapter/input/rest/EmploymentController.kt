@@ -8,7 +8,6 @@ import com.info.info_v2_backend.employment.adapter.input.rest.dto.request.Create
 import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.AnonymousEmploymentListResponse
 import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.EveryGenerationClassInformationResponse
 import com.info.info_v2_backend.employment.application.port.input.*
-import com.info.info_v2_backend.employment.domain.generation.GenerationGrade
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -75,6 +74,9 @@ class EmploymentController(
         return confirmEmploymentUsecase.confirmEmployment(Auth.checkCompanyNumber(companyNumber), studentEmail)
     }
 
+
+    //Employment Statistics Board API
+    //Get Employment Student Information with details by classNum
     @GetMapping("/{year}/class/{classNum}")
     fun getEmploymentListByClassNum(
         @PathVariable year: Int,
@@ -83,6 +85,7 @@ class EmploymentController(
         return loadEmploymentUsecase.loadAnonymousEmploymentListResponse(classNum, year)
     }
 
+    //Get Employment Student Information in short
     @GetMapping("/{year}/class/")
     fun getEmploymentList(
         @PathVariable year: Int

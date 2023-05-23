@@ -72,11 +72,13 @@ class UserController(
         }?: throw BusinessException(errorCode = ErrorCode.TOKEN_NEED_ERROR)
     }
 
-    @GetMapping("/user/{generation}")
+    @GetMapping("/grade/{grade}")
     fun getGenerationStudentList(
-        @PathVariable generation: Int
+        @PathVariable grade: Int,
+        @RequestParam classNum: Int?
     ): List<StudentDto> {
-        return loadStudentUsecase.loadStudentListByGeneration(generation)
+        if (Auth.checkIsTeacher()) return loadStudentUsecase.loadStudentListByGenerationAndClassNum(grade, classNum)
+        else throw BusinessException(errorCode = ErrorCode.NO_AUTHORIZATION_ERROR)
     }
 
     //Internal

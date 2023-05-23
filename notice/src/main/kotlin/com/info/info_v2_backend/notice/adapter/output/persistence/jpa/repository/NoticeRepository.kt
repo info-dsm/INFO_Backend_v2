@@ -55,11 +55,20 @@ interface NoticeRepository: JpaRepository<Notice, String> {
         pageable: Pageable
     ): Page<Notice>
 
-    @Query(value = "select count(*) from notice where current_date between start_date and end_date and notice_is_approve = 'APPROVE' and notice_is_delete = 'false'", nativeQuery = true)
+    @Query(value = "select count(*) from notice where curdate() between start_date and end_date and notice_is_approve = 'APPROVE' and notice_is_delete = 'false'", nativeQuery = true)
     fun countOpenNotice(): Int
 
-    @Query(value = "select a.* from notice a, recruitment_small_classification_usage b where b.notice_id = a.id and b.small_classification_id = :smallClassification and notice_is_approve = 'APPROVE' and notice_is_delete = false order by a.created_at desc",
-        countQuery = "select count(*) from notice a where notice_is_approve = 'APPROVE' and notice_is_delete = false", nativeQuery = true)
+    @Query(value = "select a.* " +
+            "from notice a, recruitment_small_classification_usage b " +
+            "where b.notice_id = a.id " +
+            "and curdate() between a.start_date and a.end_date " +
+            "and b.small_classification_id = :smallClassification " +
+            "and notice_is_approve = 'APPROVE' " +
+            "and notice_is_delete = false order by a.created_at desc",
+        countQuery = "select count(*) " +
+                "from notice a where notice_is_approve = 'APPROVE' " +
+                "and curdate() between a.start_date and a.end_date " +
+                "and notice_is_delete = false", nativeQuery = true)
     fun findBySmallClassification(
         @Param(value = "smallClassification")
         smallClassification: String,

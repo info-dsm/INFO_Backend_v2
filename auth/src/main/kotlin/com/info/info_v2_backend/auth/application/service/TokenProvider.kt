@@ -6,6 +6,7 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.common.auth.HeaderProperty
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -41,6 +42,8 @@ class TokenProvider(
     fun decodeBody(token: String): Claims {
         try {
             return Jwts.parser().setSigningKey(jwtProperty.secretKey).parseClaimsJws(token).body
+        } catch (e: ExpiredJwtException) {
+            return e.claims
         } catch (e: JwtException) {
             throw BusinessException(
                 e.message.toString(),

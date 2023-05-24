@@ -73,4 +73,12 @@ class Employment(
         )
     }
 
+    fun toAdminEmploymentResponse(): AnonymousEmploymentListResponse.AdminEmploymentResponse {
+        return AnonymousEmploymentListResponse.AdminEmploymentResponse(
+            this.company.toAnonymousEmploymentCompanyResponse(),
+            this.generationClass.classNum,
+            this.student.studentEmail
+        )
+    }
+
 }

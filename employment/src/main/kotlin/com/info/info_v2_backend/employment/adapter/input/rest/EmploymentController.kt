@@ -82,7 +82,8 @@ class EmploymentController(
         @PathVariable year: Int,
         @PathVariable classNum: Int
     ): AnonymousEmploymentListResponse {
-        return loadEmploymentUsecase.loadAnonymousEmploymentListResponse(classNum, year)
+        if (Auth.checkIsTeacher()) return loadEmploymentUsecase.loadAdminEmploymentListResponse(classNum, year)
+        else return loadEmploymentUsecase.loadAnonymousEmploymentListResponse(classNum, year)
     }
 
     //Get Employment Student Information in short

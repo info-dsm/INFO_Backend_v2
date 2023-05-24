@@ -9,6 +9,8 @@ interface LoadEmploymentUsecase {
     fun loadCompanyEmploymentLine(companyNumber: String): List<EmploymentDto>
     fun loadCompanyConfirmedEmploymentLine(companyNumber: String): List<EmploymentDto>
 
+    fun loadAdminEmploymentListResponse(classNum: Int, year: Int): AnonymousEmploymentListResponse
     fun loadAnonymousEmploymentListResponse(classNum: Int, year: Int): AnonymousEmploymentListResponse
+
     fun loadEveryGenerationClassInformationResponse(year: Int): EveryGenerationClassInformationResponse
 }

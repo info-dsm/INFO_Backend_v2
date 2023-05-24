@@ -11,7 +11,7 @@ data class AnonymousEmploymentListResponse(
     val totalEmployedGradeStudent: Int,
     val employmentList: List<AnonymousEmploymentResponse>
 ) {
-    data class AnonymousEmploymentResponse(
+    open class AnonymousEmploymentResponse(
         val company: AnonymousEmploymentCompanyResponse,
         val classNum: Int
     ) {
@@ -21,5 +21,14 @@ data class AnonymousEmploymentListResponse(
             val companyLogo: String
         )
     }
+
+    class AdminEmploymentResponse(
+        company: AnonymousEmploymentCompanyResponse,
+        classNum: Int,
+        val userEmail: String
+    ): AnonymousEmploymentResponse(
+        company,
+        classNum
+    )
 
 }

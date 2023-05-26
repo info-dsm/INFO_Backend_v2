@@ -31,10 +31,6 @@ class Student(
 
     val entranceYear: Int = LocalDate.now().year - studentKey.substring(0, 1).toInt() + 1
 
-    @ManyToOne
-    @JoinColumn(name = "profile_photo_id")
-    val profilePhoto: ProfilePhoto = ProfilePhoto(profilePhotoId)
-
 //    @OneToMany(mappedBy = "student")
 //    var hiredStudentList: MutableList<HiredStudent> = ArrayList()
 //        protected set

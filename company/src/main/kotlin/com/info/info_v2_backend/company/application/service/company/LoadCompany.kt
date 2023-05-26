@@ -14,11 +14,13 @@ import com.info.info_v2_backend.company.application.port.output.company.LoadComp
 import com.info.info_v2_backend.company.application.port.output.company.SearchCompanyPort
 import com.info.info_v2_backend.company.application.port.output.employment.LoadEmploymentPort
 import com.info.info_v2_backend.company.application.port.output.file.CompanyFilePort
+import com.info.info_v2_backend.company.application.port.output.notice.NoticePort
 import com.info.info_v2_backend.company.application.port.output.user.LoadUserPort
 import com.info.info_v2_backend.company.domain.Company
 import com.info.info_v2_backend.company.domain.classification.CompanyClassification
 import org.springframework.data.domain.Page
 import org.springframework.stereotype.Service
+import org.springframework.util.StringUtils
 
 @Service
 class LoadCompany(
@@ -27,7 +29,8 @@ class LoadCompany(
     private val loadUserPort: LoadUserPort,
     private val loadEmploymentPort: LoadEmploymentPort,
     private val searchCompanyDocumentPort: SearchCompanyPort,
-    private val loadCompanyClassificationPort: LoadCompanyClassificationPort
+    private val loadCompanyClassificationPort: LoadCompanyClassificationPort,
+    private val noticePort: NoticePort
 ): LoadCompanyUsecase {
 
     override fun loadMinimumCompanyList(idx: Int, size: Int): Page<MinimumCompanyResponse> {
@@ -36,7 +39,10 @@ class LoadCompany(
                 getCompanyIntroductionResponse(
                     it
                 ),
-                loadEmploymentPort.loadEmploymentList(it.companyNumber).size
+                loadEmploymentPort.loadEmploymentList(it.companyNumber).size,
+                noticePort.loadAvailableNoticeByCompanyNumber(it.companyNumber).map {
+                    StringUtils.commaDelimitedListToStringArray(it.classificationList).toList()
+                }.flatten().toSet().toList()
             )
 
         }
@@ -53,7 +59,10 @@ class LoadCompany(
         ).map {
             it.toMinimumCompanyResponse(
                 getCompanyIntroductionResponse(it),
-                loadEmploymentPort.loadEmploymentList(it.companyNumber).size?: 0
+                loadEmploymentPort.loadEmploymentList(it.companyNumber).size?: 0,
+                noticePort.loadAvailableNoticeByCompanyNumber(it.companyNumber).map {
+                    StringUtils.commaDelimitedListToStringArray(it.classificationList).toList()
+                }.flatten().toSet().toList()
             )
         }
     }
@@ -62,7 +71,10 @@ class LoadCompany(
         return loadCompanyPort.loadAllCompanyListByYear(idx, size, year).map {
             it.toMinimumCompanyResponse(
                 getCompanyIntroductionResponse(it),
-                loadEmploymentPort.loadEmploymentList(it.companyNumber).size?:0
+                loadEmploymentPort.loadEmploymentList(it.companyNumber).size?:0,
+                noticePort.loadAvailableNoticeByCompanyNumber(it.companyNumber).map {
+                    StringUtils.commaDelimitedListToStringArray(it.classificationList).toList()
+                }.flatten().toSet().toList()
             )
         }
     }
@@ -71,7 +83,11 @@ class LoadCompany(
         val company = loadCompanyPort.loadCompany(companyNumber)?: throw BusinessException("회사를 조회하지 못했습니다.", ErrorCode.PERSISTENCE_DATA_NOT_FOUND_ERROR)
         val contactor = loadUserPort.loadContactor(companyNumber)
             ?: throw BusinessException(errorCode = ErrorCode.NO_DATA_FOUND_ERROR)
-        return company.toMaximumCompanyResponse(contactor, getCompanyIntroductionResponse(company))
+        return company.toMaximumCompanyResponse(
+            contactor, getCompanyIntroductionResponse(company),
+            noticePort.loadAvailableNoticeByCompanyNumber(company.companyNumber).map {
+                StringUtils.commaDelimitedListToStringArray(it.classificationList).toList()
+            }.flatten().toSet().toList())
     }
 
     override fun loadCompanyDto(companyNumber: String): CompanyDto? {
@@ -92,7 +108,10 @@ class LoadCompany(
             }
             return@map company.toMinimumCompanyResponse(
                 getCompanyIntroductionResponse(company),
-                loadEmploymentPort.loadEmploymentList(company.companyNumber).size?:0
+                loadEmploymentPort.loadEmploymentList(company.companyNumber).size?:0,
+                noticePort.loadAvailableNoticeByCompanyNumber(company.companyNumber).map {
+                    StringUtils.commaDelimitedListToStringArray(it.classificationList).toList()
+                }.flatten().toSet().toList()
             )
         }
     }

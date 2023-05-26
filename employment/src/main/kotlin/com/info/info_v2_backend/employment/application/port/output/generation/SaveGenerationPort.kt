@@ -5,6 +5,6 @@ import com.info.info_v2_backend.employment.domain.generation.GenerationGrade
 
 interface SaveGenerationPort {
 
-    fun saveGenerationClass(generationClass: GenerationClass)
-    fun saveGenerationGrade(generationGrade: GenerationGrade)
+    fun saveGenerationClass(generationClass: GenerationClass): GenerationClass
+    fun saveGenerationGrade(generationGrade: GenerationGrade): GenerationGrade
 }

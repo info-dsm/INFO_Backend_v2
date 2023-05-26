@@ -22,12 +22,12 @@ class GenerationAdapter(
         return generationGradeRepository.findById(generation).orElse(null)
     }
 
-    override fun saveGenerationClass(generationClass: GenerationClass) {
-        generationClassRepository.save(generationClass)
+    override fun saveGenerationClass(generationClass: GenerationClass): GenerationClass {
+        return generationClassRepository.save(generationClass)
     }
 
-    override fun saveGenerationGrade(generationGrade: GenerationGrade) {
-        generationGradeRepository.save(generationGrade)
+    override fun saveGenerationGrade(generationGrade: GenerationGrade): GenerationGrade {
+        return generationGradeRepository.save(generationGrade)
     }
 
 }

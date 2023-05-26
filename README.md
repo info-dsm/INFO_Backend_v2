@@ -1,6 +1,6 @@
 # INFO_v2_Backend
 
-| 서버 개발 & 데브옵스 | [안진우](http://github.com/qj0r9j0vc2) |
+| 서버 개발 & 데브옵스 | [qj0r9j0vc2](http://github.com/qj0r9j0vc2) |
 | --- | --- |
 
 <br/>

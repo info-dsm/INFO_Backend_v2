@@ -76,7 +76,7 @@ class Company(
     var creationStatus: CompanyCreationStatus = CompanyCreationStatus.CREATED
         protected set
 
-    @Column(name = "company_classification", nullable = false)
+    @Column(name = "company_classification", nullable = true)
     @Enumerated(value = EnumType.STRING)
     var companyClassification: CompanyClassification? = null
         protected set
@@ -133,7 +133,8 @@ class Company(
     }
     fun toMinimumCompanyResponse(
         companyIntroductionResponse: CompanyIntroductionResponse,
-        totalHiredStudentCount: Int
+        totalHiredStudentCount: Int,
+        hiringClassificationList: List<String>
     ): MinimumCompanyResponse {
         return MinimumCompanyResponse(
             this.companyNumber,
@@ -149,11 +150,16 @@ class Company(
             this.isAssociated,
             this.isNoticeRegisteredYearList.maxOrNull(),
             totalHiredStudentCount,
-            companyIntroductionResponse
+            companyIntroductionResponse,
+            hiringClassificationList
         )
     }
 
-    fun toMaximumCompanyResponse(companyContactor: ContactorDto, companyIntroductionResponse: CompanyIntroductionResponse): MaximumCompanyResponse {
+    fun toMaximumCompanyResponse(
+        companyContactor: ContactorDto,
+        companyIntroductionResponse: CompanyIntroductionResponse,
+        hiringClassificationList: List<String>
+    ): MaximumCompanyResponse {
         return MaximumCompanyResponse(
             this.companyNumber,
             this.companyName.companyName,
@@ -165,7 +171,8 @@ class Company(
             this.isLeading,
             this.isAssociated,
             this.isNoticeRegisteredYearList.maxOrNull(),
-            companyIntroductionResponse
+            companyIntroductionResponse,
+            hiringClassificationList
         )
     }
 

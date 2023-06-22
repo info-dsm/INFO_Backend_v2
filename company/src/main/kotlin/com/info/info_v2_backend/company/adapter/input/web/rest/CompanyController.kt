@@ -81,8 +81,13 @@ class CompanyController(
         @RequestParam id: Long,
         @RequestBody request: EditInterviewReviewRequest
     ) {
-        Auth.getUserEmail()?.let {
-            editInterviewReviewUsecase.edit(id, it, request, companyNumber)
+        if (Auth.checkIsTeacher()) {
+            editInterviewReviewUsecase.edit(id, null, request, companyNumber)
+        }
+        else {
+            Auth.getUserEmail()?.let {
+                editInterviewReviewUsecase.edit(id, it, request, companyNumber)
+            }
         }
     }
 

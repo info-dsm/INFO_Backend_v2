@@ -10,8 +10,10 @@ import com.info.info_v2_backend.company.application.port.output.user.LoadUserPor
 import com.info.info_v2_backend.company.domain.interview.InterviewReview
 import com.info.info_v2_backend.company.domain.interview.InterviewReviewStudent
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional
 class WriteInterviewReview(
     private val writeInterviewReviewPort: WriteInterviewReviewPort,
     private val loadStudentPort: LoadUserPort,

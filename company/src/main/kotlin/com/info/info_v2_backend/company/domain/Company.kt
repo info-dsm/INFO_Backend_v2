@@ -13,6 +13,7 @@ import com.info.info_v2_backend.company.domain.status.CompanyCreationStatus
 import com.info.info_v2_backend.company.domain.time.TimeEntity
 import com.info.info_v2_backend.common.user.ContactorDto
 import com.info.info_v2_backend.company.domain.classification.CompanyClassification
+import com.info.info_v2_backend.company.domain.interview.InterviewReview
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import org.springframework.data.domain.Persistable
@@ -80,6 +81,9 @@ class Company(
     @Enumerated(value = EnumType.STRING)
     var companyClassification: CompanyClassification? = null
         protected set
+
+    @OneToMany(mappedBy = "company")
+    val interviewReviewList: MutableList<InterviewReview> = ArrayList()
 
     fun updateLastNoticeYear() {
         if (!this.isNoticeRegisteredYearList.contains(

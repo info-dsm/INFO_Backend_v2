@@ -1,6 +1,6 @@
 # INFO_v2_Backend
 
-| 서버 개발 & 데브옵스 | [안진우](http://github.com/qj0r9j0vc2) |
+| 서버 개발 & 데브옵스 | [qj0r9j0vc2](http://github.com/qj0r9j0vc2) |
 | --- | --- |
 
 <br/>
@@ -10,11 +10,24 @@
 It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-server)
 > **INFO 프로젝트**는 기존 **직접 담당자와 연락하여** 이루어지던 
 *대덕sw마이스터고 현장 실습생 채용 의뢰를 전산화하여* 
-소통 과정에서 발생하는 불필요한 연락을 제거하고, **웹 어플리케이션**으로 전환하여 **학교 산학부 담당자** 부재 시에도 **원활한 채용 프로세스 진행**이 가능하게 하기 위해 구상되었으며, `가용성` 및 `안정성` 확보를 기대할 수 있습니다.
+소통 과정에서 발생하는 불필요한 연락을 제거하고, **웹 어플리케이션**으로 전환하여 **학교 산학부 담당자** 부재 시에도 **원활한 채용 프로세스 진행**이 가능하게 하기 위해 구상되었습니다.
 >
 
+<br>
+<br>
+
+# Deployment Architecture
+
+![infodsm-server-architecture (1)](https://github.com/info-dsm/INFO_Backend_v2/assets/59428479/f1453a82-8ebc-42ab-b0f9-0e415f1b30ce)
+
+# Diagram
+
+![infodsm 통합 다이어그램 drawio (1)](https://github.com/info-dsm/INFO_Backend_v2/assets/59428479/96a82150-3515-48e1-aaac-fe0794e9cd1f)
 
 
+<br>
+<br>
+<br>
 
 1. 프로젝트 배경 💡
     
@@ -94,12 +107,68 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
     
  작성자: 안진우(https://github.com/qj0r9j0vc2)
 
-
 ```
 📦 
+├─ .github
+│  ├─ labeler.yml
+│  ├─ release-drafter-announcement.yml
+│  ├─ release-drafter-applies.yml
+│  ├─ release-drafter-auth.yml
+│  ├─ release-drafter-company.yml
+│  ├─ release-drafter-email.yml
+│  ├─ release-drafter-employment.yml
+│  ├─ release-drafter-file.yml
+│  ├─ release-drafter-notice.yml
+│  ├─ release-drafter-user.yml
+│  └─ workflows
+│     ├─ labeler.yml
+│     ├─ release-drafter-demo.yml
+│     └─ release-drafter.yml
 ├─ .gitignore
 ├─ README.md
+├─ announcement
+│  ├─ Dockerfile
+│  ├─ build.gradle.kts
+│  └─ src
+│     └─ main
+│        ├─ kotlin
+│        │  └─ com
+│        │     └─ info
+│        │        └─ info_v2_backend
+│        │           └─ announcement
+│        │              ├─ AnnouncementApplication.kt
+│        │              ├─ business
+│        │              │  └─ service
+│        │              │     ├─ AnnouncementService.kt
+│        │              │     └─ AnnouncementServiceImpl.kt
+│        │              ├─ global
+│        │              │  └─ exception
+│        │              │     └─ AnnouncementExceptionHandler.kt
+│        │              ├─ infra
+│        │              │  └─ feign
+│        │              │     ├─ FileFeignClient.kt
+│        │              │     ├─ FileFeignClientFallback.kt
+│        │              │     └─ config
+│        │              │        ├─ FeignConfiguration.kt
+│        │              │        └─ FeignErrorDecoder.kt
+│        │              ├─ persistance
+│        │              │  ├─ entity
+│        │              │  │  ├─ Announcement.kt
+│        │              │  │  └─ AnnouncementType.kt
+│        │              │  └─ repository
+│        │              │     └─ AnnouncementRepository.kt
+│        │              └─ presentation
+│        │                 ├─ AnnouncementController.kt
+│        │                 └─ dto
+│        │                    ├─ request
+│        │                    │  └─ CreateAnnouncementRequest.kt
+│        │                    └─ response
+│        │                       ├─ MaximumAnnouncementResponse.kt
+│        │                       └─ MinimumAnnouncementResponse.kt
+│        └─ resources
+│           └─ application.yml
 ├─ apiGateway
+│  ├─ Dockerfile
 │  ├─ build.gradle.kts
 │  └─ src
 │     └─ main
@@ -110,12 +179,13 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │                    └─ apiGateway
 │                       ├─ ApiGatewayApplication.kt
 │                       ├─ exception
-│                       │  └─ GlobalExceptionHandler.kt
+│                       │  └─ GatewayExceptionHandler.kt
 │                       ├─ filter
 │                       │  └─ GlobalFilter.kt
 │                       └─ property
 │                          └─ JwtProperty.kt
 ├─ applies
+│  ├─ Dockerfile
 │  ├─ build.gradle.kts
 │  └─ src
 │     └─ main
@@ -129,7 +199,11 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │  ├─ input
 │        │              │  │  └─ rest
 │        │              │  │     ├─ AppliesController.kt
+│        │              │  │     ├─ configuration
+│        │              │  │     │  └─ AppliesExceptionHandler.kt
 │        │              │  │     └─ dto
+│        │              │  │        ├─ request
+│        │              │  │        │  └─ RejectAppliesRequest.kt
 │        │              │  │        └─ respnose
 │        │              │  │           └─ AppliesResponse.kt
 │        │              │  └─ output
@@ -139,16 +213,21 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │     │     ├─ KafkaConfiguration.kt
 │        │              │     │     └─ KafkaProperty.kt
 │        │              │     ├─ persistence
-│        │              │     │  ├─ AppliesAdapter.kt
+│        │              │     │  ├─ AppliesPersistenceAdapter.kt
 │        │              │     │  └─ repository
 │        │              │     │     └─ AppliesRepository.kt
 │        │              │     └─ rest
+│        │              │        ├─ CompanyFeignClient.kt
+│        │              │        ├─ CompanyFeignClientFallbackFactory.kt
 │        │              │        ├─ FileFeignClient.kt
 │        │              │        ├─ FileFeignClientFallback.kt
 │        │              │        ├─ NoticeFeignClient.kt
 │        │              │        ├─ NoticeFeignClientFallback.kt
 │        │              │        ├─ UserFeignClient.kt
-│        │              │        └─ UserFeignClientFallback.kt
+│        │              │        ├─ UserFeignClientFallback.kt
+│        │              │        └─ configuration
+│        │              │           ├─ FeignConfiguration.kt
+│        │              │           └─ FeignErrorDecoder.kt
 │        │              ├─ application
 │        │              │  ├─ port
 │        │              │  │  ├─ input
@@ -158,19 +237,20 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │  │  │  ├─ LoadAppliesUsecase.kt
 │        │              │  │  │  └─ RejectAppliesUsecase.kt
 │        │              │  │  └─ output
-│        │              │  │     ├─ cancel
-│        │              │  │     │  └─ CancelApplyPort.kt
-│        │              │  │     ├─ load
+│        │              │  │     ├─ applies
+│        │              │  │     │  ├─ CancelApplyPort.kt
 │        │              │  │     │  ├─ LoadAppliesPort.kt
-│        │              │  │     │  ├─ LoadNoticePort.kt
-│        │              │  │     │  └─ LoadStudentPort.kt
+│        │              │  │     │  └─ SaveAppliesPort.kt
+│        │              │  │     ├─ company
+│        │              │  │     │  └─ LoadCompanyPort.kt
 │        │              │  │     ├─ notice
+│        │              │  │     │  ├─ LoadNoticePort.kt
+│        │              │  │     │  ├─ UpdateNoticeAppliesCountPort.kt
 │        │              │  │     │  └─ UpdateNoticePort.kt
-│        │              │  │     ├─ save
-│        │              │  │     │  ├─ SaveAppliesPort.kt
-│        │              │  │     │  └─ UpdateNoticeAppliesCountPort.kt
-│        │              │  │     └─ upload
-│        │              │  │        └─ UploadResumePort.kt
+│        │              │  │     ├─ resume
+│        │              │  │     │  └─ ResumePort.kt
+│        │              │  │     └─ student
+│        │              │  │        └─ LoadStudentPort.kt
 │        │              │  └─ service
 │        │              │     ├─ ApplyApplies.kt
 │        │              │     ├─ ApproveApplies.kt
@@ -179,13 +259,18 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │     └─ RejectApplies.kt
 │        │              └─ domain
 │        │                 ├─ Applies.kt
+│        │                 ├─ company
+│        │                 │  └─ AppliesCompany.kt
 │        │                 ├─ notice
 │        │                 │  └─ AppliesNotice.kt
+│        │                 ├─ time
+│        │                 │  └─ TimeEntity.kt
 │        │                 └─ user
 │        │                    └─ Applicant.kt
 │        └─ resources
 │           └─ application.yml
 ├─ auth
+│  ├─ Dockerfile
 │  ├─ build.gradle.kts
 │  └─ src
 │     └─ main
@@ -196,41 +281,53 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │           └─ auth
 │        │              ├─ AuthApplication.kt
 │        │              ├─ adapter
-│        │              │  ├─ configuration
-│        │              │  │  ├─ KafkaConfiguration.kt
-│        │              │  │  └─ KafkaProperty.kt
 │        │              │  ├─ input
-│        │              │  │  ├─ event
-│        │              │  │  │  └─ AuthConsumer.kt
 │        │              │  │  └─ rest
 │        │              │  │     ├─ AuthController.kt
 │        │              │  │     ├─ configuration
 │        │              │  │     │  └─ AuthExceptionHandler.kt
-│        │              │  │     └─ dto
-│        │              │  │        ├─ request
-│        │              │  │        │  ├─ LoginRequest.kt
-│        │              │  │        │  └─ TokenReissueRequest.kt
-│        │              │  │        └─ response
-│        │              │  │           └─ TokenResponse.kt
+│        │              │  │     ├─ dto
+│        │              │  │     │  ├─ request
+│        │              │  │     │  │  ├─ ChangePasswordRequest.kt
+│        │              │  │     │  │  ├─ CheckTokenExpiredTimeRequest.kt
+│        │              │  │     │  │  ├─ LoginCompanyRequest.kt
+│        │              │  │     │  │  ├─ LoginRequest.kt
+│        │              │  │     │  │  ├─ SaveStudentRequest.kt
+│        │              │  │     │  │  └─ TokenReissueRequest.kt
+│        │              │  │     │  └─ response
+│        │              │  │     │     └─ TokenResponse.kt
+│        │              │  │     └─ vaildation
+│        │              │  │        ├─ SchoolEmail.kt
+│        │              │  │        └─ SchoolEmailValidator.kt
 │        │              │  └─ output
 │        │              │     ├─ event
 │        │              │     │  ├─ SaveUserAdapter.kt
-│        │              │     │  └─ SendEmailAdapter.kt
+│        │              │     │  ├─ SendEmailAdapter.kt
+│        │              │     │  └─ configuration
+│        │              │     │     ├─ KafkaConfiguration.kt
+│        │              │     │     └─ KafkaProperty.kt
 │        │              │     ├─ persisetnece
 │        │              │     │  ├─ CodePersistenceAdapter.kt
 │        │              │     │  └─ repository
 │        │              │     │     └─ CodeRepository.kt
 │        │              │     └─ rest
 │        │              │        ├─ UserFeignClient.kt
-│        │              │        └─ UserFeignClientFallback.kt
+│        │              │        ├─ UserFeignClientFallback.kt
+│        │              │        └─ configuration
+│        │              │           ├─ FeignConfiguration.kt
+│        │              │           └─ FeignErrorDecoder.kt
 │        │              ├─ application
 │        │              │  ├─ configuration
 │        │              │  │  └─ SecurityConfiguration.kt
 │        │              │  ├─ env
+│        │              │  │  ├─ AuthenticationCodeProperty.kt
 │        │              │  │  └─ JwtProperty.kt
 │        │              │  ├─ port
 │        │              │  │  ├─ input
+│        │              │  │  │  ├─ ChangePasswordUsecase.kt
 │        │              │  │  │  ├─ CheckCodeUsecase.kt
+│        │              │  │  │  ├─ CheckTokenExpiredTimeUsecase.kt
+│        │              │  │  │  ├─ LoadPasswordHintUsecase.kt
 │        │              │  │  │  ├─ LoginUsecase.kt
 │        │              │  │  │  ├─ ReissueUsecase.kt
 │        │              │  │  │  ├─ SendAuthenticationCodeUsecase.kt
@@ -242,10 +339,16 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │  │     ├─ SaveCodePort.kt
 │        │              │  │     ├─ SaveUserPort.kt
 │        │              │  │     ├─ SendEmailPort.kt
-│        │              │  │     └─ UserServicePort.kt
+│        │              │  │     └─ userFeignPort
+│        │              │  │        ├─ ChangePasswordPort.kt
+│        │              │  │        ├─ LoadContactorPort.kt
+│        │              │  │        ├─ LoadUserDetailsPort.kt
+│        │              │  │        └─ UserFeignPort.kt
 │        │              │  └─ service
 │        │              │     ├─ AuthDetailsService.kt
+│        │              │     ├─ ChangePassword.kt
 │        │              │     ├─ CheckCode.kt
+│        │              │     ├─ CheckTokenExpiredTime.kt
 │        │              │     ├─ Login.kt
 │        │              │     ├─ Reissue.kt
 │        │              │     ├─ SendAuthenticationCode.kt
@@ -253,23 +356,6 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │     └─ TokenProvider.kt
 │        │              └─ domain
 │        │                 └─ Code.kt
-│        └─ resources
-│           └─ application.yml
-├─ board
-│  ├─ build.gradle.kts
-│  └─ src
-│     └─ main
-│        ├─ kotlin
-│        │  └─ com
-│        │     └─ info
-│        │        └─ info_v2_backend
-│        │           └─ board
-│        │              ├─ BoardApplication.kt
-│        │              ├─ business
-│        │              │  ├─ BoardService.kt
-│        │              │  └─ BoardServiceImpl.kt
-│        │              └─ presentation
-│        │                 └─ BoardController.kt
 │        └─ resources
 │           └─ application.yml
 ├─ build.gradle.kts
@@ -306,6 +392,9 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │                       │  └─ dto
 │                       │     ├─ SendEmailNotificationRequest.kt
 │                       │     └─ SendEmailTextRequest.kt
+│                       ├─ employment
+│                       │  ├─ EmploymentDto.kt
+│                       │  └─ EmploymentStatus.kt
 │                       ├─ event
 │                       │  └─ KafkaTopics.kt
 │                       ├─ exception
@@ -314,38 +403,44 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │                       │  └─ ErrorResponse.kt
 │                       ├─ file
 │                       │  ├─ FileConvert.kt
+│                       │  ├─ FileProperty.kt
 │                       │  └─ dto
 │                       │     ├─ CompanyFileClassificationType.kt
 │                       │     ├─ FileDto.kt
 │                       │     ├─ RegisterCompanyFileDto.kt
 │                       │     ├─ UploadCompanyFileDto.kt
+│                       │     ├─ request
+│                       │     │  ├─ GenerateFileListRequest.kt
+│                       │     │  └─ GenerateFileRequest.kt
 │                       │     ├─ response
+│                       │     │  ├─ AnnouncementFileResponse.kt
+│                       │     │  ├─ AttachmentResponse.kt
 │                       │     │  ├─ CompanyFileResponse.kt
-│                       │     │  └─ FileResponse.kt
+│                       │     │  ├─ FileResponse.kt
+│                       │     │  ├─ PresignedUrlListResponse.kt
+│                       │     │  ├─ PresignedUrlResponse.kt
+│                       │     │  └─ UserFileResponse.kt
 │                       │     └─ type
 │                       │        ├─ DocsExt.kt
 │                       │        ├─ FileType.kt
 │                       │        └─ ImageExt.kt
 │                       ├─ filter
 │                       │  └─ ExceptionFilter.kt
+│                       ├─ logs
+│                       │  └─ LogFormat.kt
 │                       ├─ notice
-│                       │  └─ NoticeDto.kt
+│                       │  ├─ NoticeDto.kt
+│                       │  ├─ NoticeFileDto.kt
+│                       │  └─ UpdateNoticeAppliesCountDto.kt
 │                       └─ user
+│                          ├─ ContactorDto.kt
 │                          ├─ Generation.kt
+│                          ├─ Role.kt
 │                          ├─ StudentDto.kt
+│                          ├─ TeacherDto.kt
 │                          └─ UserDto.kt
-├─ commonEntity
-│  ├─ build.gradle.kts
-│  └─ src
-│     └─ main
-│        └─ kotlin
-│           └─ com
-│              └─ info
-│                 └─ info_v2_backend
-│                    └─ commonEntity
-│                       └─ entity
-│                          └─ TimeEntity.kt
 ├─ company
+│  ├─ Dockerfile
 │  ├─ build.gradle.kts
 │  └─ src
 │     └─ main
@@ -361,7 +456,6 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │  │  └─ KafkaProperty.kt
 │        │              │  ├─ input
 │        │              │  │  ├─ event
-│        │              │  │  │  ├─ RegisterCompanyFileConsumer.kt
 │        │              │  │  │  └─ UpdateCompanyLastNoticedConsumer.kt
 │        │              │  │  └─ web
 │        │              │  │     └─ rest
@@ -374,6 +468,9 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │  │           │  │  ├─ EditCompanyInformationRequest.kt
 │        │              │  │           │  │  ├─ EditCompanyRequest.kt
 │        │              │  │           │  │  └─ EditContactorRequest.kt
+│        │              │  │           │  ├─ interviewReview
+│        │              │  │           │  │  ├─ EditInterviewReviewRequest.kt
+│        │              │  │           │  │  └─ WriteInterviewReviewRequest.kt
 │        │              │  │           │  └─ register
 │        │              │  │           │     ├─ CompanyContactRequest.kt
 │        │              │  │           │     ├─ CompanyInformationRequest.kt
@@ -382,44 +479,77 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │  │           └─ response
 │        │              │  │              ├─ CompanyIntroductionResponse.kt
 │        │              │  │              ├─ MaximumCompanyResponse.kt
-│        │              │  │              └─ MinimumCompanyResponse.kt
+│        │              │  │              ├─ MinimumCompanyResponse.kt
+│        │              │  │              └─ interviewReview
+│        │              │  │                 ├─ MaximumInterviewReviewResponse.kt
+│        │              │  │                 └─ MinimumInterviewReviewRespone.kt
 │        │              │  └─ output
 │        │              │     ├─ event
-│        │              │     │  ├─ UserAdapter.kt
-│        │              │     │  └─ configuration
-│        │              │     │     └─ FormConfiguration.kt
+│        │              │     │  └─ UserAdapter.kt
 │        │              │     ├─ persistence
-│        │              │     │  ├─ BusinessAreaAdapter.kt
-│        │              │     │  ├─ BusinessAreaTaggedAdapter.kt
-│        │              │     │  ├─ CompanyAdapater.kt
-│        │              │     │  └─ repository
-│        │              │     │     ├─ BusinessAreaRepository.kt
-│        │              │     │     ├─ BusinessAreaTaggedRepository.kt
-│        │              │     │     └─ CompanyRepository.kt
+│        │              │     │  ├─ mongo
+│        │              │     │  │  ├─ MongoCompanyDocumentAdapter.kt
+│        │              │     │  │  ├─ configuration
+│        │              │     │  │  │  ├─ DataSourceProperty.kt
+│        │              │     │  │  │  └─ MongoConfiguration.kt
+│        │              │     │  │  └─ repository
+│        │              │     │  │     └─ CompanyDocumentRepository.kt
+│        │              │     │  └─ rdb
+│        │              │     │     ├─ BusinessAreaAdapter.kt
+│        │              │     │     ├─ BusinessAreaTaggedAdapter.kt
+│        │              │     │     ├─ CompanyAdapter.kt
+│        │              │     │     ├─ CompanyClassificationPreferenceAdapter.kt
+│        │              │     │     ├─ InterviewReviewAdapter.kt
+│        │              │     │     └─ repository
+│        │              │     │        ├─ BusinessAreaRepository.kt
+│        │              │     │        ├─ BusinessAreaTaggedRepository.kt
+│        │              │     │        ├─ CompanyClassificationPreferenceRepository.kt
+│        │              │     │        ├─ CompanyRepository.kt
+│        │              │     │        └─ InterviewReviewRepository.kt
 │        │              │     └─ rest
 │        │              │        ├─ AuthFeignClient.kt
 │        │              │        ├─ AuthFeignClientFallbackFactory.kt
+│        │              │        ├─ EmploymentFeignClient.kt
+│        │              │        ├─ EmploymentFeignClientFalllback.kt
 │        │              │        ├─ FileFeignClient.kt
 │        │              │        ├─ FileFeignClientFallbackFactory.kt
+│        │              │        ├─ NoticeFeignClient.kt
+│        │              │        ├─ NoticeFeignClientFallbackFactory.kt
 │        │              │        ├─ UserFeignClient.kt
+│        │              │        ├─ UserFeingClientFallback.kt
 │        │              │        └─ configuration
-│        │              │           └─ FeignAuthConfiguration.kt
+│        │              │           ├─ FeignConfiguration.kt
+│        │              │           └─ FeignErrorDecoder.kt
 │        │              ├─ application
 │        │              │  ├─ configuration
 │        │              │  │  └─ SecurityConfiguration.kt
 │        │              │  ├─ port
 │        │              │  │  ├─ input
-│        │              │  │  │  ├─ EditCompanyUsecase.kt
-│        │              │  │  │  ├─ LoadBusinessAreaUsecase.kt
-│        │              │  │  │  ├─ LoadCompanyUsecase.kt
-│        │              │  │  │  ├─ MakeAssociatedUsecase.kt
-│        │              │  │  │  ├─ RegisterCompanyUsecase.kt
-│        │              │  │  │  ├─ RemoveCompanyFileUsecase.kt
-│        │              │  │  │  ├─ UpdateLastNoticedCompanyUsecase.kt
-│        │              │  │  │  └─ file
-│        │              │  │  │     ├─ AddCompanyFileUsecase.kt
-│        │              │  │  │     ├─ ChangeCompanyFileUsecase.kt
-│        │              │  │  │     └─ RegisterCompanyFileUsecase.kt
+│        │              │  │  │  ├─ businessArea
+│        │              │  │  │  │  ├─ AddBusinessAreaUsecase.kt
+│        │              │  │  │  │  └─ LoadBusinessAreaUsecase.kt
+│        │              │  │  │  ├─ company
+│        │              │  │  │  │  ├─ CountCompanyUsecase.kt
+│        │              │  │  │  │  ├─ EditCompanyUsecase.kt
+│        │              │  │  │  │  ├─ FailCompanyUsecase.kt
+│        │              │  │  │  │  ├─ LoadCompanyUsecase.kt
+│        │              │  │  │  │  ├─ MakeAssociatedUsecase.kt
+│        │              │  │  │  │  ├─ MakeLeadingUsecase.kt
+│        │              │  │  │  │  └─ RegisterCompanyUsecase.kt
+│        │              │  │  │  ├─ file
+│        │              │  │  │  │  ├─ AddCompanyFileUsecase.kt
+│        │              │  │  │  │  ├─ ChangeCompanyFileUsecase.kt
+│        │              │  │  │  │  └─ RemoveCompanyFileUsecase.kt
+│        │              │  │  │  ├─ interviewReview
+│        │              │  │  │  │  ├─ DeleteInterviewReviewUsecase.kt
+│        │              │  │  │  │  ├─ EditInterviewReviewUsecase.kt
+│        │              │  │  │  │  ├─ LoadInterviewReviewUsecase.kt
+│        │              │  │  │  │  └─ WriteInterviewReviewUsecase.kt
+│        │              │  │  │  ├─ notice
+│        │              │  │  │  │  └─ UpdateLastNoticedCompanyUsecase.kt
+│        │              │  │  │  └─ preference
+│        │              │  │  │     ├─ LoadMyCompanyPreferenceInfoUsecase.kt
+│        │              │  │  │     └─ SetCompanyClassificationPreferenceUsecase.kt
 │        │              │  │  └─ output
 │        │              │  │     ├─ CheckEmailCodePort.kt
 │        │              │  │     ├─ businessArea
@@ -430,22 +560,48 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │  │     ├─ company
 │        │              │  │     │  ├─ LoadCompanyPort.kt
 │        │              │  │     │  ├─ SaveCompanyPort.kt
-│        │              │  │     │  └─ SaveContactorPort.kt
+│        │              │  │     │  ├─ SaveContactorPort.kt
+│        │              │  │     │  └─ SearchCompanyPort.kt
+│        │              │  │     ├─ employment
+│        │              │  │     │  └─ LoadEmploymentPort.kt
 │        │              │  │     ├─ file
 │        │              │  │     │  └─ CompanyFilePort.kt
+│        │              │  │     ├─ interviewReview
+│        │              │  │     │  ├─ DeleteInterviewReviewPort.kt
+│        │              │  │     │  ├─ LoadInterviewReviewPort.kt
+│        │              │  │     │  └─ WriteInterviewReviewPort.kt
+│        │              │  │     ├─ notice
+│        │              │  │     │  └─ NoticePort.kt
+│        │              │  │     ├─ preference
+│        │              │  │     │  ├─ LoadCompanyClassificationPort.kt
+│        │              │  │     │  └─ SaveCompanyClassificationPreferencePort.kt
 │        │              │  │     └─ user
-│        │              │  │        └─ LoadContactorPort.kt
+│        │              │  │        └─ LoadUserPort.kt
 │        │              │  └─ service
-│        │              │     ├─ AddIntroductionFile.kt
-│        │              │     ├─ ChangeBusinessCertificate.kt
-│        │              │     ├─ EditCompany.kt
-│        │              │     ├─ LoadBusinessArea.kt
-│        │              │     ├─ LoadCompany.kt
-│        │              │     ├─ MakeAssociated.kt
-│        │              │     ├─ RegisterCompany.kt
-│        │              │     ├─ RegisterCompanyFile.kt
-│        │              │     ├─ RemoveCompanyFile.kt
-│        │              │     └─ UpdateLastNoticedCompany.kt
+│        │              │     ├─ businessArea
+│        │              │     │  ├─ AddBusinessArea.kt
+│        │              │     │  └─ LoadBusinessArea.kt
+│        │              │     ├─ company
+│        │              │     │  ├─ AddIntroductionFile.kt
+│        │              │     │  ├─ ChangeBusinessCertificate.kt
+│        │              │     │  ├─ CountCompany.kt
+│        │              │     │  ├─ EditCompany.kt
+│        │              │     │  ├─ FailCompany.kt
+│        │              │     │  ├─ LoadCompany.kt
+│        │              │     │  ├─ MakeAssociated.kt
+│        │              │     │  ├─ MakeLeading.kt
+│        │              │     │  ├─ RegisterCompany.kt
+│        │              │     │  └─ RemoveCompanyFile.kt
+│        │              │     ├─ interview
+│        │              │     │  ├─ DeleteInterviewReview.kt
+│        │              │     │  ├─ EditInterviewReview.kt
+│        │              │     │  ├─ LoadInterviewReview.kt
+│        │              │     │  └─ WriteInterviewReview.kt
+│        │              │     ├─ notice
+│        │              │     │  └─ UpdateLastNoticedCompany.kt
+│        │              │     └─ preference
+│        │              │        ├─ LoadMyCompanyPreferenceInfo.kt
+│        │              │        └─ SetCompanyClassificationPreference.kt
 │        │              └─ domain
 │        │                 ├─ Company.kt
 │        │                 ├─ ContactorId.kt
@@ -453,18 +609,32 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │                 │  ├─ BusinessArea.kt
 │        │                 │  ├─ BusinessAreaTagged.kt
 │        │                 │  └─ BusinessAreaTaggedIdClass.kt
+│        │                 ├─ classification
+│        │                 │  ├─ CompanyClassification.kt
+│        │                 │  ├─ CompanyClassificationPreference.kt
+│        │                 │  └─ CompanyClassificationPreferenceIdClass.kt
+│        │                 ├─ document
+│        │                 │  └─ CompanyDocument.kt
 │        │                 ├─ information
 │        │                 │  ├─ AddressInfo.kt
 │        │                 │  └─ CompanyInformation.kt
+│        │                 ├─ interview
+│        │                 │  ├─ InterviewReview.kt
+│        │                 │  ├─ InterviewReviewStudent.kt
+│        │                 │  └─ InterviewType.kt
 │        │                 ├─ introduction
 │        │                 │  └─ CompanyIntroduction.kt
 │        │                 ├─ name
 │        │                 │  └─ CompanyName.kt
-│        │                 └─ status
-│        │                    └─ CompanyCreationStatus.kt
+│        │                 ├─ status
+│        │                 │  └─ CompanyCreationStatus.kt
+│        │                 └─ time
+│        │                    └─ TimeEntity.kt
 │        └─ resources
 │           └─ application.yml
+├─ docker-compose.yml
 ├─ email
+│  ├─ Dockerfile
 │  ├─ build.gradle.kts
 │  └─ src
 │     └─ main
@@ -482,7 +652,7 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │  │  │  └─ configuration
 │        │              │  │  │     ├─ KafkaConfiguration.kt
 │        │              │  │  │     └─ KafkaProperty.kt
-│        │              │  │  └─ web
+│        │              │  │  └─ rest
 │        │              │  │     ├─ EmailController.kt
 │        │              │  │     └─ configuration
 │        │              │  │        └─ EmailExceptionHandler.kt
@@ -501,11 +671,14 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │     │  └─ repository
 │        │              │     │     └─ EmailRecordRepository.kt
 │        │              │     └─ rest
-│        │              │        ├─ adapter
-│        │              │        │  ├─ UserFeignClient.kt
-│        │              │        │  └─ UserFiegnClientFallback.kt
-│        │              │        └─ configuration
-│        │              │           └─ HystrixConfiguration.kt
+│        │              │        ├─ CloudflareFeignClient.kt
+│        │              │        ├─ FeignConfiguration.kt
+│        │              │        ├─ UserFeignClient.kt
+│        │              │        ├─ UserFiegnClientFallback.kt
+│        │              │        ├─ configuration
+│        │              │        │  └─ FeignErrorDecoder.kt
+│        │              │        └─ dto
+│        │              │           └─ CloudflareMailDto.kt
 │        │              ├─ application
 │        │              │  ├─ port
 │        │              │  │  ├─ input
@@ -522,6 +695,8 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │                 ├─ content
 │        │                 │  ├─ EmailContent.kt
 │        │                 │  └─ EmailDataConverter.kt
+│        │                 ├─ time
+│        │                 │  └─ TimeEntity.kt
 │        │                 └─ user
 │        │                    ├─ Sender.kt
 │        │                    └─ Target.kt
@@ -530,6 +705,7 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │           └─ templates
 │              └─ notification.html
 ├─ employment
+│  ├─ Dockerfile
 │  ├─ build.gradle.kts
 │  └─ src
 │     └─ main
@@ -543,53 +719,71 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │  ├─ input
 │        │              │  │  └─ rest
 │        │              │  │     ├─ EmploymentController.kt
+│        │              │  │     ├─ configuration
+│        │              │  │     │  └─ EmploymentExceptionHandler.kt
 │        │              │  │     └─ dto
-│        │              │  │        └─ request
-│        │              │  │           └─ EmploymentResponse.kt
+│        │              │  │        ├─ request
+│        │              │  │        │  └─ CreateGenerationGradeRequest.kt
+│        │              │  │        └─ response
+│        │              │  │           ├─ AnonymousEmploymentListResponse.kt
+│        │              │  │           └─ EveryGenerationClassInformationResponse.kt
 │        │              │  └─ output
 │        │              │     ├─ persistence
 │        │              │     │  ├─ EmploymentAdapter.kt
+│        │              │     │  ├─ GenerationAdapter.kt
 │        │              │     │  └─ repository
-│        │              │     │     └─ EmploymentRepository.kt
+│        │              │     │     ├─ EmploymentRepository.kt
+│        │              │     │     ├─ GenerationClassRepository.kt
+│        │              │     │     └─ GenerationGradeRepository.kt
 │        │              │     └─ rest
-│        │              │        ├─ AppliesFeignClient.kt
-│        │              │        ├─ AppliesFeignClientFallback.kt
 │        │              │        ├─ CompanyFeignClient.kt
 │        │              │        ├─ CompanyFeignClientFallback.kt
-│        │              │        ├─ NoticeFeignClient.kt
-│        │              │        └─ NoticeFeignClientFallback.kt
+│        │              │        ├─ UserFeignClient.kt
+│        │              │        ├─ UserFeignClientFallback.kt
+│        │              │        └─ configuration
+│        │              │           ├─ FeignAuthConfiguration.kt
+│        │              │           └─ FeignErrorDecoder.kt
 │        │              ├─ application
 │        │              │  ├─ port
 │        │              │  │  ├─ input
 │        │              │  │  │  ├─ ConfirmEmploymentUsecase.kt
+│        │              │  │  │  ├─ CreateGenerationUsecase.kt
 │        │              │  │  │  ├─ EmployStudentUsecase.kt
 │        │              │  │  │  ├─ FailEmploymentUsecase.kt
-│        │              │  │  │  └─ LoadEmploymentUsecase.kt
+│        │              │  │  │  ├─ LoadEmploymentUsecase.kt
+│        │              │  │  │  └─ LoadGenerationUsecase.kt
 │        │              │  │  └─ output
-│        │              │  │     ├─ LoadAppliesStudentPort.kt
 │        │              │  │     ├─ LoadCompanyPort.kt
 │        │              │  │     ├─ LoadEmploymentPort.kt
-│        │              │  │     ├─ LoadNoticePort.kt
-│        │              │  │     └─ SaveEmploymentPort.kt
+│        │              │  │     ├─ LoadUserPort.kt
+│        │              │  │     ├─ SaveEmploymentPort.kt
+│        │              │  │     └─ generation
+│        │              │  │        ├─ LoadGenerationPort.kt
+│        │              │  │        └─ SaveGenerationPort.kt
 │        │              │  └─ service
 │        │              │     ├─ ConfirmEmployment.kt
+│        │              │     ├─ CreateGeneration.kt
 │        │              │     ├─ EmployStudent.kt
 │        │              │     ├─ FailEmployment.kt
-│        │              │     └─ LoadEmployment.kt
+│        │              │     ├─ LoadEmployment.kt
+│        │              │     └─ LoadGeneration.kt
 │        │              └─ domain
 │        │                 ├─ Employment.kt
 │        │                 ├─ company
 │        │                 │  ├─ EmploymentCompany.kt
 │        │                 │  └─ EmploymentContactor.kt
-│        │                 ├─ notice
-│        │                 │  └─ EmploymentNotice.kt
-│        │                 ├─ status
-│        │                 │  └─ EmploymentStatus.kt
-│        │                 └─ student
-│        │                    └─ EmployedStudent.kt
+│        │                 ├─ generation
+│        │                 │  ├─ GenerationClass.kt
+│        │                 │  ├─ GenerationClassIdClass.kt
+│        │                 │  └─ GenerationGrade.kt
+│        │                 ├─ student
+│        │                 │  └─ EmployedStudent.kt
+│        │                 └─ time
+│        │                    └─ TimeEntity.kt
 │        └─ resources
 │           └─ application.yml
 ├─ eureka
+│  ├─ Dockerfile
 │  ├─ build.gradle.kts
 │  └─ src
 │     └─ main
@@ -602,6 +796,7 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        └─ resources
 │           └─ application.yml
 ├─ file
+│  ├─ Dockerfile
 │  ├─ build.gradle.kts
 │  └─ src
 │     └─ main
@@ -612,9 +807,6 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │           └─ file
 │        │              ├─ FileApplication.kt
 │        │              ├─ adapter
-│        │              │  ├─ configuration
-│        │              │  │  ├─ KafkaConfiguration.kt
-│        │              │  │  └─ KafkaProperty.kt
 │        │              │  ├─ input
 │        │              │  │  └─ rest
 │        │              │  │     └─ FileController.kt
@@ -625,48 +817,107 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │     │     ├─ S3Configuration.kt
 │        │              │     │     └─ S3Property.kt
 │        │              │     ├─ event
-│        │              │     │  └─ RegisterCompanyFileAdapter.kt
+│        │              │     │  ├─ ChangeCompanyStatusAdapter.kt
+│        │              │     │  └─ configuration
+│        │              │     │     ├─ KafkaConfiguration.kt
+│        │              │     │     └─ KafkaProperty.kt
 │        │              │     └─ persistence
-│        │              │        ├─ LoadCompanyFileAdapter.kt
+│        │              │        ├─ AnnouncementFileAdapter.kt
+│        │              │        ├─ AttachmentFileAdapter.kt
+│        │              │        ├─ CompanyFileAdapter.kt
 │        │              │        ├─ RemoveFileAdapter.kt
 │        │              │        ├─ ResumeFileAdapter.kt
-│        │              │        ├─ SaveCompanyFileAdapter.kt
+│        │              │        ├─ UserFileAdapter.kt
 │        │              │        └─ repository
-│        │              │           ├─ CompanyFileRepostiory.kt
+│        │              │           ├─ AnnouncementFileRepository.kt
+│        │              │           ├─ AttachmentRepository.kt
+│        │              │           ├─ CompanyFileRepository.kt
 │        │              │           ├─ FileRepository.kt
-│        │              │           └─ ResumeRepository.kt
+│        │              │           ├─ ResumeRepository.kt
+│        │              │           └─ UserProfilePhotoRepository.kt
 │        │              ├─ application
 │        │              │  ├─ configuration
 │        │              │  │  └─ AsyncConfiguration.kt
 │        │              │  ├─ port
 │        │              │  │  ├─ input
-│        │              │  │  │  ├─ LoadCompanyFileUsecase.kt
-│        │              │  │  │  ├─ RemoveCompanyFileUsecase.kt
-│        │              │  │  │  ├─ UploadCompanyFileUsecase.kt
-│        │              │  │  │  └─ UploadResumeUsecase.kt
+│        │              │  │  │  ├─ UploadFileUsecase.kt
+│        │              │  │  │  ├─ announce
+│        │              │  │  │  │  ├─ LoadAnnouncementFileUsecase.kt
+│        │              │  │  │  │  └─ UploadAnnouncementFileUsecase.kt
+│        │              │  │  │  ├─ applies
+│        │              │  │  │  │  ├─ LoadResumeUsecase.kt
+│        │              │  │  │  │  ├─ RemoveResumeUsecase.kt
+│        │              │  │  │  │  └─ UploadResumeUsecase.kt
+│        │              │  │  │  ├─ company
+│        │              │  │  │  │  ├─ LoadCompanyFileUsecase.kt
+│        │              │  │  │  │  ├─ RemoveCompanyFileUsecase.kt
+│        │              │  │  │  │  └─ UploadCompanyFileUsecase.kt
+│        │              │  │  │  ├─ notice
+│        │              │  │  │  │  ├─ LoadAttachmentUsecase.kt
+│        │              │  │  │  │  ├─ RemoveAttachmentUsecase.kt
+│        │              │  │  │  │  └─ UploadAttachmentUsecase.kt
+│        │              │  │  │  └─ user
+│        │              │  │  │     ├─ LoadUserFileUsecase.kt
+│        │              │  │  │     └─ UploadUserFileUsecase.kt
 │        │              │  │  └─ output
-│        │              │  │     ├─ LoadCompanyFilePort.kt
-│        │              │  │     ├─ RegisterCompanyFilePort.kt
 │        │              │  │     ├─ RemoveFilePort.kt
 │        │              │  │     ├─ UploadFilePort.kt
-│        │              │  │     └─ save
-│        │              │  │        ├─ SaveCompanyFilePort.kt
-│        │              │  │        └─ SaveResumeFilePort.kt
+│        │              │  │     ├─ announce
+│        │              │  │     │  ├─ LoadAnnouncementFilePort.kt
+│        │              │  │     │  └─ SaveAnnouncementFilePort.kt
+│        │              │  │     ├─ applies
+│        │              │  │     │  ├─ LoadResumePort.kt
+│        │              │  │     │  ├─ RemoveResumePort.kt
+│        │              │  │     │  └─ SaveResumeFilePort.kt
+│        │              │  │     ├─ company
+│        │              │  │     │  ├─ ChangeCompanyStatusPort.kt
+│        │              │  │     │  ├─ LoadCompanyFilePort.kt
+│        │              │  │     │  ├─ RemoveCompanyFilePort.kt
+│        │              │  │     │  └─ SaveCompanyFilePort.kt
+│        │              │  │     ├─ notice
+│        │              │  │     │  ├─ LoadAttachmentPort.kt
+│        │              │  │     │  ├─ RemoveAttachmentPort.kt
+│        │              │  │     │  └─ SaveAttachmentPort.kt
+│        │              │  │     └─ user
+│        │              │  │        ├─ LoadUserFilePort.kt
+│        │              │  │        └─ SaveUserFilePort.kt
 │        │              │  └─ service
-│        │              │     ├─ LoadCompanyFile.kt
-│        │              │     ├─ RemoveCompanyFile.kt
-│        │              │     └─ UploadFile.kt
+│        │              │     ├─ UploadFile.kt
+│        │              │     ├─ announcement
+│        │              │     │  ├─ LoadAnnouncementFile.kt
+│        │              │     │  └─ UploadAnnouncementFile.kt
+│        │              │     ├─ applies
+│        │              │     │  ├─ LoadResume.kt
+│        │              │     │  ├─ RemoveResume.kt
+│        │              │     │  └─ UploadResume.kt
+│        │              │     ├─ company
+│        │              │     │  ├─ LoadCompanyFile.kt
+│        │              │     │  ├─ RemoveCompanyFile.kt
+│        │              │     │  └─ UploadCompanyFile.kt
+│        │              │     ├─ notice
+│        │              │     │  ├─ LoadAttachment.kt
+│        │              │     │  ├─ RemoveAttachment.kt
+│        │              │     │  └─ UploadAttachment.kt
+│        │              │     └─ user
+│        │              │        ├─ LoadUserFile.kt
+│        │              │        └─ UploadUserFile.kt
 │        │              └─ domain
 │        │                 ├─ File.kt
+│        │                 ├─ announcement
+│        │                 │  └─ AnnouncementFile.kt
 │        │                 ├─ applicant
 │        │                 │  └─ Reporter.kt
 │        │                 ├─ applies
 │        │                 │  └─ Resume.kt
 │        │                 ├─ company
 │        │                 │  └─ CompanyFile.kt
-│        │                 └─ notice
-│        │                    ├─ AttachmentNotice.kt
-│        │                    └─ FormAttachment.kt
+│        │                 ├─ notice
+│        │                 │  ├─ Attachment.kt
+│        │                 │  └─ AttachmentNotice.kt
+│        │                 ├─ time
+│        │                 │  └─ TimeEntity.kt
+│        │                 └─ user
+│        │                    └─ UserProfilePhoto.kt
 │        └─ resources
 │           └─ application.yml
 ├─ gradle
@@ -676,6 +927,7 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 ├─ gradlew
 ├─ gradlew.bat
 ├─ notice
+│  ├─ Dockerfile
 │  ├─ build.gradle.kts
 │  └─ src
 │     └─ main
@@ -686,14 +938,22 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │           └─ notice
 │        │              ├─ NoticeApplication.kt
 │        │              ├─ adapter
+│        │              │  ├─ configuration
+│        │              │  │  └─ KafkaConfiguration.kt
 │        │              │  ├─ input
+│        │              │  │  ├─ event
+│        │              │  │  │  └─ NoticeApplicantCountConsumer.kt
 │        │              │  │  └─ rest
 │        │              │  │     ├─ NoticeController.kt
+│        │              │  │     ├─ conifguration
+│        │              │  │     │  └─ NoticeExceptionHandler.kt
 │        │              │  │     └─ dto
 │        │              │  │        ├─ request
 │        │              │  │        │  ├─ CreateNoticeRequest.kt
 │        │              │  │        │  ├─ EditNoticeRequest.kt
 │        │              │  │        │  ├─ NoticeOpenPeriodRequest.kt
+│        │              │  │        │  ├─ classification
+│        │              │  │        │  │  └─ AddClassificationRequest.kt
 │        │              │  │        │  ├─ openPeriod
 │        │              │  │        │  │  └─ EditNoticeOpenPeriodRequest.kt
 │        │              │  │        │  ├─ pay
@@ -714,55 +974,165 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │              │  │        │  └─ worktime
 │        │              │  │        │     └─ EditWorkTimeRequest.kt
 │        │              │  │        └─ response
+│        │              │  │           ├─ AdminMaximumNoticeResponse.kt
 │        │              │  │           ├─ LanguageResponse.kt
 │        │              │  │           ├─ MaximumNoticeResponse.kt
 │        │              │  │           ├─ MinimumNoticeResponse.kt
+│        │              │  │           ├─ MinimumNoticeWithApproveStatusResponse.kt
 │        │              │  │           ├─ certificate
 │        │              │  │           │  └─ CertificateResponse.kt
 │        │              │  │           ├─ classification
 │        │              │  │           │  ├─ BigClassificationResponse.kt
 │        │              │  │           │  └─ ClassificationResponse.kt
+│        │              │  │           ├─ interview
+│        │              │  │           │  └─ InterviewProcessResponse.kt
 │        │              │  │           └─ technology
 │        │              │  │              └─ TechnologyResponse.kt
 │        │              │  └─ output
 │        │              │     ├─ event
 │        │              │     │  └─ CompanyAdapter.kt
 │        │              │     ├─ persistence
-│        │              │     │  ├─ BigRecruitmentClassificationAdapter.kt
-│        │              │     │  ├─ NoticeAdapter.kt
-│        │              │     │  ├─ SmallRecruitmentClassificationAdapter.kt
-│        │              │     │  └─ repository
-│        │              │     │     ├─ NoticeRepository.kt
-│        │              │     │     ├─ RecruitmentBigClassificationRepository.kt
-│        │              │     │     └─ RecruitmentSmallClassificationRepository.kt
+│        │              │     │  ├─ jdbc
+│        │              │     │  │  ├─ LoadNoticeAdapter.kt
+│        │              │     │  │  ├─ NoticeQueryBlocks.kt
+│        │              │     │  │  ├─ configuration
+│        │              │     │  │  │  ├─ DatasourceConfiguration.kt
+│        │              │     │  │  │  └─ JdbcConfiguration.kt
+│        │              │     │  │  ├─ dto
+│        │              │     │  │  │  └─ LanguageUsageDto.kt
+│        │              │     │  │  └─ mapper
+│        │              │     │  │     ├─ JdbcCertificateResponseMapper.kt
+│        │              │     │  │     ├─ JdbcInterviewProcessMapMapper.kt
+│        │              │     │  │     ├─ JdbcLanguageResponseDtoMapper.kt
+│        │              │     │  │     ├─ JdbcNoticeVoMapper.kt
+│        │              │     │  │     ├─ JdbcTechnologyResponseMapper.kt
+│        │              │     │  │     └─ vo
+│        │              │     │  │        └─ NoticeVo.kt
+│        │              │     │  └─ jpa
+│        │              │     │     ├─ BigRecruitmentClassificationAdapter.kt
+│        │              │     │     ├─ NoticeAdapter.kt
+│        │              │     │     ├─ SmallRecruitmentClassificationAdapter.kt
+│        │              │     │     ├─ certificate
+│        │              │     │     │  ├─ CertificateAdapter.kt
+│        │              │     │     │  └─ CertificateUsageAdapter.kt
+│        │              │     │     ├─ classification
+│        │              │     │     │  ├─ SmallClassificationUsageAdapter.kt
+│        │              │     │     │  └─ SmallClassificationUsageRepository.kt
+│        │              │     │     ├─ language
+│        │              │     │     │  └─ LanguageAdapter.kt
+│        │              │     │     ├─ preference
+│        │              │     │     │  └─ NoticePreferenceAdapter.kt
+│        │              │     │     ├─ repository
+│        │              │     │     │  ├─ CertificateRepository.kt
+│        │              │     │     │  ├─ CertificateUsageRepository.kt
+│        │              │     │     │  ├─ LanguageRepository.kt
+│        │              │     │     │  ├─ LanguageUsageRepository.kt
+│        │              │     │     │  ├─ NoticePreferenceRepository.kt
+│        │              │     │     │  ├─ NoticeRepository.kt
+│        │              │     │     │  ├─ RecruitmentBigClassificationRepository.kt
+│        │              │     │     │  ├─ RecruitmentSmallClassificationRepository.kt
+│        │              │     │     │  ├─ TechnologyRepository.kt
+│        │              │     │     │  └─ TechnologyUsageRepository.kt
+│        │              │     │     └─ technology
+│        │              │     │        ├─ TechnologyAdapter.kt
+│        │              │     │        └─ TechnologyUsageAdapter.kt
 │        │              │     └─ rest
-│        │              │        └─ CompanyFeignClient.kt
+│        │              │        ├─ CompanyFeignClient.kt
+│        │              │        ├─ CompanyFeignClientFallback.kt
+│        │              │        ├─ FileFeignClient.kt
+│        │              │        ├─ FileFeignClientFallback.kt
+│        │              │        └─ configuration
+│        │              │           ├─ FeignConfiguration.kt
+│        │              │           └─ FeignErrorDecoder.kt
 │        │              ├─ application
 │        │              │  ├─ port
 │        │              │  │  ├─ input
+│        │              │  │  │  ├─ ApproveNoticeUsecase.kt
 │        │              │  │  │  ├─ ConcludeNoticeUsecase.kt
+│        │              │  │  │  ├─ CountOpenNoticeUsecase.kt
 │        │              │  │  │  ├─ CreateNoticeUsecase.kt
 │        │              │  │  │  ├─ EditNoticeUsecase.kt
 │        │              │  │  │  ├─ LoadNoticeUsecase.kt
-│        │              │  │  │  └─ RemoveNoticeUsecase.kt
+│        │              │  │  │  ├─ LoadWaitingNoticeUsecase.kt
+│        │              │  │  │  ├─ RemoveNoticeUsecase.kt
+│        │              │  │  │  ├─ UpdateNoticeApplicantCountUsecase.kt
+│        │              │  │  │  ├─ certificate
+│        │              │  │  │  │  └─ LoadCertificateUsecase.kt
+│        │              │  │  │  ├─ change
+│        │              │  │  │  │  └─ ChangeAttachmentUsecase.kt
+│        │              │  │  │  ├─ classification
+│        │              │  │  │  │  ├─ AddClassificationUsecase.kt
+│        │              │  │  │  │  └─ LoadClassificationUsecase.kt
+│        │              │  │  │  ├─ interview
+│        │              │  │  │  │  └─ LoadInterviewProcessUsecase.kt
+│        │              │  │  │  ├─ language
+│        │              │  │  │  │  ├─ AddLanguageUsecase.kt
+│        │              │  │  │  │  └─ LoadLanguageUsecase.kt
+│        │              │  │  │  ├─ noticePreference
+│        │              │  │  │  │  ├─ LoadMyNoticePreferenceInfoUsecase.kt
+│        │              │  │  │  │  └─ SetNoticePreferenceUsecase.kt
+│        │              │  │  │  └─ technology
+│        │              │  │  │     ├─ AddTechnologyUsecase.kt
+│        │              │  │  │     └─ LoadTechnologyUsecase.kt
 │        │              │  │  └─ output
 │        │              │  │     ├─ LoadCompanyPort.kt
 │        │              │  │     ├─ LoadNoticePort.kt
+│        │              │  │     ├─ LoadWithConditionPort.kt
 │        │              │  │     ├─ RemoveNoticePort.kt
 │        │              │  │     ├─ SaveNoticePort.kt
 │        │              │  │     ├─ UpdateCompanyPort.kt
 │        │              │  │     ├─ bigClassification
 │        │              │  │     │  ├─ LoadBigClassificationPort.kt
 │        │              │  │     │  └─ SaveBigClassificationPort.kt
-│        │              │  │     └─ smallClassification
-│        │              │  │        ├─ LoadSmallClassificationPort.kt
-│        │              │  │        └─ SaveSmallClassificationPort.kt
+│        │              │  │     ├─ certificate
+│        │              │  │     │  ├─ LoadCertificatePort.kt
+│        │              │  │     │  ├─ RemoveCertificateUsagePort.kt
+│        │              │  │     │  └─ SaveCertificateUsagePort.kt
+│        │              │  │     ├─ file
+│        │              │  │     │  └─ FilePort.kt
+│        │              │  │     ├─ language
+│        │              │  │     │  ├─ AddLanguagePort.kt
+│        │              │  │     │  ├─ LoadLanguagePort.kt
+│        │              │  │     │  └─ SaveLanguageUsagePort.kt
+│        │              │  │     ├─ noticePreference
+│        │              │  │     │  ├─ LoadNoticePreferencePort.kt
+│        │              │  │     │  └─ SaveNoticePreferencePort.kt
+│        │              │  │     ├─ smallClassification
+│        │              │  │     │  ├─ LoadSmallClassificationPort.kt
+│        │              │  │     │  ├─ LoadSmallClassificationUsagePort.kt
+│        │              │  │     │  ├─ SaveSmallClassificationPort.kt
+│        │              │  │     │  └─ SaveSmallClassificationUsagePort.kt
+│        │              │  │     └─ technology
+│        │              │  │        ├─ LoadTechnologyPort.kt
+│        │              │  │        ├─ RemoveTechnologyUsagePort.kt
+│        │              │  │        └─ SaveTechnologyUsagePort.kt
 │        │              │  └─ service
+│        │              │     ├─ ApproveNotice.kt
 │        │              │     ├─ ConcludeNotice.kt
 │        │              │     ├─ CreateNotice.kt
 │        │              │     ├─ EditNotice.kt
 │        │              │     ├─ LoadNotice.kt
-│        │              │     └─ RemoveNotice.kt
+│        │              │     ├─ LoadWaitingNotice.kt
+│        │              │     ├─ RemoveNotice.kt
+│        │              │     ├─ UpdateNoticeApplicantCount.kt
+│        │              │     ├─ certificate
+│        │              │     │  └─ LoadCertificate.kt
+│        │              │     ├─ change
+│        │              │     │  └─ ChangeAttachment.kt
+│        │              │     ├─ classification
+│        │              │     │  ├─ AddClassification.kt
+│        │              │     │  └─ LoadClassification.kt
+│        │              │     ├─ interview
+│        │              │     │  └─ LoadInterviewProcess.kt
+│        │              │     ├─ language
+│        │              │     │  ├─ AddLanguage.kt
+│        │              │     │  └─ LoadLanguage.kt
+│        │              │     ├─ noticePreference
+│        │              │     │  ├─ LoadMyNoticePreferenceInfo.kt
+│        │              │     │  └─ SetNoticePreference.kt
+│        │              │     └─ technology
+│        │              │        ├─ AddTechnology.kt
+│        │              │        └─ LoadTechnology.kt
 │        │              └─ domain
 │        │                 ├─ Notice.kt
 │        │                 ├─ certificate
@@ -772,17 +1142,20 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │                 ├─ company
 │        │                 │  └─ NoticeCompany.kt
 │        │                 ├─ interview
-│        │                 │  ├─ InterviewProcess.kt
-│        │                 │  └─ InterviewProcessUsage.kt
+│        │                 │  └─ InterviewProcess.kt
 │        │                 ├─ language
 │        │                 │  ├─ Language.kt
 │        │                 │  ├─ LanguageUsage.kt
 │        │                 │  └─ LanguageUsageIdClass.kt
+│        │                 ├─ noticePreference
+│        │                 │  ├─ NoticePreference.kt
+│        │                 │  └─ NoticePreferenceIdClass.kt
 │        │                 ├─ openPeriod
 │        │                 │  └─ NoticeOpenPeriod.kt
 │        │                 ├─ recruitmentBusiness
 │        │                 │  ├─ RecruitmentBigClassification.kt
-│        │                 │  └─ RecruitmentSmallClassification.kt
+│        │                 │  ├─ RecruitmentSmallClassification.kt
+│        │                 │  └─ RecruitmentSmallClassificationUsage.kt
 │        │                 ├─ status
 │        │                 │  └─ NoticeWaitingStatus.kt
 │        │                 ├─ support
@@ -794,12 +1167,15 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
 │        │                 │  ├─ Technology.kt
 │        │                 │  ├─ TechnologyUsage.kt
 │        │                 │  └─ TechnologyUsageIdClass.kt
+│        │                 ├─ time
+│        │                 │  └─ TimeEntity.kt
 │        │                 └─ workPlace
 │        │                    └─ WorkPlace.kt
 │        └─ resources
 │           └─ application.yml
 ├─ settings.gradle.kts
 └─ user
+   ├─ Dockerfile
    ├─ build.gradle.kts
    └─ src
       └─ main
@@ -829,42 +1205,58 @@ It also preparing [OAuth2 service](https://github.com/qj0r9j0vc2/info-oauth2-ser
          │              │  │           │  └─ SaveUserDto.kt
          │              │  │           └─ response
          │              │  │              ├─ CommonUserDetails.kt
-         │              │  │              ├─ ContactorResponse.kt
          │              │  │              └─ CustomGrantedAuthority.kt
          │              │  └─ output
-         │              │     └─ persistence
-         │              │        ├─ UserPersistenceAdapter.kt
-         │              │        └─ repository
-         │              │           ├─ ContactorRepository.kt
-         │              │           ├─ StudentRepository.kt
-         │              │           ├─ TeacherRepository.kt
-         │              │           └─ UserRepository.kt
+         │              │     ├─ persistence
+         │              │     │  ├─ UserPersistenceAdapter.kt
+         │              │     │  └─ repository
+         │              │     │     ├─ ContactorRepository.kt
+         │              │     │     ├─ ProfilePhotoRepository.kt
+         │              │     │     ├─ StudentRepository.kt
+         │              │     │     ├─ TeacherRepository.kt
+         │              │     │     └─ UserRepository.kt
+         │              │     └─ rest
+         │              │        ├─ FileFeignClient.kt
+         │              │        ├─ FileFeignClientFallbackFactory.kt
+         │              │        └─ configuration
+         │              │           ├─ FeignConfiguration.kt
+         │              │           └─ FeignErrorDecoder.kt
          │              ├─ application
          │              │  ├─ configuration
          │              │  │  └─ SecurityConfiguration.kt
          │              │  ├─ port
          │              │  │  ├─ input
+         │              │  │  │  ├─ ChangePasswordUsecase.kt
+         │              │  │  │  ├─ ChangeUserProfilePhotoUsecase.kt
          │              │  │  │  ├─ LoadCommonUserDetailsUsecase.kt
          │              │  │  │  ├─ LoadContactorUsecase.kt
          │              │  │  │  ├─ LoadPasswordHintUsecase.kt
          │              │  │  │  ├─ LoadStudentUsecase.kt
+         │              │  │  │  ├─ LoadTeacherUsecase.kt
          │              │  │  │  └─ SaveUserUsecase.kt
          │              │  │  └─ output
          │              │  │     ├─ LoadContactorPort.kt
          │              │  │     ├─ LoadStudentPort.kt
+         │              │  │     ├─ LoadTeacherPort.kt
          │              │  │     ├─ LoadUserPort.kt
-         │              │  │     └─ SaveUserPort.kt
+         │              │  │     ├─ SaveUserPort.kt
+         │              │  │     └─ UserFilePort.kt
          │              │  └─ service
+         │              │     ├─ ChangePassword.kt
+         │              │     ├─ ChangeUserProfilePhoto.kt
          │              │     ├─ LoadCommonUserDetails.kt
          │              │     ├─ LoadPasswordHint.kt
          │              │     ├─ LoadUser.kt
          │              │     └─ SaveUser.kt
          │              └─ domain
          │                 ├─ Contactor.kt
-         │                 ├─ Role.kt
          │                 ├─ Student.kt
          │                 ├─ Teacher.kt
-         │                 └─ User.kt
+         │                 ├─ User.kt
+         │                 ├─ profile
+         │                 │  └─ ProfilePhoto.kt
+         │                 └─ time
+         │                    └─ TimeEntity.kt
          └─ resources
             └─ application.yml
 ```

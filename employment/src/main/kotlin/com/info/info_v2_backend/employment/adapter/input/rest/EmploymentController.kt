@@ -6,8 +6,8 @@ import com.info.info_v2_backend.common.exception.BusinessException
 import com.info.info_v2_backend.common.exception.ErrorCode
 import com.info.info_v2_backend.employment.adapter.input.rest.dto.request.CreateGenerationGradeRequest
 import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.AnonymousEmploymentListResponse
+import com.info.info_v2_backend.employment.adapter.input.rest.dto.response.EveryGenerationClassInformationResponse
 import com.info.info_v2_backend.employment.application.port.input.*
-import com.info.info_v2_backend.employment.domain.generation.GenerationGrade
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -74,13 +74,26 @@ class EmploymentController(
         return confirmEmploymentUsecase.confirmEmployment(Auth.checkCompanyNumber(companyNumber), studentEmail)
     }
 
+
+    //Employment Statistics Board API
+    //Get Employment Student Information with details by classNum
     @GetMapping("/{year}/class/{classNum}")
     fun getEmploymentListByClassNum(
         @PathVariable year: Int,
         @PathVariable classNum: Int
     ): AnonymousEmploymentListResponse {
-        return loadEmploymentUsecase.loadAnonymousEmploymentListResponse(classNum, year)
+        if (Auth.checkIsTeacher()) return loadEmploymentUsecase.loadAdminEmploymentListResponse(classNum, year)
+        else return loadEmploymentUsecase.loadAnonymousEmploymentListResponse(classNum, year)
     }
+
+    //Get Employment Student Information in short
+    @GetMapping("/{year}/class/")
+    fun getEmploymentList(
+        @PathVariable year: Int
+    ): EveryGenerationClassInformationResponse {
+        return loadEmploymentUsecase.loadEveryGenerationClassInformationResponse(year)
+    }
+
 
     @PatchMapping("/generation/class")
     @ResponseStatus(HttpStatus.ACCEPTED)

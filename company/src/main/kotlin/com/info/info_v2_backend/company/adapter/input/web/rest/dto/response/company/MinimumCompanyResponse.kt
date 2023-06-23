@@ -1,8 +1,7 @@
-package com.info.info_v2_backend.company.adapter.input.web.rest.dto.response
+package com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.company
 
 import com.info.info_v2_backend.company.domain.businessArea.BusinessArea
 import com.info.info_v2_backend.company.domain.information.AddressInfo
-import java.time.Year
 
 data class MinimumCompanyResponse (
     val companyNumber: String,

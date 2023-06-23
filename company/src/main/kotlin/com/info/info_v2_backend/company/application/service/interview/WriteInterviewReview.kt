@@ -31,7 +31,8 @@ class WriteInterviewReview(
             InterviewReview(
                 InterviewReviewStudent(
                     student.email,
-                    student.studentKey
+                    student.studentKey,
+                    student.name
                 ),
                 company,
                 request.appliedJobPart,

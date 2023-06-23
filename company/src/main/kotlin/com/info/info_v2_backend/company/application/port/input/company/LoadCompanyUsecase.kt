@@ -1,8 +1,8 @@
 package com.info.info_v2_backend.company.application.port.input.company
 
 import com.info.info_v2_backend.common.company.CompanyDto
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.company.MaximumCompanyResponse
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.company.MinimumCompanyResponse
 import org.springframework.data.domain.Page
 
 interface LoadCompanyUsecase {

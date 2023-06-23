@@ -114,10 +114,10 @@ class InterviewReview(
         return MinimumInterviewReviewResponse(
             this.id!!,
             this.company.companyNumber,
-            this.createdAt?.toLocalDate()?:LocalDate.now(),
             this.appliedJobPart,
             this.student,
-            this.interviewDate
+            this.interviewDate,
+            this.createdAt?.toLocalDate()?:LocalDate.now()
         )
     }
 

@@ -2,7 +2,7 @@ package com.info.info_v2_backend.company.domain.interview
 
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.interviewReview.EditInterviewReviewRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MaximumInterviewReviewResponse
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MinimumInterviewReviewRespone
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MinimumInterviewReviewResponse
 import com.info.info_v2_backend.company.domain.Company
 import com.info.info_v2_backend.user.domain.time.TimeEntity
 import java.time.LocalDate
@@ -110,13 +110,14 @@ class InterviewReview(
         )
     }
 
-    fun toMinimumInterviewReview(): MinimumInterviewReviewRespone {
-        return MinimumInterviewReviewRespone(
+    fun toMinimumInterviewReview(): MinimumInterviewReviewResponse {
+        return MinimumInterviewReviewResponse(
             this.id!!,
             this.company.companyNumber,
+            this.createdAt?.toLocalDate()?:LocalDate.now(),
+            this.appliedJobPart,
             this.student,
-            this.interviewDate,
-            this.createdAt?.toLocalDate()?:LocalDate.now()
+            this.interviewDate
         )
     }
 

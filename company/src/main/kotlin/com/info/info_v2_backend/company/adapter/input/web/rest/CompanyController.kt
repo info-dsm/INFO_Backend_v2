@@ -12,10 +12,10 @@ import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.edit.
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.interviewReview.EditInterviewReviewRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.interviewReview.WriteInterviewReviewRequest
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.register.RegisterCompanyRequest
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.company.MaximumCompanyResponse
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.company.MinimumCompanyResponse
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MaximumInterviewReviewResponse
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MinimumInterviewReviewRespone
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.interviewReview.MinimumInterviewReviewResponse
 import com.info.info_v2_backend.company.application.port.input.businessArea.AddBusinessAreaUsecase
 import com.info.info_v2_backend.company.application.port.input.businessArea.LoadBusinessAreaUsecase
 import com.info.info_v2_backend.company.application.port.input.company.*
@@ -57,7 +57,7 @@ class CompanyController(
 ) {
 
     @GetMapping("/{companyNumber}/interview")
-    fun getMinimumInterviewReviewListByCompany(@PathVariable companyNumber: String): List<MinimumInterviewReviewRespone> {
+    fun getMinimumInterviewReviewListByCompany(@PathVariable companyNumber: String): List<MinimumInterviewReviewResponse> {
         return loadInterviewReviewUsecase.loadMinimumInterviewListByCompany(companyNumber)
     }
 
@@ -95,8 +95,12 @@ class CompanyController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteInterviewReview(@PathVariable companyNumber: String,
                               @RequestParam id: Long) {
-        Auth.getUserEmail()?.let {
-            deleteInterviewReviewUsecase.delete(id, it, companyNumber)
+        if (Auth.checkIsTeacher()) {
+            deleteInterviewReviewUsecase.delete(id, null, companyNumber)
+        } else {
+            Auth.getUserEmail()?.let {
+                deleteInterviewReviewUsecase.delete(id, it, companyNumber)
+            }
         }
     }
 

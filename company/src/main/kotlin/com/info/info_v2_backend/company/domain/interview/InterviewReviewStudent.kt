@@ -6,7 +6,8 @@ import javax.persistence.Embeddable
 @Embeddable
 class InterviewReviewStudent(
     studentEmail: String,
-    studentKey: String
+    studentKey: String,
+    studentName: String
 ) {
 
     @Column(name = "student_email", nullable = false, length = 50)
@@ -14,5 +15,8 @@ class InterviewReviewStudent(
 
     @Column(name = "student_key", nullable = false, length = 4)
     val studentKey: String = studentKey
+
+    @Column(name = "student_name", nullable = false, length = 10)
+    val studentName: String = studentName
 
 }

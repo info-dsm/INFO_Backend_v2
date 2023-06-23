@@ -11,8 +11,10 @@ class DeleteInterviewReview(
     private val interviewReviewRepository: InterviewReviewRepository
 ): DeleteInterviewReviewUsecase {
 
-    override fun delete(id: Long, userEmail: String, companyNumber: String) {
-        interviewReviewRepository.deleteByIdAndStudentAndCompany(id, userEmail, companyNumber)
+    override fun delete(id: Long, userEmail: String?, companyNumber: String) {
+        userEmail?.let {
+            interviewReviewRepository.deleteByIdAndStudentAndCompany(id, it, companyNumber)
+        }?: interviewReviewRepository.deleteByIdAndCompany(id, companyNumber)
     }
 
 

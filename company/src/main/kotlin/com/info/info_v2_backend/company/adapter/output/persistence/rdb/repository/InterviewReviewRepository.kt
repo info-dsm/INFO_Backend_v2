@@ -23,4 +23,13 @@ interface InterviewReviewRepository: JpaRepository<InterviewReview, Long> {
         @Param("companyNumber") companyNumber: String
     )
 
+    @Query(nativeQuery = true,
+        value = "delete from interview_review where interview_id = :interviewId " +
+                "and company_number = :companyNumber")
+    @Modifying
+    fun deleteByIdAndCompany(
+        @Param("interviewId") interviewId: Long,
+        @Param("companyNumber") companyNumber: String
+    )
+
 }

@@ -2,9 +2,9 @@ package com.info.info_v2_backend.company.domain
 
 import com.info.info_v2_backend.common.company.CompanyDto
 import com.info.info_v2_backend.company.adapter.input.web.rest.dto.request.edit.EditCompanyRequest
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.CompanyIntroductionResponse
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MaximumCompanyResponse
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.company.CompanyIntroductionResponse
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.company.MaximumCompanyResponse
+import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.company.MinimumCompanyResponse
 import com.info.info_v2_backend.company.domain.businessArea.BusinessAreaTagged
 import com.info.info_v2_backend.company.domain.information.CompanyInformation
 import com.info.info_v2_backend.company.domain.introduction.CompanyIntroduction

@@ -1,7 +1,5 @@
 package com.info.info_v2_backend.company.domain.document
 
-import com.info.info_v2_backend.company.adapter.input.web.rest.dto.response.MinimumCompanyResponse
-import com.info.info_v2_backend.company.domain.information.AddressInfo
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.TextIndexed
